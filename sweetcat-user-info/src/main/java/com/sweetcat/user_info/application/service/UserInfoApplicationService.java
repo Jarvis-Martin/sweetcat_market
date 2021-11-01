@@ -463,7 +463,7 @@ public class UserInfoApplicationService {
         // 找到 user
         User user = userRepository.find(userId);
         // 修改头像路径
-        user.changeAvatarPath(user.getAvatarPath());
+        user.changeAvatarPath(avatarPath);
         // 保存回db
         userRepository.save(user);
         // 返回头像路径
@@ -491,6 +491,6 @@ public class UserInfoApplicationService {
                     ResponseStatusEnum.SAVEFILEFAILE.getErrorMessage()
             );
         }
-        return staticServerAddress + avatarImgPath + fileName;
+        return staticServerAddress + avatarImgPath + destFileName;
     }
 }

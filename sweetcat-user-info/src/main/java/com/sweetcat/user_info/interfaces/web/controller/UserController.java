@@ -211,7 +211,7 @@ public class UserController {
 
         HashMap<String, String> response = new HashMap<>(2);
         response.put("name", avatarPath);
-        response.put("sttus", "done");
+        response.put("status", "done");
         response.put("url", avatarPath);
         return response;
     }
