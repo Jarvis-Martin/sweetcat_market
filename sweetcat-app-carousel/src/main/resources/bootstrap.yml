@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        group: SWEETCAT_GROUP
+        prefix: sweetcat-app-carousel
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            file-extension: yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True

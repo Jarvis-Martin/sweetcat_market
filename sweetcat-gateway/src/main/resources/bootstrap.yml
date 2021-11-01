@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        group: SWEETCAT_GROUP
+        prefix: sweetcat-gateway
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+    gateway:
+      routes:
+        - id: sweetcat-app-carousel
+          uri: lb://sweetcat-app-carousel
+          predicates:
+            - Path=/api/v1/app/carousel/**
+        - id: sweetcat-app-activity
+          uri: lb://sweetcat-app-activity
+          predicates:
+            - Path=/api/v1/app/activity_list/**
+        - id: sweetcat-user-info
+          uri: lb://sweetcat-user-info
+          predicates:
+            - Path=/api/v1/user/**

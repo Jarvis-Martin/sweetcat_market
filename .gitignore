@@ -1,0 +1,6 @@
+# Project exclude paths
+/sweetcat-app-activity/target/
+/sweetcat-app-carousel/target/
+/sweetcat-commons/target/
+/sweetcat-gateway/target/
+/sweetcat-user-info/target/

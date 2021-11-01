@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.user_info.infrastructure.dao.UserAddressMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.user_info.infrastructure.po.UserAddressPO">
+        <id column="address_id" jdbcType="BIGINT" property="addressId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="receiver_phone" jdbcType="CHAR" property="receiverPhone"/>
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
+        <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="town_name" jdbcType="VARCHAR" property="townName"/>
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
+        <result column="is_default" jdbcType="TINYINT" property="defaultAddress"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        address_id, user_id, receiver_name, receiver_phone, province_name, city_name, area_name, town_name, detail_address, is_default, create_time, update_time
+    </sql>
+    <insert id="addOne">
+        insert into t_user_address(address_id, user_id, receiver_name, receiver_phone, province_name, city_name, area_name,town_name, detail_address, is_default, create_time, update_time)
+        values (#{addressId}, #{userId}, #{receiverName}, #{receiverPhone}, #{provinceName}, #{cityName}, #{areaName}, #{townName}, #{detailAddress}, #{defaultAddress}, #{createTime}, #{updateTime})
+    </insert>
+    <update id="update">
+        update t_user_address
+        set
+            receiver_name = #{receiverName},
+            receiver_phone = #{receiverPhone},
+            province_name = #{provinceName},
+            city_name = #{cityName},
+            area_name = #{areaName},
+            town_name = #{townName},
+            detail_address = #{detailAddress},
+            is_default = #{defaultAddress},
+            update_time = #{updateTime}
+        where address_id = #{addressId} and user_id = #{userId}
+    </update>
+    <delete id="remove">
+        delete from t_user_address where address_id = #{addressId} and user_id = #{userId}
+    </delete>
+    <select id="findOne" resultType="com.sweetcat.user_info.infrastructure.po.UserAddressPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_address
+        where address_id = #{addressId}
+    </select>
+    <select id="getPage" resultType="com.sweetcat.user_info.infrastructure.po.UserAddressPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_address
+        where user_id = #{userId}
+        limit #{page}, #{limit}
+    </select>
+    <select id="findDefaultAddress" resultType="com.sweetcat.user_info.infrastructure.po.UserAddressPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_address
+        where user_id = #{userId} and is_default = 1
+    </select>
+
+</mapper>

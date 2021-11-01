@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.user_info.infrastructure.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.user_info.infrastructure.po.UserPO">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+        <result column="gender" jdbcType="TINYINT" property="gender"/>
+        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
+        <result column="vip_level" jdbcType="TINYINT" property="vipLevel"/>
+        <result column="is_referrer" jdbcType="TINYINT" property="referrer"/>
+        <result column="personalized_signature" jdbcType="VARCHAR" property="personalizedSignature"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id
+        , nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, create_time, update_time
+    </sql>
+    <insert id="insertOne">
+        insert into t_user_info(nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer,
+                                personalized_signature, phone, create_time, update_time)
+        values (#{nickname}, #{password}, #{avatarPath}, #{gender}, #{birthday}, #{vipLevel}, #{referrer},
+                #{personalizedSignature}, #{phone}, #{createTime}, #{updateTime})
+    </insert>
+    <update id="update">
+        update t_user_info
+        set nickname               = #{nickname},
+            `password`             = #{password},
+            avatar_path            = #{avatarPath},
+            gender                 = #{gender},
+            birthday               = #{birthday},
+            vip_level              = #{vipLevel},
+            is_referrer            = #{referrer},
+            personalized_signature = #{personalizedSignature},
+            update_time            = #{updateTime}
+        where user_id = #{userId}
+    </update>
+    <!--  , avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, create_time, update_time-->
+    <!--  , #{avatarPath}, #{gender}, #{vipLevel}, #{referrer}, #{personalizedSignature}, #{createTime}, #{updateTime}-->
+
+    <select id="getOne" resultType="com.sweetcat.user_info.infrastructure.po.UserPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info
+        where user_id = #{userId}
+    </select>
+
+    <select id="getOneByPhone" resultType="com.sweetcat.user_info.infrastructure.po.UserPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info where phone = #{phone}
+    </select>
+
+</mapper>

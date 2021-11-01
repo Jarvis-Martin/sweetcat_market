@@ -1,0 +1,90 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: sweetcat-user-info
+        group: SWEETCAT_GROUP
+        namespace: dev
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_user_info0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_user_info1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    # 分库配置 ， 根据good_id分库
+    sharding:
+      default-database-strategy:
+        inline:
+          sharding-column: user_id
+          algorithm-expression: ds$->{user_id % 2}
+
+      # 分表配置，根据member_id分表
+      tables:
+        t_user_info:
+          actual-data-nodes: ds$->{0..1}.t_user_info$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: t_user_info$->{user_id % 2}
+          key-generator:
+            column: user_id
+            type: SNOWFLAKE
+        t_user_address:
+          actual-data-nodes: ds$->{0..1}.t_user_address$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: t_user_address$->{user_id % 2}
+          key-generator:
+            column: user_id
+            type: SNOWFLAKE
+      broadcast-tables:
+        - t_area
+
+  # redis 基础配置
+  redis:
+    database: 0
+    host: 192.168.193.129
+    port: 6379
+    password: 123456
+    timeout: 3000
+#    lettuce 连接池配置
+    lettuce:
+      pool:
+        # 连接池最大活跃连接数
+        max-active: 8
+        # 连接池最大阻塞等待世界（负值：表示没有限制）
+        max-wait: -1
+        # 最大空闲连接数
+        max-idle: 8
+        # 最小空闲连接数
+        min-idle: 0
+
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false
