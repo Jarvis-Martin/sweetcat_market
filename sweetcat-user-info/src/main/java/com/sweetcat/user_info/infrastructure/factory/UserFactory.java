@@ -29,15 +29,4 @@ public class UserFactory {
         );
     }
 
-    /**
-     * 创建一个 空的 User
-     * @return
-     */
-    public User createEmpty() {
-        User user = new User();
-        user.setIsNew(true);
-        user.setEctype(user);
-        return user;
-    }
-
 }

@@ -15,6 +15,7 @@
         <module>sweetcat-scaffold</module>
         <module>sweetcat-app-activity</module>
         <module>sweetcat-user-info</module>
+        <module>sweetcat-user-relationship</module>
     </modules>
 
     <properties>

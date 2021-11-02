@@ -28,4 +28,10 @@ public interface UserRepository {
      * @param user user
      */
     void save(User user);
+
+    /**
+     * 根据 参数更新 User
+     * @param user user
+     */
+    void add(User user);
 }

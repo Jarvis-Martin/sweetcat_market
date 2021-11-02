@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -206,6 +207,53 @@ public class UserInfoApplicationService {
         user.changePassword(encryptedPassword);
         // 保存
         userRepository.save(user);
+    }
+
+    /**
+     * 修改用头像
+     *
+     * @param userId userId
+     * @param avatar avatar
+     * @return 头像文件路径
+     */
+    public String changeAvatar(Long userId, MultipartFile avatar) {
+
+        // 保存头像文件到 nginx，返回 头像文件路径
+        String avatarPath = saveFile(avatar);
+        System.out.println("头像文件路径 --------" + avatarPath);
+        // 找到 user
+        User user = userRepository.find(userId);
+        // 修改头像路径
+        user.changeAvatarPath(avatarPath);
+        // 保存回db
+        userRepository.save(user);
+        // 返回头像路径
+        return user.getAvatarPath();
+    }
+
+    /**
+     * 保存文件到 nginx
+     *
+     * @param file file
+     * @return 保存的文件的文件名
+     */
+    private String saveFile(MultipartFile file) {
+        // 上传文件的文件名
+        String randomId = UUID.randomUUID().toString();
+        String fileName = file.getOriginalFilename();
+        String destFileName = randomId + fileName;
+        File dest = new File(uploadFilePath + '/' + destFileName);
+        System.out.println(uploadFilePath + '/' + destFileName);
+        try {
+            file.transferTo(dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new SaveFileFailException(
+                    ResponseStatusEnum.SAVEFILEFAILE.getErrorCode(),
+                    ResponseStatusEnum.SAVEFILEFAILE.getErrorMessage()
+            );
+        }
+        return staticServerAddress + avatarImgPath + destFileName;
     }
 
     /**
@@ -431,15 +479,20 @@ public class UserInfoApplicationService {
                     ResponseStatusEnum.USEREXISTED.getErrorMessage()
             );
         }
-        // 获取 空user
-        user = userFactory.createEmpty();
+        // 生成 userid
+        long userId = snowFlakeService.snowflakeId();
         // 加密明文密码
         EncryptAndDecryptService encryptAndDecryptService = new BCryptService();
         String encryptedPassword = encryptAndDecryptService.encrypt(password);
-        // 注册 user（填充必要数据）
-        user.register(nickname, encryptedPassword, gender, birthday, phone);
+        // now timestamp
+        long now = Instant.now().toEpochMilli();
+        // 获取 空user
+        user = new User(
+                userId, nickname, encryptedPassword, User.DEFAULTAVATAR, gender, birthday,
+                User.NORMALVIP, User.NOTREFERRER, User.DEFAULTPERSONALIZEDSIGNATURE, phone, now, now
+        );
         // 插入 db
-        userRepository.save(user);
+        userRepository.add(user);
         // 再次通过 phone 找到刚注册的用户信息（以便获得其 userId）
         user = userRepository.find(phone);
         // 返回 userid
@@ -493,50 +546,5 @@ public class UserInfoApplicationService {
         }
     }
 
-    /**
-     * 修改用头像
-     *
-     * @param userId userId
-     * @param avatar avatar
-     * @return 头像文件路径
-     */
-    public String changeAvatar(Long userId, MultipartFile avatar) {
 
-        // 保存头像文件到 nginx，返回 头像文件路径
-        String avatarPath = saveFile(avatar);
-        System.out.println("头像文件路径 --------" + avatarPath);
-        // 找到 user
-        User user = userRepository.find(userId);
-        // 修改头像路径
-        user.changeAvatarPath(avatarPath);
-        // 保存回db
-        userRepository.save(user);
-        // 返回头像路径
-        return user.getAvatarPath();
-    }
-
-    /**
-     * 保存文件到 nginx
-     *
-     * @param file file
-     * @return 保存的文件的文件名
-     */
-    private String saveFile(MultipartFile file) {
-        // 上传文件的文件名
-        String randomId = UUID.randomUUID().toString();
-        String fileName = file.getOriginalFilename();
-        String destFileName = randomId + fileName;
-        File dest = new File(uploadFilePath + '/' + destFileName);
-        System.out.println(uploadFilePath + '/' + destFileName);
-        try {
-            file.transferTo(dest);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new SaveFileFailException(
-                    ResponseStatusEnum.SAVEFILEFAILE.getErrorCode(),
-                    ResponseStatusEnum.SAVEFILEFAILE.getErrorMessage()
-            );
-        }
-        return staticServerAddress + avatarImgPath + destFileName;
-    }
 }

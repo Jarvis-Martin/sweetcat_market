@@ -47,12 +47,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
-//        if (user.getIsNew()) {
-//            System.out.println("some thind error in Repository save method");
-//            userMapper.insertOne(user);
-//        }
-//
         userMapper.update(user);
+    }
+
+    @Override
+    public void add(User user) {
+        userMapper.insertOne(user);
     }
 }
 

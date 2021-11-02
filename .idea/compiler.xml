@@ -8,11 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="sweetcat-gateway" />
-        <module name="sweetcat-commons" />
         <module name="sweetcat-app-carousel" />
         <module name="sweetcat-app-activity" />
-        <module name="sweetcat-user-info" />
         <module name="sweetcat-scaffold" />
+        <module name="sweetcat-commons" />
+        <module name="sweetcat-user-relationship" />
+        <module name="sweetcat-user-info" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -32,6 +33,7 @@
       <module name="sweetcat-scaffold" options="-parameters" />
       <module name="sweetcat-store" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
+      <module name="sweetcat-user-relationship" options="-parameters" />
       <module name="sweetcat_market" options="-parameters" />
     </option>
   </component>

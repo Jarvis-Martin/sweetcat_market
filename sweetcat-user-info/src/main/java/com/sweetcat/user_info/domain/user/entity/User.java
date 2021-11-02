@@ -20,8 +20,29 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor
-public class User extends BaseEntity<User> implements Serializable {
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+    /**
+     * 默认个性签名
+     */
+    public static String DEFAULTPERSONALIZEDSIGNATURE = "该用户什么也没留下喔";
+    /**
+     * 默认头像
+     */
+    public static String DEFAULTAVATAR = "http:localhost:80/img/icon_default_avatar.png";
+    /**
+     * 普通 vip
+     */
+    public static Integer NORMALVIP = 0;
+    /**
+     * 非鉴赏官身份
+     */
+    public static Integer NOTREFERRER = 0;
+    /**
+     * 鉴赏官身份
+     */
+    public static Integer REFERRER = 1;
+
     /**
      * 账号
      */
@@ -83,6 +104,10 @@ public class User extends BaseEntity<User> implements Serializable {
      */
     private Long updateTime;
 
+    public User(Long userId) {
+        this.userId = userId;
+    }
+
     public User(Long userId,
                 String nickname,
                 String password,
@@ -110,68 +135,49 @@ public class User extends BaseEntity<User> implements Serializable {
     }
 
     public void changeNickname(String nickname) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setNickname(nickname);
     }
 
     public void changePassword(String password) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setPassword(password);
     }
 
     public void changeAvatarPath(String avatarPath) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setAvatarPath(avatarPath);
     }
 
     public void changeGender(Integer gender) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setGender(gender);
     }
 
     public void changeBirthday(Long birthday) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setBirthday(birthday);
     }
 
     public void upgradeVipLevel() {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setVipLevel(this.vipLevel + 1);
     }
 
     public void demoteVipLevel() {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setVipLevel(this.vipLevel - 1);
     }
 
     public void becomeReferrer() {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setVipLevel(1);
     }
 
     public void changePersonalizedSignature(String personalizedSignature) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setPersonalizedSignature(personalizedSignature);
     }
 
     public void changeUpdateTime(Long updateTime) {
-        this.setIsNew(false);
-        this.setIsChanged(true);
         this.setUpdateTime(updateTime);
     }
 
     public void changePhone(String phone) {
         this.setPhone(phone);
     }
+
     private void setNickname(String nickname) {
         // 如果传入的 nickname 为 null，则设置默认的昵称： 蓝胖子xxx
         nickname = nickname == null ? "蓝胖子" + UUID.randomUUID().toString().substring(24) : nickname;
@@ -187,7 +193,7 @@ public class User extends BaseEntity<User> implements Serializable {
 
     private void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath == null || avatarPath.length() <= 0
-                ? "/img/icon_default_avatar.png" : avatarPath;
+                ? User.DEFAULTAVATAR : avatarPath;
     }
 
     private void setGender(Integer gender) {
@@ -212,7 +218,7 @@ public class User extends BaseEntity<User> implements Serializable {
 
     private void setPersonalizedSignature(String personalizedSignature) {
         this.personalizedSignature = personalizedSignature == null || personalizedSignature.length() <= 0
-                ? "该用户什么也没留下喔" : personalizedSignature;
+                ? User.DEFAULTPERSONALIZEDSIGNATURE : personalizedSignature;
     }
 
     private void setPhone(String phone) {
@@ -233,7 +239,7 @@ public class User extends BaseEntity<User> implements Serializable {
         this.updateTime = updateTime < 0 || updateTime > milli ? 0 : milli;
     }
 
-    public void register(String nickname, String password, Integer gender, Long birthday, String phone) {
+    private void register(String nickname, String password, Integer gender, Long birthday, String phone) {
         this.setNickname(nickname);
         this.setPassword(password);
         this.setAvatarPath(null);
