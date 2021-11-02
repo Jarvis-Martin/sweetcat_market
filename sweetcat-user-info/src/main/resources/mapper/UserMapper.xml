@@ -10,13 +10,14 @@
         <result column="birthday" jdbcType="BIGINT" property="birthday"/>
         <result column="vip_level" jdbcType="TINYINT" property="vipLevel"/>
         <result column="is_referrer" jdbcType="TINYINT" property="referrer"/>
+        <result column="phone" jdbcType="TINYINT" property="phone"/>
         <result column="personalized_signature" jdbcType="VARCHAR" property="personalizedSignature"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
         user_id
-        , nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, create_time, update_time
+        , nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, phone, create_time, update_time
     </sql>
     <insert id="insertOne">
         insert into t_user_info(nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer,
@@ -34,6 +35,7 @@
             vip_level              = #{vipLevel},
             is_referrer            = #{referrer},
             personalized_signature = #{personalizedSignature},
+            phone                  = #{phone},
             update_time            = #{updateTime}
         where user_id = #{userId}
     </update>

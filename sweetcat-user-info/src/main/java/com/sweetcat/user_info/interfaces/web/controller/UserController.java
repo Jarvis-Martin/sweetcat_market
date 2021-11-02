@@ -54,7 +54,7 @@ public class UserController {
     /**
      * 修改用户昵称
      *
-     * @param userId      userId
+     * @param userId   userId
      * @param nickName nickName
      */
     @GetMapping(value = "/{user_id}", params = {"nickName"})
@@ -191,6 +191,19 @@ public class UserController {
     }
 
     /**
+     * 向 phone 发送验证码
+     *
+     * @param phone phone
+     * @return
+     */
+    @GetMapping("/captcha")
+    public ResponseDTO getCaptcha(String phone) {
+        userInfoFacade.getCaptcha(phone);
+        String tip = "验证码以发送到您的手机，请注意查收喔";
+        return response(tip, "{}");
+    }
+
+    /**
      * 验证手机号 与 验证码是否配对
      *
      * @param phone   phone
@@ -205,6 +218,12 @@ public class UserController {
         return response(tip, "{}");
     }
 
+    /**
+     * 修改用头像
+     *
+     * @param userId userId
+     * @param avatar avatar
+     */
     @PostMapping("/{user_id}/avatar/upload")
     public Map changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") MultipartFile avatar) {
         String avatarPath = userInfoFacade.changeAvatar(userId, avatar);
@@ -214,6 +233,19 @@ public class UserController {
         response.put("status", "done");
         response.put("url", avatarPath);
         return response;
+    }
+
+    /**
+     * 修改手机号
+     *
+     * @param userId   userId
+     * @param phone phone
+     */
+    @PostMapping("/{user_id}/phone")
+    public ResponseDTO changePhone(@PathVariable("user_id") Long userId, String phone) {
+        userInfoFacade.changePhone(userId, phone);
+        String tip = "换绑手机号成功";
+        return response(tip, "{}");
     }
 
     /**

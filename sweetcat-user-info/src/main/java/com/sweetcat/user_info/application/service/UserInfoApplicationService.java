@@ -493,4 +493,18 @@ public class UserInfoApplicationService {
         }
         return staticServerAddress + avatarImgPath + destFileName;
     }
+
+    /**
+     * 修改手机号
+     * @param userId userId
+     * @param newPhone newPhone
+     */
+    public void changePhone(Long userId, String newPhone) {
+        // 找到 userid 对应信息
+        User user = userRepository.find(userId);
+        // 改变手机号
+        user.changePhone(newPhone);
+        // 保存修改
+        userRepository.save(user);
+    }
 }

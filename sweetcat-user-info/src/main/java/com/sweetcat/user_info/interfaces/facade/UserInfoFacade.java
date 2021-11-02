@@ -103,6 +103,15 @@ public class UserInfoFacade {
     }
 
     /**
+     * 发送验证码
+     *
+     * @param phone phone
+     */
+    public void getCaptcha(String phone) {
+        userInfoApplicationService.sendCaptcha(phone);
+    }
+
+    /**
      * 验证 phone 与 captcha 是否配对
      *
      * @param phone   phone
@@ -166,5 +175,14 @@ public class UserInfoFacade {
      */
     public String changeAvatar(Long userId, MultipartFile avatar) {
         return userInfoApplicationService.changeAvatar(userId, avatar);
+    }
+
+    /**
+     * 修改手机号
+     * @param userId userId
+     * @param newPhone newPhone
+     */
+    public void changePhone(Long userId, String newPhone) {
+        userInfoApplicationService.changePhone(userId, newPhone);
     }
 }

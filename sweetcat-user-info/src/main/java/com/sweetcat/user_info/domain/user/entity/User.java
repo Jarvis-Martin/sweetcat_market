@@ -169,6 +169,9 @@ public class User extends BaseEntity<User> implements Serializable {
         this.setUpdateTime(updateTime);
     }
 
+    public void changePhone(String phone) {
+        this.setPhone(phone);
+    }
     private void setNickname(String nickname) {
         // 如果传入的 nickname 为 null，则设置默认的昵称： 蓝胖子xxx
         nickname = nickname == null ? "蓝胖子" + UUID.randomUUID().toString().substring(24) : nickname;
