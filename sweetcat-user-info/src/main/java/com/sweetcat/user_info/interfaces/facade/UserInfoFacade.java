@@ -185,4 +185,15 @@ public class UserInfoFacade {
     public void changePhone(Long userId, String newPhone) {
         userInfoApplicationService.changePhone(userId, newPhone);
     }
+
+
+    /**
+     * 修改密码
+     *
+     * @param userId   userId
+     * @param password password
+     */
+    public void changePassword(Long userId, String password) {
+        userInfoApplicationService.changePassword(userId, password);
+    }
 }

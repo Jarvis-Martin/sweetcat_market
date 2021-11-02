@@ -100,6 +100,49 @@ public class UserController {
     }
 
     /**
+     * 修改用头像
+     *
+     * @param userId userId
+     * @param avatar avatar
+     */
+    @PostMapping("/{user_id}/avatar/upload")
+    public Map changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") MultipartFile avatar) {
+        String avatarPath = userInfoFacade.changeAvatar(userId, avatar);
+
+        HashMap<String, String> response = new HashMap<>(2);
+        response.put("name", avatarPath);
+        response.put("status", "done");
+        response.put("url", avatarPath);
+        return response;
+    }
+
+    /**
+     * 修改手机号
+     *
+     * @param userId userId
+     * @param phone  phone
+     */
+    @PostMapping("/{user_id}/phone")
+    public ResponseDTO changePhone(@PathVariable("user_id") Long userId, String phone) {
+        userInfoFacade.changePhone(userId, phone);
+        String tip = "换绑手机号成功";
+        return response(tip, "{}");
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param userId   userId
+     * @param password password
+     */
+    @PostMapping("/{user_id}/password")
+    public ResponseDTO changePassword(@PathVariable("user_id") Long userId, String password) {
+        userInfoFacade.changePassword(userId, password);
+        String tip = "修改密码成功";
+        return response(tip, "{}");
+    }
+
+    /**
      * 账号密码登录
      *
      * @param userId   userId
@@ -218,35 +261,6 @@ public class UserController {
         return response(tip, "{}");
     }
 
-    /**
-     * 修改用头像
-     *
-     * @param userId userId
-     * @param avatar avatar
-     */
-    @PostMapping("/{user_id}/avatar/upload")
-    public Map changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") MultipartFile avatar) {
-        String avatarPath = userInfoFacade.changeAvatar(userId, avatar);
-
-        HashMap<String, String> response = new HashMap<>(2);
-        response.put("name", avatarPath);
-        response.put("status", "done");
-        response.put("url", avatarPath);
-        return response;
-    }
-
-    /**
-     * 修改手机号
-     *
-     * @param userId   userId
-     * @param phone phone
-     */
-    @PostMapping("/{user_id}/phone")
-    public ResponseDTO changePhone(@PathVariable("user_id") Long userId, String phone) {
-        userInfoFacade.changePhone(userId, phone);
-        String tip = "换绑手机号成功";
-        return response(tip, "{}");
-    }
 
     /**
      * 通用的放回 ResponseDTO

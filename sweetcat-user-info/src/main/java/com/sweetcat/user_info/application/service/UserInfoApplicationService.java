@@ -92,6 +92,7 @@ public class UserInfoApplicationService {
 
     /**
      * 获得用户详情
+     *
      * @param userId userId
      * @return 用户详情
      */
@@ -102,7 +103,8 @@ public class UserInfoApplicationService {
 
     /**
      * 修改用户昵称
-     * @param userId userId
+     *
+     * @param userId      userId
      * @param newNickName newNickName
      */
     public void changeNickName(Long userId, String newNickName) {
@@ -118,6 +120,7 @@ public class UserInfoApplicationService {
 
     /**
      * 修改用户性别
+     *
      * @param userId userId
      * @param gender gender
      */
@@ -134,7 +137,8 @@ public class UserInfoApplicationService {
 
     /**
      * 修改用户 生日
-     * @param userId userId
+     *
+     * @param userId   userId
      * @param birthday birthday
      */
     public void changeBirthday(Long userId, Long birthday) {
@@ -150,7 +154,8 @@ public class UserInfoApplicationService {
 
     /**
      * 修改用户 个性签名
-     * @param userId userId
+     *
+     * @param userId                userId
      * @param personalizedSignature personalizedSignature
      */
     public void changePersonalizedSignature(Long userId, String personalizedSignature) {
@@ -161,6 +166,45 @@ public class UserInfoApplicationService {
         // 修改 个性签名
         user.changePersonalizedSignature(personalizedSignature);
         // 修改 昵称
+        userRepository.save(user);
+    }
+
+    /**
+     * 修改手机号
+     *
+     * @param userId   userId
+     * @param newPhone newPhone
+     */
+    public void changePhone(Long userId, String newPhone) {
+        // 验证 id 格式
+        verifyIdFormatService.verifyId(userId);
+        // 验证手机号格式
+        verifyPhoneFormatService.verifyPhoneFormat(newPhone);
+        // 找到 userid 对应信息
+        User user = userRepository.find(userId);
+        // 改变手机号
+        user.changePhone(newPhone);
+        // 保存修改
+        userRepository.save(user);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param userId   userId
+     * @param password password
+     */
+    public void changePassword(Long userId, String password) {
+        // 验证 id 格式
+        verifyIdFormatService.verifyId(userId);
+        // 根据 userId 查找 userInfo
+        User user = userRepository.find(userId);
+        // 加密明文密码
+        EncryptAndDecryptService encryptAndDecryptService = new BCryptService();
+        String encryptedPassword = encryptAndDecryptService.encrypt(password);
+        // 修改密码
+        user.changePassword(encryptedPassword);
+        // 保存
         userRepository.save(user);
     }
 
@@ -451,6 +495,7 @@ public class UserInfoApplicationService {
 
     /**
      * 修改用头像
+     *
      * @param userId userId
      * @param avatar avatar
      * @return 头像文件路径
@@ -472,6 +517,7 @@ public class UserInfoApplicationService {
 
     /**
      * 保存文件到 nginx
+     *
      * @param file file
      * @return 保存的文件的文件名
      */
@@ -480,8 +526,8 @@ public class UserInfoApplicationService {
         String randomId = UUID.randomUUID().toString();
         String fileName = file.getOriginalFilename();
         String destFileName = randomId + fileName;
-        File dest = new File(uploadFilePath +'/'+ destFileName);
-        System.out.println(uploadFilePath +'/'+ destFileName);
+        File dest = new File(uploadFilePath + '/' + destFileName);
+        System.out.println(uploadFilePath + '/' + destFileName);
         try {
             file.transferTo(dest);
         } catch (IOException e) {
@@ -492,19 +538,5 @@ public class UserInfoApplicationService {
             );
         }
         return staticServerAddress + avatarImgPath + destFileName;
-    }
-
-    /**
-     * 修改手机号
-     * @param userId userId
-     * @param newPhone newPhone
-     */
-    public void changePhone(Long userId, String newPhone) {
-        // 找到 userid 对应信息
-        User user = userRepository.find(userId);
-        // 改变手机号
-        user.changePhone(newPhone);
-        // 保存修改
-        userRepository.save(user);
     }
 }
