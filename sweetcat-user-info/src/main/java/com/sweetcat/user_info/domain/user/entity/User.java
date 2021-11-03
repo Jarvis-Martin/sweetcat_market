@@ -5,11 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.AuthenticateFailException;
-import com.sweetcat.user_info.domain.BaseEntity;
 import com.sweetcat.user_info.domain.user.exception.UserPropertyIlleagalException;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

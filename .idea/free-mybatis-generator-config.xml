@@ -147,6 +147,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_user_fans">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="TUserFansMapper" />
+              <option name="daoPackage" value="com.sweetcat.user_relationship.infrastructure.dao" />
+              <option name="daoPostfix" value="TUserFansMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="UserFansRelationshipPO" />
+              <option name="modelPackage" value="com.sweetcat.user_relationship.infrastructure.po" />
+              <option name="name" value="t_user_fans" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="user_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-relationship" />
+              <option name="tableName" value="t_user_fans" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_user_info">
           <value>
             <Config>

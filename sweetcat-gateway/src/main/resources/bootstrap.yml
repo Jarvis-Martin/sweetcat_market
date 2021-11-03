@@ -28,3 +28,7 @@ spring:
           uri: lb://sweetcat-user-info
           predicates:
             - Path=/api/v1/user/**
+        - id: sweetcat-user-relationship
+          uri: lb://sweetcat-user-relationship
+          predicates:
+            - Path=/api/v1/relationship/**
