@@ -2,7 +2,9 @@ package com.sweetcat.user_info.application.service;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.*;
+import com.sweetcat.user_info.application.event.publish.DomainEventPublisher;
 import com.sweetcat.user_info.domain.user.entity.User;
+import com.sweetcat.user_info.domain.user.event.CaptchaRequestedEvent;
 import com.sweetcat.user_info.domain.user.repository.UserRepository;
 import com.sweetcat.user_info.domain.user.service.authen_service.AuthenService;
 import com.sweetcat.user_info.domain.user.vo.UserDescriptor;
@@ -51,6 +53,12 @@ public class UserInfoApplicationService {
     private RedisService redisService;
     private VerifyPhoneFormatService verifyPhoneFormatService;
     private VerifyIdFormatService verifyIdFormatService;
+    private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
+        this.domainEventPublisher = domainEventPublisher;
+    }
 
     @Autowired
     public void setVerifyIdFormatService(VerifyIdFormatService verifyIdFormatService) {
@@ -348,20 +356,8 @@ public class UserInfoApplicationService {
         NumberCaptchaService numberCaptchaService = new NumberCaptchaService();
         String code = numberCaptchaService.generate(registerCaptchaLength);
         System.out.println("验证码：---------------" + code);
-        // 调用 SMS api 发送手机短信
-//        try {
-//            SmsService.send(code);
-//        } catch (ServerException e) {
-//            throw new SmsSendException(
-//                    ResponseStatusEnum.SMSSERVERDIDEERROR.getErrorCode(),
-//                    ResponseStatusEnum.SMSSERVERDIDEERROR.getErrorMessage()
-//            );
-//        } catch (ClientException e) {
-//            throw new SmsSendException(
-//                    ResponseStatusEnum.SMSCLIENTSIDEERROR.getErrorCode(),
-//                    ResponseStatusEnum.SMSCLIENTSIDEERROR.getErrorMessage()
-//            );
-//        }
+        // 触发 CaptchaRequestedEvent事件，触发发送短信操作
+        domainEventPublisher.syncSend("buyer_topic", new CaptchaRequestedEvent(phone));
         // 手机号存入 redis 60s
         redisService.setnx("phone:" + phone, phone, (long) (60));
         // 发送给用户的验证码存入 redis 5min

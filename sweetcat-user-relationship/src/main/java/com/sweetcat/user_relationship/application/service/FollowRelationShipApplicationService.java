@@ -1,12 +1,18 @@
 package com.sweetcat.user_relationship.application.service;
 
-import com.sweetcat.user_relationship.domain.follow_relationship.entity.FollowRelationShip;
-import com.sweetcat.user_relationship.domain.follow_relationship.repository.FollowRelationShipRepository;
+import com.sweetcat.commons.rpcdto.userinfo.UserInfoRpcDTO;
+import com.sweetcat.user_relationship.application.rpc.UserInfoRpc;
+import com.sweetcat.user_relationship.domain.followrelationship.entity.FollowRelationShip;
+import com.sweetcat.user_relationship.domain.followrelationship.entity.User;
+import com.sweetcat.user_relationship.domain.followrelationship.exception.UserLikedException;
+import com.sweetcat.user_relationship.domain.followrelationship.exception.UserNotLikedException;
+import com.sweetcat.user_relationship.domain.followrelationship.repository.FollowRelationShipRepository;
 import com.sweetcat.user_relationship.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -25,6 +31,12 @@ public class FollowRelationShipApplicationService {
     private Integer defaultFansLimit;
     private FollowRelationShipRepository followRelationShipRepository;
     private VerifyIdFormatService verifyIdFormatService;
+    private UserInfoRpc userInfoRpc;
+
+    @Autowired
+    public void setUserInfoRpc(UserInfoRpc userInfoRpc) {
+        this.userInfoRpc = userInfoRpc;
+    }
 
     @Autowired
     public void setFollowRelationShipRepository(FollowRelationShipRepository followRelationShipRepository) {
@@ -70,5 +82,60 @@ public class FollowRelationShipApplicationService {
         page = page < 0 ? 0 : page * limit;
         limit = limit < 0 ? this.defaultFansLimit : limit;
         return followRelationShipRepository.getSubscriberPage(userId, page, limit);
+    }
+
+    /**
+     * 发起关注
+     *
+     * @param userId       userId
+     * @param targetUserId targetUserId
+     */
+    public void like(Long userId, Long targetUserId) {
+        // 检查 id 格式
+        verifyIdFormatService.verifyId(userId, targetUserId);
+        // 根据 uesrId 和 targetUserId 查找记录
+        FollowRelationShip followRelationShip = followRelationShipRepository.find(userId, targetUserId);
+        // 记录已存在，说明已经关注过了，不做处理
+        if (followRelationShip != null) {
+            throw new UserLikedException("您已经关注过他了");
+        }
+        // rpc 获得 被关注用户信息
+        UserInfoRpcDTO targetUserInfoRpcDTO = userInfoRpc.getUserInfo(targetUserId);
+        // 获得被关注目标粉丝数
+        BigInteger targetFansNumber = followRelationShipRepository.getFansNumber(targetUserId);
+        // 创建被关注对象
+        User targetUser = new User(
+                targetUserInfoRpcDTO.getUserId(),
+                targetUserInfoRpcDTO.getAvatarPath(),
+                targetUserInfoRpcDTO.getNickname(),
+                targetUserInfoRpcDTO.getPersonalizedSignature(),
+                targetFansNumber
+        );
+        // followRelationShip创建记录对象
+        followRelationShip = new FollowRelationShip(userId);
+        // 发起关注
+        followRelationShip.like(targetUser);
+        // 添加进db
+        followRelationShipRepository.add(followRelationShip);
+    }
+
+    /**
+     * 取消关注
+     *
+     * @param userId userId
+     * @param targetUserId targetUserId
+     */
+    public void disLike(Long userId, Long targetUserId) {
+        // 检查id
+        verifyIdFormatService.verifyId(userId, targetUserId);
+        // 查找记录
+        FollowRelationShip followRelationShip = followRelationShipRepository.find(userId, targetUserId);
+        // userId 未关注 targetUserId，故 do nothing
+        if (followRelationShip == null) {
+            throw new UserNotLikedException("您还未关注它喔！");
+        }
+        // 取关
+        followRelationShip.disLike(new User(targetUserId));
+        followRelationShipRepository.remove(followRelationShip);
     }
 }

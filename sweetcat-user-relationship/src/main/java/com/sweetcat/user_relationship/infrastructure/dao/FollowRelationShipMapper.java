@@ -1,6 +1,6 @@
 package com.sweetcat.user_relationship.infrastructure.dao;
 
-import com.sweetcat.user_relationship.domain.follow_relationship.entity.FollowRelationShip;
+import com.sweetcat.user_relationship.domain.followrelationship.entity.FollowRelationShip;
 import com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,4 +39,20 @@ public interface FollowRelationShipMapper {
      * @return 关注数
      */
     BigInteger getSubscribeNumber(Long userId);
+
+    /**
+     * 获得 我关注的人的分页数据
+     *
+     * @param userId userId
+     * @param page   page
+     * @param limit  limit
+     * @return 关注数
+     */
+    List<FollowRelationshipPO> getSubscriberPage(Long userId, Integer page, Integer limit);
+
+    void insertOne(FollowRelationShip followRelationShip);
+
+    FollowRelationshipPO findOne(@Param("userId") Long userId, @Param("targetUserId") Long targetUserId);
+
+    void delete(FollowRelationShip followRelationShip);
 }

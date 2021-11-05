@@ -16,6 +16,7 @@
         <module>sweetcat-app-activity</module>
         <module>sweetcat-user-info</module>
         <module>sweetcat-user-relationship</module>
+        <module>sweetcat-api</module>
     </modules>
 
     <properties>

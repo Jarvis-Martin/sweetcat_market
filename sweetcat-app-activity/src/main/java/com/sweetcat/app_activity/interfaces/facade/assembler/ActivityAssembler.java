@@ -1,8 +1,8 @@
 package com.sweetcat.app_activity.interfaces.facade.assembler;
 
 import com.sweetcat.app_activity.domain.activity.entity.Activity;
-import com.sweetcat.app_activity.interfaces.facade.dto.ActivityDetailDTO;
-import com.sweetcat.app_activity.interfaces.facade.dto.ActivityPageDTO;
+import com.sweetcat.app_activity.interfaces.facade.restdto.ActivityDetailDTO;
+import com.sweetcat.app_activity.interfaces.facade.restdto.ActivityPageDTO;
 import com.sweetcat.commons.util.JSONUtils;
 import org.springframework.stereotype.Component;
 

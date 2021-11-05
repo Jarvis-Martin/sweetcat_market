@@ -1,26 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sweetcat.user_relationship.infrastructure.dao.FollowRelationShipMapper">
-  <resultMap id="BaseResultMap" type="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO">
-    <id column="user_id" jdbcType="BIGINT" property="userId" />
-    <id column="target_user_id" jdbcType="BIGINT" property="targetUserId" />
-    <result column="target_avatar" jdbcType="VARCHAR" property="targetAvatar" />
-    <result column="target_nickname" jdbcType="VARCHAR" property="targetNickname" />
-    <result column="target_personalized_signature" jdbcType="VARCHAR" property="targetPersonalizedSignature" />
-    <result column="create_time" jdbcType="BIGINT" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    user_id, target_user_id, target_avatar, target_nickname, target_personalized_signature, 
+    <resultMap id="BaseResultMap" type="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <id column="target_user_id" jdbcType="BIGINT" property="targetUserId"/>
+        <result column="target_avatar" jdbcType="VARCHAR" property="targetAvatar"/>
+        <result column="target_nickname" jdbcType="VARCHAR" property="targetNickname"/>
+        <result column="target_personalized_signature" jdbcType="VARCHAR" property="targetPersonalizedSignature"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id
+        , target_user_id, target_avatar, target_nickname, target_personalized_signature,
     create_time
-  </sql>
-  <select id="getFansPage" resultType="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from t_user_fans where user_id = #{userId} limit #{page}, #{limit}
-  </select>
-  <select id="getFansNumber" resultType="java.math.BigInteger">
-    select count(*) from t_user_fans where target_user_id = #{userId}
-  </select>
-  <select id="getSubscribeNumber" resultType="java.math.BigInteger">
-    select count(*) from t_user_fans where user_id = #{userId}
-  </select>
-
+    </sql>
+    <insert id="insertOne">
+        insert into t_user_fans(user_id, target_user_id, target_avatar, target_nickname, target_personalized_signature,
+                                create_time)
+        values (#{userId}, #{targetUser.userId}, #{targetUser.avatar}, #{targetUser.nickName},
+                #{targetUser.personalizedSignature}, #{createTime})
+    </insert>
+    <delete id="delete">
+        delete from t_user_fans
+        where user_id = #{userId}
+        and
+        target_user_id = #{targetUser.userId}
+    </delete>
+    <!-- 获得用户 的粉丝数量 -->
+    <select id="getFansNumber" resultType="java.math.BigInteger">
+        select count(*)
+        from t_user_fans
+        where target_user_id = #{userId}
+    </select>
+    <!-- 获得我关注的人的数量 -->
+    <select id="getSubscribeNumber" resultType="java.math.BigInteger">
+        select count(*)
+        from t_user_fans
+        where user_id = #{userId}
+    </select>
+    <!-- 获得用户粉丝列表 -->
+    <select id="getFansPage" resultType="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_fans where target_user_id = #{userId} limit #{page}, #{limit}
+    </select>
+    <!-- 获得用户关注的人的列表 -->
+    <select id="getSubscriberPage"
+            resultType="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_fans where user_id = #{userId} limit #{page}, #{limit}
+    </select>
+    <select id="findOne" resultType="com.sweetcat.user_relationship.infrastructure.po.FollowRelationshipPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_fans where user_id =#{userId} and target_user_id = #{targetUserId}
+    </select>
 </mapper>

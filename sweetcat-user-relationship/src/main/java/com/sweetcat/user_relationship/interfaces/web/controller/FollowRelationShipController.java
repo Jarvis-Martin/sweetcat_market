@@ -2,10 +2,10 @@ package com.sweetcat.user_relationship.interfaces.web.controller;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
-import com.sweetcat.user_relationship.domain.follow_relationship.entity.FollowRelationShip;
+import com.sweetcat.user_relationship.domain.followrelationship.entity.FollowRelationShip;
 import com.sweetcat.user_relationship.interfaces.facade.FollowRelationShipFacade;
 import com.sweetcat.user_relationship.interfaces.facade.assembler.FollowRelationShipAssembler;
-import com.sweetcat.user_relationship.interfaces.facade.dto.FollowRelationShipDTO;
+import com.sweetcat.user_relationship.interfaces.facade.restdto.FollowRelationShipDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +48,34 @@ public class FollowRelationShipController {
         fansList.put("data_list", fansDTOList);
         String tip = "一切OK！";
         return response(tip, fansList);
+    }
+
+    @GetMapping("/user/{user_id}/subscriber_list")
+    public ResponseDTO getSubscriberPage(@PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
+        List<FollowRelationShip> subscriberPage = followRelationShipFacade.getSubscriberPage(userId, page, limit);
+        List<FollowRelationShipDTO> subscriberDTOList = subscriberPage.stream().collect(
+                ArrayList<FollowRelationShipDTO>::new,
+                (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipDTO(followRelationShip)),
+                ArrayList::addAll
+        );
+        Map<String, Object> subscriberList = new HashMap<>(12);
+        subscriberList.put("data_list", subscriberDTOList);
+        String tip = "一切OK！";
+        return response(tip, subscriberList);
+    }
+
+    @GetMapping("/user/{user_id}/like/{target_user_id}")
+    public ResponseDTO like(@PathVariable("user_id") Long userId, @PathVariable("target_user_id") Long targetUserId) {
+        followRelationShipFacade.like(userId, targetUserId);
+
+        return response("关注成功！", "{}");
+    }
+
+    @GetMapping("/user/{user_id}/dislike/{target_user_id}")
+    public ResponseDTO disLike(@PathVariable("user_id") Long userId, @PathVariable("target_user_id") Long targetUserId) {
+        followRelationShipFacade.dislike(userId, targetUserId);
+
+        return response("取消关注成功！", "{}");
     }
 
     /**

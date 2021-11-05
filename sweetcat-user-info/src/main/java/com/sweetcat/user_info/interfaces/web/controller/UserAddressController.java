@@ -8,7 +8,7 @@ import com.sweetcat.user_info.domain.address.entity.UserAddress;
 import com.sweetcat.user_info.interfaces.UserAddressFacade;
 import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAddressAssembler;
-import com.sweetcat.user_info.interfaces.facade.dto.UserAddressDTO;
+import com.sweetcat.user_info.interfaces.facade.restdto.UserAddressDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +26,6 @@ import java.util.List;
 public class UserAddressController {
     private UserInfoFacade userInfoFacade;
     private UserAddressFacade userAddressFacade;
-
-    @Autowired
-    public void setUserAddressFacade(UserAddressFacade userAddressFacade) {
-        this.userAddressFacade = userAddressFacade;
-    }
 
     private UserAddressAssembler userAddressAssembler;
 

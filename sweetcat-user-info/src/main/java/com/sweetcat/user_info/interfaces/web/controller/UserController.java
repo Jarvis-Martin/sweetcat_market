@@ -5,7 +5,7 @@ import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.user_info.domain.user.entity.User;
 import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAssembler;
-import com.sweetcat.user_info.interfaces.facade.dto.UserInfoDTO;
+import com.sweetcat.user_info.interfaces.facade.restdto.UserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

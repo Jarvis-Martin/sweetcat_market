@@ -1,7 +1,7 @@
 package com.sweetcat.user_relationship.interfaces.facade.assembler;
 
-import com.sweetcat.user_relationship.domain.follow_relationship.entity.FollowRelationShip;
-import com.sweetcat.user_relationship.interfaces.facade.dto.FollowRelationShipDTO;
+import com.sweetcat.user_relationship.domain.followrelationship.entity.FollowRelationShip;
+import com.sweetcat.user_relationship.interfaces.facade.restdto.FollowRelationShipDTO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,12 +14,11 @@ import org.springframework.stereotype.Component;
 public class FollowRelationShipAssembler {
     public FollowRelationShipDTO converterToFollowRelationShipDTO(FollowRelationShip followRelationShip) {
         FollowRelationShipDTO followRelationShipDTO = new FollowRelationShipDTO();
-        followRelationShipDTO.setUserId(followRelationShip.getFollowRelationShipKey().getUserId());
-        followRelationShipDTO.setTargetUserId(followRelationShip.getFollowRelationShipKey().getTargetUserId());
-        followRelationShipDTO.setTargetAvatar(followRelationShip.getTargetAvatar());
-        followRelationShipDTO.setTargetNickname(followRelationShip.getTargetNickname());
-        followRelationShipDTO.setTargetPersonalizedSignature(followRelationShip.getTargetPersonalizedSignature());
-        followRelationShipDTO.setFansNumber(followRelationShip.getFansNumber());
+        followRelationShipDTO.setTargetUserId(followRelationShip.getUserId());
+        followRelationShipDTO.setTargetAvatar(followRelationShip.getTargetUser().getAvatar());
+        followRelationShipDTO.setTargetNickname(followRelationShip.getTargetUser().getNickName());
+        followRelationShipDTO.setTargetPersonalizedSignature(followRelationShip.getTargetUser().getPersonalizedSignature());
+        followRelationShipDTO.setFansNumber(followRelationShip.getTargetUser().getFansNumber());
         followRelationShipDTO.setCreateTime(followRelationShip.getCreateTime());
         return followRelationShipDTO;
     }

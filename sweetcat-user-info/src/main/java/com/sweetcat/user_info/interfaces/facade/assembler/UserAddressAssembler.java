@@ -1,7 +1,7 @@
 package com.sweetcat.user_info.interfaces.facade.assembler;
 
 import com.sweetcat.user_info.domain.address.entity.UserAddress;
-import com.sweetcat.user_info.interfaces.facade.dto.UserAddressDTO;
+import com.sweetcat.user_info.interfaces.facade.restdto.UserAddressDTO;
 import org.springframework.stereotype.Component;
 
 /**

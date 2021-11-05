@@ -1,7 +1,7 @@
 package com.sweetcat.app_carousel.interfaces.facade.assembler;
 
 import com.sweetcat.app_carousel.domain.carousel.entity.Carousel;
-import com.sweetcat.app_carousel.interfaces.facade.dto.CarouselDTO;
+import com.sweetcat.app_carousel.interfaces.facade.restdto.CarouselDTO;
 import org.springframework.stereotype.Component;
 
 /**
