@@ -21,7 +21,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/relationship/")
+@RequestMapping("/relationship")
 public class FollowRelationShipController {
     private FollowRelationShipFacade followRelationShipFacade;
     private FollowRelationShipAssembler followRelationShipAssembler;
@@ -41,7 +41,7 @@ public class FollowRelationShipController {
         List<FollowRelationShip> fansPage = followRelationShipFacade.getFansPage(userId, page, limit);
         List<FollowRelationShipDTO> fansDTOList = fansPage.stream().collect(
                 ArrayList<FollowRelationShipDTO>::new,
-                (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipDTO(followRelationShip)),
+                (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipFansDTO(followRelationShip)),
                 ArrayList::addAll
         );
         Map<String, Object> fansList = new HashMap<>(12);
@@ -55,7 +55,7 @@ public class FollowRelationShipController {
         List<FollowRelationShip> subscriberPage = followRelationShipFacade.getSubscriberPage(userId, page, limit);
         List<FollowRelationShipDTO> subscriberDTOList = subscriberPage.stream().collect(
                 ArrayList<FollowRelationShipDTO>::new,
-                (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipDTO(followRelationShip)),
+                (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipSubscriberDTO(followRelationShip)),
                 ArrayList::addAll
         );
         Map<String, Object> subscriberList = new HashMap<>(12);

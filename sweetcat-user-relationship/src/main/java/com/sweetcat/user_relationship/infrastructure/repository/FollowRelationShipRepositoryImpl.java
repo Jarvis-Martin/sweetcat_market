@@ -55,10 +55,18 @@ public class FollowRelationShipRepositoryImpl implements FollowRelationShipRepos
         return followRelationshipPOPage.stream().collect(
                 ArrayList<FollowRelationShip>::new,
                 (con, followRelationshipPO) -> {
+                    // 获得我的粉丝数
+                    BigInteger myFansNumber = followRelationShipMapper.getFansNumber(followRelationshipPO.getTargetUserId());
+                    // 设置粉丝数
+                    followRelationshipPO.setFansNumber(myFansNumber);
                     // 获得目标用户粉丝数
                     BigInteger targetUserFansNumber = followRelationShipMapper.getFansNumber(followRelationshipPO.getTargetUserId());
                     // 给 followRelationshipPO 设置目标粉丝数
-                    followRelationshipPO.setFansNumber(targetUserFansNumber);
+                    followRelationshipPO.setTargetFansNumber(targetUserFansNumber);
+                    // 判断targetuserid 是否以及被关注
+                    FollowRelationshipPO one = followRelationShipMapper.findOne(userId, followRelationshipPO.getTargetUserId());
+                    int isLike = one == null ? 0 : 1;
+                    followRelationshipPO.setIsLiked(isLike);
                     con.add(this.followRelationShipFactory.create(followRelationshipPO));
                 },
                 ArrayList::addAll
@@ -71,10 +79,15 @@ public class FollowRelationShipRepositoryImpl implements FollowRelationShipRepos
         return followRelationshipPOPage.stream().collect(
                 ArrayList<FollowRelationShip>::new,
                 (con, followRelationshipPO) -> {
+                    // 获得我的粉丝数
+                    BigInteger myFansNumber = followRelationShipMapper.getFansNumber(followRelationshipPO.getTargetUserId());
+                    // 设置粉丝数
+                    followRelationshipPO.setFansNumber(myFansNumber);
                     // 获得目标用户粉丝数
                     BigInteger targetUserFansNumber = followRelationShipMapper.getFansNumber(followRelationshipPO.getTargetUserId());
                     // 给 followRelationshipPO 设置目标粉丝数
-                    followRelationshipPO.setFansNumber(targetUserFansNumber);
+                    followRelationshipPO.setTargetFansNumber(targetUserFansNumber);
+                    followRelationshipPO.setIsLiked(1);
                     con.add(this.followRelationShipFactory.create(followRelationshipPO));
                 },
                 ArrayList::addAll

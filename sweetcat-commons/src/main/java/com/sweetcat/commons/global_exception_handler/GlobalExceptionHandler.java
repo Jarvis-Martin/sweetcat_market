@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
 //        return new ResponseDTO(
 //                "500",
 //                e.getMessage(),
-//                "服务器出错",
+//                e.getMessage(),
 //                JSONUtils.fromJson("{}", Object.class));
 //    }
 }

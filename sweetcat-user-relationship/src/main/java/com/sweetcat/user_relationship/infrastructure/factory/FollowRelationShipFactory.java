@@ -15,15 +15,28 @@ import org.springframework.stereotype.Component;
 public class FollowRelationShipFactory {
 
     public FollowRelationShip create(FollowRelationshipPO followRelationshipPO) {
+        // user
         User user = new User(
-                followRelationshipPO.getTargetUserId(),
-                followRelationshipPO.getTargetAvatar(),
-                followRelationshipPO.getTargetNickname(),
-                followRelationshipPO.getTargetPersonalizedSignature(),
+                followRelationshipPO.getUserId(),
+                followRelationshipPO.getUserAvatar(),
+                followRelationshipPO.getUserNickName(),
+                followRelationshipPO.getUserPersonalizedSignature(),
                 followRelationshipPO.getFansNumber()
         );
-
-        return new FollowRelationShip(followRelationshipPO.getUserId(), user, followRelationshipPO.getCreateTime());
+        // targetUser
+        User targetUser = new User(
+                followRelationshipPO.getTargetUserId(),
+                followRelationshipPO.getTargetAvatar(),
+                followRelationshipPO.getTargetNickName(),
+                followRelationshipPO.getTargetPersonalizedSignature(),
+                followRelationshipPO.getTargetFansNumber()
+        );
+        return new FollowRelationShip(
+                user,
+                targetUser,
+                followRelationshipPO.getIsLiked(),
+                followRelationshipPO.getCreateTime()
+        );
     }
 
 }

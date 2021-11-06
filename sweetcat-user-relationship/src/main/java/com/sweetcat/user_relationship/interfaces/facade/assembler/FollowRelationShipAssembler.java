@@ -12,13 +12,25 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FollowRelationShipAssembler {
-    public FollowRelationShipDTO converterToFollowRelationShipDTO(FollowRelationShip followRelationShip) {
+    public FollowRelationShipDTO converterToFollowRelationShipFansDTO(FollowRelationShip followRelationShip) {
         FollowRelationShipDTO followRelationShipDTO = new FollowRelationShipDTO();
-        followRelationShipDTO.setTargetUserId(followRelationShip.getUserId());
-        followRelationShipDTO.setTargetAvatar(followRelationShip.getTargetUser().getAvatar());
-        followRelationShipDTO.setTargetNickname(followRelationShip.getTargetUser().getNickName());
-        followRelationShipDTO.setTargetPersonalizedSignature(followRelationShip.getTargetUser().getPersonalizedSignature());
+        followRelationShipDTO.setUserId(followRelationShip.getUser().getUserId().toString());
+        followRelationShipDTO.setAvatar(followRelationShip.getUser().getAvatar());
+        followRelationShipDTO.setNickName(followRelationShip.getUser().getNickName());
+        followRelationShipDTO.setPersonalizedSignature(followRelationShip.getUser().getPersonalizedSignature());
+        followRelationShipDTO.setFansNumber(followRelationShip.getUser().getFansNumber());
+        followRelationShipDTO.setIsLiked(followRelationShip.getIsLiked());
+        followRelationShipDTO.setCreateTime(followRelationShip.getCreateTime());
+        return followRelationShipDTO;
+    }
+    public FollowRelationShipDTO converterToFollowRelationShipSubscriberDTO(FollowRelationShip followRelationShip) {
+        FollowRelationShipDTO followRelationShipDTO = new FollowRelationShipDTO();
+        followRelationShipDTO.setUserId(followRelationShip.getTargetUser().getUserId().toString());
+        followRelationShipDTO.setAvatar(followRelationShip.getTargetUser().getAvatar());
+        followRelationShipDTO.setNickName(followRelationShip.getTargetUser().getNickName());
+        followRelationShipDTO.setPersonalizedSignature(followRelationShip.getTargetUser().getPersonalizedSignature());
         followRelationShipDTO.setFansNumber(followRelationShip.getTargetUser().getFansNumber());
+        followRelationShipDTO.setIsLiked(followRelationShip.getIsLiked());
         followRelationShipDTO.setCreateTime(followRelationShip.getCreateTime());
         return followRelationShipDTO;
     }

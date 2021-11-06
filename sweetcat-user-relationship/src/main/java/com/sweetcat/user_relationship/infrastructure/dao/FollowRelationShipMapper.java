@@ -30,7 +30,7 @@ public interface FollowRelationShipMapper {
      * @param userId userId
      * @return 粉丝数
      */
-    BigInteger getFansNumber(Long userId);
+    BigInteger getFansNumber(@Param("userId") Long userId);
 
     /**
      * 获得 关注数
@@ -38,7 +38,7 @@ public interface FollowRelationShipMapper {
      * @param userId userId
      * @return 关注数
      */
-    BigInteger getSubscribeNumber(Long userId);
+    BigInteger getSubscribeNumber(@Param("userId") Long userId);
 
     /**
      * 获得 我关注的人的分页数据
@@ -48,7 +48,7 @@ public interface FollowRelationShipMapper {
      * @param limit  limit
      * @return 关注数
      */
-    List<FollowRelationshipPO> getSubscriberPage(Long userId, Integer page, Integer limit);
+    List<FollowRelationshipPO> getSubscriberPage(@Param("userId") Long userId, @Param("page") Integer page, @Param("limit") Integer limit);
 
     void insertOne(FollowRelationShip followRelationShip);
 

@@ -12,14 +12,13 @@ import java.time.Instant;
  * @Date: 2021-11-2021/11/3-15:41
  * @Version: 1.0
  */
-@Getter
 @AllArgsConstructor
 public class FollowRelationShip {
 
     /**
      * 当前userid
      */
-    private Long userId;
+    private User user;
 
 
     /**
@@ -28,22 +27,38 @@ public class FollowRelationShip {
     private User targetUser;
 
     /**
+     * 是否以及关注过它: 0 未关注; 1 已关注
+     */
+    private Integer isLiked;
+
+    /**
      * 关注时间
      */
     private Long createTime;
 
-    public FollowRelationShip(Long userId) {
-        if (userId == null || userId < 0) {
-            throw new UserPropertyIlleagalException(
-                    "创建事件格式错误。"
-            );
-        }
-        this.userId = userId;
+    public User getUser() {
+        return user;
+    }
+
+    public User getTargetUser() {
+        return targetUser;
+    }
+
+    public Integer getIsLiked() {
+        return isLiked;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public FollowRelationShip(User user) {
+        this.user = user;
         this.setCreateTime(Instant.now().toEpochMilli());
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setCreateTime(Long createTime) {

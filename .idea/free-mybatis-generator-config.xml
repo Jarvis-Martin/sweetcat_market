@@ -152,11 +152,11 @@
             <Config>
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
-              <option name="daoName" value="TUserFansMapper" />
+              <option name="daoName" value="TUserFansTUserFansMapper" />
               <option name="daoPackage" value="com.sweetcat.user_relationship.infrastructure.dao" />
-              <option name="daoPostfix" value="TUserFansMapper" />
+              <option name="daoPostfix" value="Mapper" />
               <option name="modelMvnPath" value="src/main/java" />
-              <option name="modelName" value="UserFansRelationshipPO" />
+              <option name="modelName" value="TUserFans" />
               <option name="modelPackage" value="com.sweetcat.user_relationship.infrastructure.po" />
               <option name="name" value="t_user_fans" />
               <option name="overrideJava" value="true" />

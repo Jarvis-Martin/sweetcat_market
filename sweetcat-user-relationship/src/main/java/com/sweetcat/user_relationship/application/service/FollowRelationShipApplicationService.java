@@ -99,6 +99,18 @@ public class FollowRelationShipApplicationService {
         if (followRelationShip != null) {
             throw new UserLikedException("您已经关注过他了");
         }
+        // rpc 获得我自己
+        UserInfoRpcDTO myUserInfoRPCDTO = userInfoRpc.getUserInfo(userId);
+
+        BigInteger myFansNumber = followRelationShipRepository.getFansNumber(targetUserId);
+        // 创建被关注对象
+        User myUserInfo = new User(
+                myUserInfoRPCDTO.getUserId(),
+                myUserInfoRPCDTO.getAvatarPath(),
+                myUserInfoRPCDTO.getNickname(),
+                myUserInfoRPCDTO.getPersonalizedSignature(),
+                myFansNumber
+        );
         // rpc 获得 被关注用户信息
         UserInfoRpcDTO targetUserInfoRpcDTO = userInfoRpc.getUserInfo(targetUserId);
         // 获得被关注目标粉丝数
@@ -112,7 +124,7 @@ public class FollowRelationShipApplicationService {
                 targetFansNumber
         );
         // followRelationShip创建记录对象
-        followRelationShip = new FollowRelationShip(userId);
+        followRelationShip = new FollowRelationShip(myUserInfo);
         // 发起关注
         followRelationShip.like(targetUser);
         // 添加进db
