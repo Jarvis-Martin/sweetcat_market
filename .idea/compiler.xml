@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="sweetcat-gateway" />
+        <module name="sweetcat-store-info" />
         <module name="sweetcat-app-carousel" />
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
@@ -37,6 +38,7 @@
       <module name="sweetcat-gateway" options="-parameters" />
       <module name="sweetcat-scaffold" options="-parameters" />
       <module name="sweetcat-store" options="-parameters" />
+      <module name="sweetcat-store-info" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />

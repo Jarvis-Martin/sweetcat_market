@@ -19,6 +19,7 @@
         <module>sweetcat-api</module>
         <module>sweetcat-app-feedback</module>
         <module>sweetcat-takeaway-man-info</module>
+        <module>sweetcat-store-info</module>
     </modules>
 
     <properties>
