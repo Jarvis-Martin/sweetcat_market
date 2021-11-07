@@ -22,8 +22,12 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
     @Value("${max-activity}")
     private Integer maxActivity;
 
-    @Autowired
     private ActivityRepository activityRepository;
+
+    @Autowired
+    public void setActivityRepository(ActivityRepository activityRepository) {
+        this.activityRepository = activityRepository;
+    }
 
     @Override
     public List<Activity> getActivitPage(Integer page, Integer limit, Long curTimeStamp) {

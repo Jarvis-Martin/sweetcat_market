@@ -12,6 +12,7 @@
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
         <module name="sweetcat-scaffold" />
+        <module name="sweetcat-app-feedback" />
         <module name="sweetcat-commons" />
         <module name="sweetcat-user-relationship" />
         <module name="sweetcat-user-info" />
@@ -28,6 +29,7 @@
       <module name="sweetcat-api" options="-parameters" />
       <module name="sweetcat-app-activity" options="-parameters" />
       <module name="sweetcat-app-carousel" options="-parameters" />
+      <module name="sweetcat-app-feedback" options="-parameters" />
       <module name="sweetcat-cms" options="-parameters" />
       <module name="sweetcat-commons" options="-parameters" />
       <module name="sweetcat-dto" options="-parameters" />

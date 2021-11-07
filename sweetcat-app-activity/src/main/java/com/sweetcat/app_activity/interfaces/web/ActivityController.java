@@ -25,12 +25,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/app")
 public class ActivityController {
-
-    @Autowired
     private ActivityAssembler activityAssembler;
+    private AppActivityFacade facade;
 
     @Autowired
-    private AppActivityFacade facade;
+    public void setActivityAssembler(ActivityAssembler activityAssembler) {
+        this.activityAssembler = activityAssembler;
+    }
+
+    @Autowired
+    public void setFacade(AppActivityFacade facade) {
+        this.facade = facade;
+    }
 
     /**
      * 返回分页数据

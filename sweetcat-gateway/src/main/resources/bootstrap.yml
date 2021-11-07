@@ -24,6 +24,10 @@ spring:
           uri: lb://sweetcat-app-activity
           predicates:
             - Path=/api/v1/app/activity_list/**
+        - id: sweetcat-app-feedback
+          uri: lb://sweetcat-app-feedback
+          predicates:
+            - Path=/api/v1/feedback/**
         - id: sweetcat-user-info
           uri: lb://sweetcat-user-info
           predicates:
