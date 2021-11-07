@@ -147,6 +147,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_takeaway_man_info">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="TakeawayManInfoMapper" />
+              <option name="daoPackage" value="com.sweetcat.takeawaymaninfo.infrastructure.dao" />
+              <option name="daoPostfix" value="TakeawayManInfoMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="ManInfoPO" />
+              <option name="modelPackage" value="com.sweetcat.takeawaymaninfo.infrastructure.po" />
+              <option name="name" value="t_takeaway_man_info" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="man_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-man-info" />
+              <option name="tableName" value="t_takeaway_man_info" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_user_address">
           <value>
             <Config>

@@ -18,6 +18,7 @@
         <module>sweetcat-user-relationship</module>
         <module>sweetcat-api</module>
         <module>sweetcat-app-feedback</module>
+        <module>sweetcat-takeaway-man-info</module>
     </modules>
 
     <properties>
