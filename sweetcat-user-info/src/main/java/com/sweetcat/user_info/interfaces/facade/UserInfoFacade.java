@@ -173,7 +173,7 @@ public class UserInfoFacade {
      * @param userId userId
      * @param avatar avatar
      */
-    public String changeAvatar(Long userId, MultipartFile avatar) {
+    public String changeAvatar(Long userId, String avatar) {
         return userInfoApplicationService.changeAvatar(userId, avatar);
     }
 

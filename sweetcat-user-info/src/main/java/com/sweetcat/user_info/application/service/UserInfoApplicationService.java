@@ -224,15 +224,11 @@ public class UserInfoApplicationService {
      * @param avatar avatar
      * @return 头像文件路径
      */
-    public String changeAvatar(Long userId, MultipartFile avatar) {
-
-        // 保存头像文件到 nginx，返回 头像文件路径
-        String avatarPath = saveFile(avatar);
-        System.out.println("头像文件路径 --------" + avatarPath);
+    public String changeAvatar(Long userId, String avatar) {
         // 找到 user
         User user = userRepository.find(userId);
         // 修改头像路径
-        user.changeAvatarPath(avatarPath);
+        user.changeAvatarPath(avatar);
         // 保存回db
         userRepository.save(user);
         // 返回头像路径

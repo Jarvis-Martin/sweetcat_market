@@ -106,14 +106,10 @@ public class UserController {
      * @param avatar avatar
      */
     @PostMapping("/{user_id}/avatar/upload")
-    public Map changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") MultipartFile avatar) {
-        String avatarPath = userInfoFacade.changeAvatar(userId, avatar);
+    public ResponseDTO changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") String avatar) {
+        userInfoFacade.changeAvatar(userId, avatar);
 
-        HashMap<String, String> response = new HashMap<>(2);
-        response.put("name", avatarPath);
-        response.put("status", "done");
-        response.put("url", avatarPath);
-        return response;
+        return response("修改成功", "{}");
     }
 
     /**
