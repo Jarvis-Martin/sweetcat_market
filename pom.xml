@@ -20,6 +20,8 @@
         <module>sweetcat-app-feedback</module>
         <module>sweetcat-takeaway-man-info</module>
         <module>sweetcat-store-info</module>
+        <module>sweetcat-store-commodity</module>
+        <module>sweetcat-app-fileupload</module>
     </modules>
 
     <properties>

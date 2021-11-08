@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: sweetcat-app-fileupload
+        namespace: dev
+        group: SWEETCAT_GROUP
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True

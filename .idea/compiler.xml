@@ -7,17 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sweetcat-gateway" />
         <module name="sweetcat-store-info" />
         <module name="sweetcat-app-carousel" />
+        <module name="sweetcat-scaffold" />
+        <module name="sweetcat-user-relationship" />
+        <module name="sweetcat-takeaway-man-info" />
+        <module name="sweetcat-app-fileupload" />
+        <module name="sweetcat-gateway" />
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
-        <module name="sweetcat-scaffold" />
         <module name="sweetcat-app-feedback" />
         <module name="sweetcat-commons" />
-        <module name="sweetcat-user-relationship" />
         <module name="sweetcat-user-info" />
-        <module name="sweetcat-takeaway-man-info" />
+        <module name="sweetcat-store-commodity" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -32,12 +34,14 @@
       <module name="sweetcat-app-activity" options="-parameters" />
       <module name="sweetcat-app-carousel" options="-parameters" />
       <module name="sweetcat-app-feedback" options="-parameters" />
+      <module name="sweetcat-app-fileupload" options="-parameters" />
       <module name="sweetcat-cms" options="-parameters" />
       <module name="sweetcat-commons" options="-parameters" />
       <module name="sweetcat-dto" options="-parameters" />
       <module name="sweetcat-gateway" options="-parameters" />
       <module name="sweetcat-scaffold" options="-parameters" />
       <module name="sweetcat-store" options="-parameters" />
+      <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
