@@ -27,7 +27,7 @@ public class AppFeedbackController {
     }
 
     @PostMapping("/upload")
-    public ResponseDTO addAFeedback(Long userId, String content, @RequestParam("feedbackPics") MultipartFile[] feedbackPics, Long feedbackTime) {
+    public ResponseDTO addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
         feedbackFacade.addAFeedback(userId, content, feedbackPics, feedbackTime);
 
         String tip = "反馈成功，客服人员将及时为您处理，请稍等";

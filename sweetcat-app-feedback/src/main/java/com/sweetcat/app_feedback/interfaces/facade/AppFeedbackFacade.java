@@ -20,7 +20,7 @@ public class AppFeedbackFacade {
         this.feedbackApplicationService = feedbackApplicationService;
     }
 
-    public void addAFeedback(Long userId, String content, MultipartFile[] feedbackPics, Long feedbackTime) {
+    public void addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
         feedbackApplicationService.addAFeedback(userId, content, feedbackPics, feedbackTime);
     }
 }

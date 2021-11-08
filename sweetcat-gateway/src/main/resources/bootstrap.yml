@@ -16,22 +16,33 @@ spring:
             refresh: True
     gateway:
       routes:
+        # 应用管理域：轮播图上下文
         - id: sweetcat-app-carousel
           uri: lb://sweetcat-app-carousel
           predicates:
             - Path=/api/v1/app/carousel/**
+        # 应用管理域：活动上下文
         - id: sweetcat-app-activity
           uri: lb://sweetcat-app-activity
           predicates:
             - Path=/api/v1/app/activity_list/**
+        # 应用管理域：反馈上下问
         - id: sweetcat-app-feedback
           uri: lb://sweetcat-app-feedback
           predicates:
             - Path=/api/v1/feedback/**
+        # 应用管理域：文件上传上下问
+        - id: sweetcat-app-fileupload
+          uri: lb://sweetcat-app-fileupload
+          predicates:
+            - Path=/api/v1/file/**
+
+        # 买家域：用户基本信息上下问
         - id: sweetcat-user-info
           uri: lb://sweetcat-user-info
           predicates:
             - Path=/api/v1/user/**
+        # 买家域：用户关系上下文
         - id: sweetcat-user-relationship
           uri: lb://sweetcat-user-relationship
           predicates:

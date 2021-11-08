@@ -1,5 +1,6 @@
 package com.sweetcat.app_feedback.application.service;
 
+import com.google.gson.Gson;
 import com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback;
 import com.sweetcat.app_feedback.domain.feedback.repository.AppFeedbackRepository;
 import com.sweetcat.app_feedback.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
@@ -62,13 +63,11 @@ public class AppFeedbackApplicationService {
         this.feedbackRepository = feedbackRepository;
     }
 
-    public void addAFeedback(Long userId, String content, MultipartFile[] feedbackPics, Long feedbackTime) {
+    public void addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
         // 检查 userId
         verifyIdFormatService.verifyIds(userId);
-        // 报错 反馈配图，并获得文件名数组
-        List<String> strings = saveFile(feedbackPics);
         // 反馈配图文件名转 json 字符串，以备存入db
-        String feedbackPicsStr = JSONUtils.toJson(strings);
+        String feedbackPicsStr = JSONUtils.toJson(feedbackPics);
         // 验证 反馈事件格式
         verifyTimeStampFormatService.verifyTimeStamps(feedbackTime);
         // 获得 feedbackId
