@@ -1,13 +1,15 @@
-package com.sweetcat.user_relationship.application.rpc;
+package com.sweetcat.storecommodity.application.rpc;
 
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
+import org.springframework.stereotype.Component;
 
 /**
- * @Author: Coder_Jarvis
- * @Description:
- * @Date: 2021-11-2021/11/5-10:00
- * @Version: 1.0
+ * @author: Coder_Jarvis
+ * @description:
+ * @date: 2021-11-2021/11/9-19:45
+ * @version: 1.0
  */
+@Component
 public interface UserInfoRpc {
     /**
      * 获得用户详情

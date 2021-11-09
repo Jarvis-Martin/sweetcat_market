@@ -1,16 +1,16 @@
-package com.sweetcat.storecommodity.infrastructure.po;
+package com.sweetcat.storecommodity.interfaces.facade.restdto;
+
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
-
-import lombok.Data;
 
 /**
  * t_store_commodity_comment
  * @author 
  */
 @Data
-public class CommodityCommentPO implements Serializable {
+public class CommodityCommentDTO implements Serializable {
     /**
      * 评论编号
      */

@@ -57,4 +57,4 @@ spring:
         - id: sweetcat-store-commodity
           uri: lb://sweetcat-store-commodity
           predicates:
-            - Path=/api/v1/commodity/**
+            - Path=/api/v1/commodity/**,/api/v1/comment/**

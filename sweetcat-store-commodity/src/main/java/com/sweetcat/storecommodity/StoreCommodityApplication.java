@@ -18,6 +18,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients("com.sweetcat.api")
 public class StoreCommodityApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(StoreCommodityApplication.class, args);
     }

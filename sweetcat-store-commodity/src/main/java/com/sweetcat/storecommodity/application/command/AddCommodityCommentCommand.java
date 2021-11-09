@@ -1,21 +1,23 @@
-package com.sweetcat.storecommodity.infrastructure.po;
+package com.sweetcat.storecommodity.application.command;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
-import lombok.Data;
-
 /**
- * t_store_commodity_comment
- * @author 
+ * @author: Coder_Jarvis
+ * @description:
+ * @date: 2021-11-2021/11/9-19:39
+ * @version: 1.0
  */
-@Data
-public class CommodityCommentPO implements Serializable {
-    /**
-     * 评论编号
-     */
-    private Long commentId;
-
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AddCommodityCommentCommand {
     /**
      * 发布评论的用户id
      */
@@ -45,6 +47,4 @@ public class CommodityCommentPO implements Serializable {
      * 发布时间
      */
     private Long createTime;
-
-    private static final long serialVersionUID = 1L;
 }

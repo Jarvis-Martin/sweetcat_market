@@ -49,7 +49,16 @@ spring:
               sharding-column: commodity_id
               algorithm-expression: t_store_commodity_info$->{commodity_id % 2}
           key-generator:
-            column: commodity_id
+            column: comment_id
+            type: SNOWFLAKE
+        t_store_commodity_comment:
+          actual-data-nodes: ds$->{0..1}.t_store_commodity_comment$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: comment_id
+              algorithm-expression: t_store_commodity_comment$->{comment_id % 2}
+          key-generator:
+            column: comment_id
             type: SNOWFLAKE
 # 由于 spring acuator 健康检查会导致服务启动报错：
 # org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid

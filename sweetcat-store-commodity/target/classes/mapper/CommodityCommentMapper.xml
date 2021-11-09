@@ -1,111 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sweetcat.storecommodity.infrastructure.dao.CommodityCommentMapper">
-  <resultMap id="BaseResultMap" type="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
-    <id column="comment_id" jdbcType="BIGINT" property="commentId" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="content_pics" jdbcType="VARCHAR" property="contentPics" />
-    <result column="stars" jdbcType="TINYINT" property="stars" />
-    <result column="create_time" jdbcType="BIGINT" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    comment_id, user_id, commodity_id, content, content_pics, stars, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_store_commodity_comment
-    where comment_id = #{commentId,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_store_commodity_comment
-    where comment_id = #{commentId,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" keyColumn="comment_id" keyProperty="commentId" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO" useGeneratedKeys="true">
-    insert into t_store_commodity_comment (user_id, commodity_id, content, 
-      content_pics, stars, create_time
-      )
-    values (#{userId,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
-      #{contentPics,jdbcType=VARCHAR}, #{stars,jdbcType=TINYINT}, #{createTime,jdbcType=BIGINT}
-      )
-  </insert>
-  <insert id="insertSelective" keyColumn="comment_id" keyProperty="commentId" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO" useGeneratedKeys="true">
-    insert into t_store_commodity_comment
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="commodityId != null">
-        commodity_id,
-      </if>
-      <if test="content != null">
-        content,
-      </if>
-      <if test="contentPics != null">
-        content_pics,
-      </if>
-      <if test="stars != null">
-        stars,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="commodityId != null">
-        #{commodityId,jdbcType=BIGINT},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="contentPics != null">
-        #{contentPics,jdbcType=VARCHAR},
-      </if>
-      <if test="stars != null">
-        #{stars,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
-    update t_store_commodity_comment
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="commodityId != null">
-        commodity_id = #{commodityId,jdbcType=BIGINT},
-      </if>
-      <if test="content != null">
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="contentPics != null">
-        content_pics = #{contentPics,jdbcType=VARCHAR},
-      </if>
-      <if test="stars != null">
-        stars = #{stars,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=BIGINT},
-      </if>
-    </set>
-    where comment_id = #{commentId,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
-    update t_store_commodity_comment
-    set user_id = #{userId,jdbcType=BIGINT},
-      commodity_id = #{commodityId,jdbcType=BIGINT},
-      content = #{content,jdbcType=VARCHAR},
-      content_pics = #{contentPics,jdbcType=VARCHAR},
-      stars = #{stars,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=BIGINT}
-    where comment_id = #{commentId,jdbcType=BIGINT}
-  </update>
+    <resultMap id="BaseResultMap" type="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
+        <id column="comment_id" jdbcType="BIGINT" property="commentId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="content_pics" jdbcType="VARCHAR" property="contentPics" typeHandler="com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="stars" jdbcType="TINYINT" property="stars"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        comment_id, user_id, commodity_id, content, content_pics, stars, create_time
+    </sql>
+    <insert id="insertOne">
+        insert into t_store_commodity_comment(<include refid="Base_Column_List"/>) values (#{commentId}, #{userId},
+        #{commodityId}, #{content},
+        #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{stars}, #{createTime})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_store_commodity_comment
+        where comment_id = #{commentId}
+    </delete>
+    <select id="findByCommentId"
+            resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_commodity_comment where comment_id = #{commentId}
+    </select>
+    <select id="findPageByCommodityId"
+            resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_commodity_comment where #{commodityId} limit #{page}, #{limit}
+    </select>
+
 </mapper>

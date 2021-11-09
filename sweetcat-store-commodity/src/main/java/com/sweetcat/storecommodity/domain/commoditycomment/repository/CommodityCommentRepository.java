@@ -1,21 +1,23 @@
-package com.sweetcat.storecommodity.infrastructure.dao;
+package com.sweetcat.storecommodity.domain.commoditycomment.repository;
 
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
-import com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@Mapper
-public interface CommodityCommentMapper {
+/**
+ * @Author: Coder_Jarvis
+ * @Description:
+ * @Date: 2021-11-2021/11/9-17:24
+ * @Version: 1.0
+ */
+public interface CommodityCommentRepository {
     /**
      * find commodity comment by commentId
      *
      * @param commentId commentId
      * @return
      */
-    CommodityCommentPO findByCommentId(Long commentId);
+    CommodityComment findByCommentId(Long commentId);
 
     /**
      * find commodity comment by commodityId
@@ -25,19 +27,20 @@ public interface CommodityCommentMapper {
      * @param limit
      * @return
      */
-    List<CommodityCommentPO> findPageByCommodityId(@Param("commodityId") Long commodityId, @Param("page") Integer page, @Param("limit") Integer limit);
+    List<CommodityComment> findPageByCommodityId(Long commodityId, Integer page, Integer limit);
 
     /**
      * add a commodity comment
      *
      * @param commodityComment commodityComment
      */
-    void insertOne(CommodityComment commodityComment);
+    void addOne(CommodityComment commodityComment);
 
     /**
      * remove a commodity comment
      *
      * @param commodityComment commodityComment
      */
-    void deleteOne(CommodityComment commodityComment);
+    void removeOne(CommodityComment commodityComment);
+
 }
