@@ -1,0 +1,72 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: sweetcat-store-info
+        group: SWEETCAT_GROUP
+        namespace: dev
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_store_info0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_store_info1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    # 分库配置 ， 根据good_id分库
+    sharding:
+      default-database-strategy:
+        inline:
+          sharding-column: store_id
+          algorithm-expression: ds$->{store_id % 2}
+
+      # 分表配置，根据member_id分表
+      tables:
+        t_store_info:
+          actual-data-nodes: ds$->{0..1}.t_store_info$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: store_id
+              algorithm-expression: t_store_info$->{store_id % 2}
+          key-generator:
+            column: store_id
+            type: SNOWFLAKE
+        t_store_address:
+          actual-data-nodes: ds$->{0..1}.t_store_address$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: store_id
+              algorithm-expression: t_store_address$->{store_id % 2}
+          key-generator:
+            column: store_id
+            type: SNOWFLAKE
+
+
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

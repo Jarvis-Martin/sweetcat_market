@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.storeinfo.infrastructure.dao.StoreAddressMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.storeinfo.infrastructure.po.StoreAddressPO">
+        <id column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
+        <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="town_name" jdbcType="VARCHAR" property="townName"/>
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        store_id, province_name, city_name, area_name, town_name, detail_address, create_time, update_time
+    </sql>
+    <insert id="insertOne">
+        insert into t_store_address(<include refid="Base_Column_List"/>) values (#{storeId}, #{provinceName},
+        #{cityName}, #{areaName}, #{townName}, #{detailAddress}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="getById" resultType="com.sweetcat.storeinfo.infrastructure.po.StoreAddressPO">
+        select <include refid="Base_Column_List" /> from t_store_address where store_id = #{storeId}
+    </select>
+
+</mapper>

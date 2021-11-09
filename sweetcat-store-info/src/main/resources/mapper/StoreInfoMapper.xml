@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.storeinfo.infrastructure.dao.StoreInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.storeinfo.infrastructure.po.StoreInfoPO">
+        <id column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="principal_name" jdbcType="VARCHAR" property="principalName"/>
+        <result column="principal_phone" jdbcType="CHAR" property="principalPhone"/>
+        <result column="main_business" jdbcType="VARCHAR" property="mainBusiness"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        store_id
+        , store_name, principal_name, principal_phone, main_business, `type`, create_time,
+    update_time
+    </sql>
+    <insert id="insertOne">
+        insert into t_store_info(<include refid="Base_Column_List"/>) values (#{storeId}, #{storeName},
+        #{principalName}, #{principalPhone}, #{mainBusiness}, #{type}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="find" resultType="com.sweetcat.storeinfo.infrastructure.po.StoreInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_info where store_id = #{storeId}
+    </select>
+    <select id="isExisted" resultType="java.lang.Long">
+        select store_id from t_store_info where store_id = #{storeId}
+    </select>
+
+</mapper>

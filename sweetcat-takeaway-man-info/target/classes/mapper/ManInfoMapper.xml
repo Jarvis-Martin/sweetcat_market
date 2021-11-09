@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.takeawaymaninfo.infrastructure.dao.ManInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.takeawaymaninfo.infrastructure.po.ManInfoPO">
+        <id column="man_id" jdbcType="BIGINT" property="manId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="CHAR" property="phone"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        man_id
+        , `name`, phone, create_time
+    </sql>
+    <insert id="addOne">
+        insert into t_takeaway_man_info(<include refid="Base_Column_List"/>) values(#{manId}, #{name}, #{phone},
+        #{createTime})
+    </insert>
+    <!-- find manInfo by manId-->
+    <select id="getOne" resultMap="BaseResultMap" resultType="com.sweetcat.takeawaymaninfo.infrastructure.po.ManInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_takeaway_man_info where man_id = #{manId}
+    </select>
+
+</mapper>

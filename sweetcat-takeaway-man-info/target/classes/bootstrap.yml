@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: sweetat-takeaway-main-info
+        namespace: dev
+        group: SWEETCAT_GROUP
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: test
+      password: mysqladmin123
+      url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_takeaway_man_info?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+      max-active: 40 # 数据库最大活跃连接数
