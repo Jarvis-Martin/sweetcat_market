@@ -1,9 +1,9 @@
 package com.sweetcat.user_info.interfaces.rpc;
 
+import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.user_info.domain.user.entity.User;
 import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAssembler;
-import com.sweetcat.user_info.interfaces.facade.restdto.UserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +39,9 @@ public class UserRpcController {
      * @return 用户详情
      */
     @GetMapping("/{user_id}")
-    public UserInfoDTO getUserInfo(@PathVariable("user_id") Long userId) {
+    public UserInfoRpcDTO getUserInfo(@PathVariable("user_id") Long userId) {
         User user = userInfoFacade.getUserInfo(userId);
 
-        return userAssembler.converter2UserInfoDTO(user);
+        return new UserInfoRpcDTO(userId, user.getNickname(), user.getAvatarPath(), user.getPersonalizedSignature());
     }
 }

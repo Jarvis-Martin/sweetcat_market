@@ -54,6 +54,7 @@ public class GlobalExceptionHandler {
                 "验证码已经发送过了，请稍后",
                 JSONUtils.fromJson("{}", Object.class));
     }
+
     @ExceptionHandler(ParameterException.class)
     @ResponseBody
     public ResponseDTO ParameterExceptionHandler(ParameterException e) {
@@ -94,22 +95,33 @@ public class GlobalExceptionHandler {
                 JSONUtils.fromJson("{}", Object.class));
     }
 
-    @ExceptionHandler(UesrExistedException.class)
+    @ExceptionHandler(UserExistedException.class)
     @ResponseBody
-    public ResponseDTO UesrExistedExceptionHandler(UesrExistedException e) {
+    public ResponseDTO UesrExistedExceptionHandler(UserExistedException e) {
         return new ResponseDTO(
                 e.getCode().toString(),
                 e.getMessage(),
                 "改手机号已经注册过了，直接登录吧",
                 JSONUtils.fromJson("{}", Object.class));
     }
-    @ExceptionHandler(UesrNotExistedException.class)
+
+    @ExceptionHandler(UserNotExistedException.class)
     @ResponseBody
-    public ResponseDTO UesrNotExistedExceptionHandler(UesrNotExistedException e) {
+    public ResponseDTO UesrNotExistedExceptionHandler(UserNotExistedException e) {
         return new ResponseDTO(
                 e.getCode().toString(),
                 e.getMessage(),
                 "该用户还没有注册喔，前往注册一个吧",
+                JSONUtils.fromJson("{}", Object.class));
+    }
+
+    @ExceptionHandler(StoreNotExistedException.class)
+    @ResponseBody
+    public ResponseDTO StoreNotExistedExceptionHandler(StoreNotExistedException e) {
+        return new ResponseDTO(
+                e.getCode().toString(),
+                e.getMessage(),
+                "该店铺尚未注册",
                 JSONUtils.fromJson("{}", Object.class));
     }
 

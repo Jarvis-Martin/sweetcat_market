@@ -47,3 +47,14 @@ spring:
           uri: lb://sweetcat-user-relationship
           predicates:
             - Path=/api/v1/relationship/**
+
+        #  卖家域：商家基本信息上下文
+        - id: sweetcat-store-info
+          uri: lb://sweetcat-store-info
+          predicates:
+            - Path=/api/v1/store/**
+        #  卖家域：卖家商品上下文
+        - id: sweetcat-store-commodity
+          uri: lb://sweetcat-store-commodity
+          predicates:
+            - Path=/api/v1/commodity/**

@@ -1,6 +1,6 @@
 package com.sweetcat.user_relationship.application.service;
 
-import com.sweetcat.commons.rpcdto.userinfo.UserInfoRpcDTO;
+import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.user_relationship.application.rpc.UserInfoRpc;
 import com.sweetcat.user_relationship.domain.followrelationship.entity.FollowRelationShip;
 import com.sweetcat.user_relationship.domain.followrelationship.entity.User;

@@ -1,6 +1,6 @@
 package com.sweetcat.user_relationship.application.rpc;
 
-import com.sweetcat.commons.rpcdto.userinfo.UserInfoRpcDTO;
+import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 
 /**
  * @Author: Coder_Jarvis

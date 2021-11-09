@@ -1,7 +1,7 @@
 package com.sweetcat.user_relationship.infrastructure.rpc;
 
-import com.sweetcat.api.UserInfoClient;
-import com.sweetcat.commons.rpcdto.userinfo.UserInfoRpcDTO;
+import com.sweetcat.api.client.UserInfoClient;
+import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.user_relationship.application.rpc.UserInfoRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

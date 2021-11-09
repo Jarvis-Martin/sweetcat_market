@@ -309,7 +309,7 @@ public class UserInfoApplicationService {
         User user = userRepository.find(phone);
         // 用户不存在，通知用户前往注册
         if (user == null) {
-            throw new UesrNotExistedException(
+            throw new UserNotExistedException(
                     ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
             );
@@ -372,7 +372,7 @@ public class UserInfoApplicationService {
         User user = userRepository.find(phone);
         // 用户已注册，通知用户前往登录
         if (user != null) {
-            throw new UesrExistedException(
+            throw new UserExistedException(
                     ResponseStatusEnum.USEREXISTED.getErrorCode(),
                     ResponseStatusEnum.USEREXISTED.getErrorMessage()
             );
@@ -393,7 +393,7 @@ public class UserInfoApplicationService {
         User user = userRepository.find(phone);
         // 该手机号尚未注册
         if (user == null) {
-            throw new UesrNotExistedException(
+            throw new UserNotExistedException(
                     ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
             );
@@ -466,7 +466,7 @@ public class UserInfoApplicationService {
         User user = userRepository.find(phone);
         // 该手机号已注册
         if (user != null) {
-            throw new UesrExistedException(
+            throw new UserExistedException(
                     ResponseStatusEnum.USEREXISTED.getErrorCode(),
                     ResponseStatusEnum.USEREXISTED.getErrorMessage()
             );

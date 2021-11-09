@@ -24,4 +24,11 @@ public interface StoreInfoRepository {
      * @param storeInfo storeInfo
      */
     void addOne(StoreInfo storeInfo);
+
+    /**
+     * 根据 storeId 判断 store 是否已存在
+     * @param storeId storeId
+     * @return
+     */
+    Boolean storeIsExisted(Long storeId);
 }

@@ -1,4 +1,4 @@
-package com.sweetcat.commons.rpcdto.userinfo;
+package com.sweetcat.api.rpcdto.userinfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

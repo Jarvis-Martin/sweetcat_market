@@ -57,6 +57,7 @@ public class StoreInfoApplicationService {
         return storeInfoRepository.find(storeId);
     }
 
+    // 添加 store
     public void addOne(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime) {
         // 检查 店铺名，开店人姓名， 主营业务mainBusiness可以为null
         verifyString(storeName, principalName);
@@ -86,5 +87,17 @@ public class StoreInfoApplicationService {
                 );
             }
         });
+    }
+
+    /**
+     * 查询 storeId 是否存在
+     * @param storeId storeId
+     * @return storeId 是否存在
+     */
+    public Boolean storeIsExisted(Long storeId) {
+        // 检查 storeId 格式
+        verifyIdFormatService.verifyIds(storeId);
+        // 查询 storeId 是否以及存在
+        return storeInfoRepository.storeIsExisted(storeId);
     }
 }

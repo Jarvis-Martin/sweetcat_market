@@ -42,4 +42,8 @@ public class StoreInfoFacade {
     public void addOne(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime) {
         storeInfoApplicationService.addOne(storeName, principalName, principalPhone, mainBusiness, type, createTime);
     }
+
+    public Boolean storeIsExisted(Long storeId) {
+        return storeInfoApplicationService.storeIsExisted(storeId);
+    }
 }

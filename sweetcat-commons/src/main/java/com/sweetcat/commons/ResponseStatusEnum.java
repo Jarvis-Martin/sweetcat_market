@@ -35,6 +35,10 @@ public enum ResponseStatusEnum {
     /**
      * 用户账户不存在
      */
+    STORENOTEXISTED("A0201", "该店铺不存在"),
+    /**
+     * 用户账户不存在
+     */
     CAPTCHASENDED("S0246", "验证码已发送"),
     /**
      * 验证吗超时

@@ -50,4 +50,10 @@ public class StoreInfoRepositoryImpl implements StoreInfoRepository {
     public void addOne(StoreInfo storeInfo) {
         storeInfoMapper.insertOne(storeInfo);
     }
+
+    @Override
+    public Boolean storeIsExisted(Long storeId) {
+        Long isExisted = storeInfoMapper.isExisted(storeId);
+        return isExisted != null;
+    }
 }
