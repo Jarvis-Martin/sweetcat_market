@@ -20,6 +20,7 @@
         <module name="sweetcat-commons" />
         <module name="sweetcat-user-info" />
         <module name="sweetcat-store-commodity" />
+        <module name="sweetcat-app-geography" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -35,6 +36,7 @@
       <module name="sweetcat-app-carousel" options="-parameters" />
       <module name="sweetcat-app-feedback" options="-parameters" />
       <module name="sweetcat-app-fileupload" options="-parameters" />
+      <module name="sweetcat-app-geography" options="-parameters" />
       <module name="sweetcat-cms" options="-parameters" />
       <module name="sweetcat-commons" options="-parameters" />
       <module name="sweetcat-dto" options="-parameters" />

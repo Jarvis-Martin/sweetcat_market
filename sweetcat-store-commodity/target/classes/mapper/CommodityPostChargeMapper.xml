@@ -1,87 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sweetcat.storecommodity.infrastructure.dao.CommodityPostChargeMapper">
-  <resultMap id="BaseResultMap" type="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
-    <id column="charge_id" jdbcType="BIGINT" property="chargeId" />
-    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
-    <result column="store_id" jdbcType="BIGINT" property="storeId" />
-    <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
-    <result column="post_charge" jdbcType="DECIMAL" property="postCharge" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    charge_id, commodity_id, store_id, province_code, post_charge
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_store_commodity_post_charge
-    where charge_id = #{chargeId,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_store_commodity_post_charge
-    where charge_id = #{chargeId,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" keyColumn="charge_id" keyProperty="chargeId" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO" useGeneratedKeys="true">
-    insert into t_store_commodity_post_charge (commodity_id, store_id, province_code, 
-      post_charge)
-    values (#{commodityId,jdbcType=BIGINT}, #{storeId,jdbcType=BIGINT}, #{provinceCode,jdbcType=VARCHAR}, 
-      #{postCharge,jdbcType=DECIMAL})
-  </insert>
-  <insert id="insertSelective" keyColumn="charge_id" keyProperty="chargeId" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO" useGeneratedKeys="true">
-    insert into t_store_commodity_post_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="commodityId != null">
-        commodity_id,
-      </if>
-      <if test="storeId != null">
-        store_id,
-      </if>
-      <if test="provinceCode != null">
-        province_code,
-      </if>
-      <if test="postCharge != null">
-        post_charge,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="commodityId != null">
-        #{commodityId,jdbcType=BIGINT},
-      </if>
-      <if test="storeId != null">
-        #{storeId,jdbcType=BIGINT},
-      </if>
-      <if test="provinceCode != null">
-        #{provinceCode,jdbcType=VARCHAR},
-      </if>
-      <if test="postCharge != null">
-        #{postCharge,jdbcType=DECIMAL},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
-    update t_store_commodity_post_charge
-    <set>
-      <if test="commodityId != null">
-        commodity_id = #{commodityId,jdbcType=BIGINT},
-      </if>
-      <if test="storeId != null">
-        store_id = #{storeId,jdbcType=BIGINT},
-      </if>
-      <if test="provinceCode != null">
-        province_code = #{provinceCode,jdbcType=VARCHAR},
-      </if>
-      <if test="postCharge != null">
-        post_charge = #{postCharge,jdbcType=DECIMAL},
-      </if>
-    </set>
-    where charge_id = #{chargeId,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
-    update t_store_commodity_post_charge
-    set commodity_id = #{commodityId,jdbcType=BIGINT},
-      store_id = #{storeId,jdbcType=BIGINT},
-      province_code = #{provinceCode,jdbcType=VARCHAR},
-      post_charge = #{postCharge,jdbcType=DECIMAL}
-    where charge_id = #{chargeId,jdbcType=BIGINT}
-  </update>
+    <resultMap id="BaseResultMap" type="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
+        <id column="charge_id" jdbcType="BIGINT" property="chargeId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode"/>
+        <result column="post_charge" jdbcType="DECIMAL" property="postCharge"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        charge_id, commodity_id, store_id, province_code, post_charge, create_time, update_time
+    </sql>
+    <insert id="addOne">
+        insert into t_store_commodity_post_charge(<include refid="Base_Column_List"/>) values (#{chargeId},
+        #{commodityId}, #{storeId}, #{provinceCode}, #{postCharge}, #{createTime}, #{updateTime})
+    </insert>
+    <delete id="delete">
+        delete
+        from t_store_commodity_post_charge
+        where commodity_id = #{commodityId}
+          and province_code = #{provinceCode}
+    </delete>
+    <select id="find"
+            resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_commodity_post_charge
+        where commodity_id = #{commodityId}
+        and province_code = #{provinceCode}
+    </select>
+    <select id="findByPostChargeId"
+            resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_commodity_post_charge
+        where charge_id = #{chargeId}
+    </select>
+
 </mapper>

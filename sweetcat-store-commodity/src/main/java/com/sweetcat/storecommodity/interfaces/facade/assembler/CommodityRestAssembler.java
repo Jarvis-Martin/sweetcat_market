@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Version: 1.0
  */
 @Component
-public class CommodityAssembler {
+public class CommodityRestAssembler {
     public CommodityInfoDTO converterToCommodityInfoDTO(CommodityInfo commodityInfo) {
         CommodityInfoDTO commodityInfoDTO = new CommodityInfoDTO();
         commodityInfoDTO.setCommodityId(commodityInfo.getCommodityId().toString());

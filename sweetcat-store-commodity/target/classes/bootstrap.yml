@@ -60,6 +60,15 @@ spring:
           key-generator:
             column: comment_id
             type: SNOWFLAKE
+        t_store_commodity_post_charge:
+          actual-data-nodes: ds$->{0..1}.t_store_commodity_post_charge$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: charge_id
+              algorithm-expression: t_store_commodity_post_charge$->{charge_id % 2}
+          key-generator:
+            column: charge_id
+            type: SNOWFLAKE
 # 由于 spring acuator 健康检查会导致服务启动报错：
 # org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
 # 但不影响服务注册注册

@@ -75,6 +75,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_app_geography">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="GeographyMapper" />
+              <option name="daoPackage" value="generate" />
+              <option name="daoPostfix" value="GeographyMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="GeographyPO" />
+              <option name="modelPackage" value="com.sweetcat.geography.infrastructure.po" />
+              <option name="name" value="t_app_geography" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="address_code" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-geography" />
+              <option name="tableName" value="t_app_geography" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_cms_activity">
           <value>
             <Config>

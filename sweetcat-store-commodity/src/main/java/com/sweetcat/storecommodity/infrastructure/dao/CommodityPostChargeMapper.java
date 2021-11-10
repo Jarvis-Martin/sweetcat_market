@@ -1,17 +1,40 @@
 package com.sweetcat.storecommodity.infrastructure.dao;
 
+import com.sweetcat.storecommodity.domain.commonditypostcharge.entity.CommodityPostCharge;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityPostChargePO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface CommodityPostChargeMapper {
-    int deleteByPrimaryKey(Long chargeId);
+    /**
+     * find post charge recorde by commodityId and provinceCode
+     *
+     * @param commodityId  commodityId
+     * @param provinceCode provinceCode
+     * @return
+     */
+    CommodityPostChargePO find(@Param("commodityId") Long commodityId, @Param("provinceCode") String provinceCode);
 
-    int insert(CommodityPostChargePO record);
+    /**
+     * remove post charge recorde by commodity id and province code
+     *
+     * @param charge
+     */
+    void delete(CommodityPostCharge charge);
 
-    int insertSelective(CommodityPostChargePO record);
+    /**
+     * find post charge recorde by chargeId
+     *
+     * @param chargeId chargeId
+     * @return
+     */
+    CommodityPostChargePO findByPostChargeId(Long chargeId);
 
-    CommodityPostChargePO selectByPrimaryKey(Long chargeId);
-
-    int updateByPrimaryKeySelective(CommodityPostChargePO record);
-
-    int updateByPrimaryKey(CommodityPostChargePO record);
+    /**
+     * 添加一个记录
+     *
+     * @param charge charge
+     */
+    void addOne(CommodityPostCharge charge);
 }

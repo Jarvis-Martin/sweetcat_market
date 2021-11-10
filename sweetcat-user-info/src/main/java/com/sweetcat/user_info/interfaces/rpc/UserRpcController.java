@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/user/rpc")
+@RequestMapping("/rpc/user")
 public class UserRpcController {
     private UserInfoFacade userInfoFacade;
     private UserAssembler userAssembler;

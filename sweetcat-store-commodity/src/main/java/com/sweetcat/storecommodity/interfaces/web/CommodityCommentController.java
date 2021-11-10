@@ -5,7 +5,7 @@ import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storecommodity.application.command.AddCommodityCommentCommand;
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
 import com.sweetcat.storecommodity.interfaces.facade.CommodityCommentFacade;
-import com.sweetcat.storecommodity.interfaces.facade.assembler.CommodityCommentAssembler;
+import com.sweetcat.storecommodity.interfaces.facade.assembler.CommodityCommentRestAssembler;
 import com.sweetcat.storecommodity.interfaces.facade.restdto.CommodityCommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +24,10 @@ import java.util.List;
 @RequestMapping("/comment")
 public class CommodityCommentController {
     private CommodityCommentFacade commentFacade;
-    private CommodityCommentAssembler commentAssembler;
+    private CommodityCommentRestAssembler commentAssembler;
 
     @Autowired
-    public void setCommentAssembler(CommodityCommentAssembler commentAssembler) {
+    public void setCommentAssembler(CommodityCommentRestAssembler commentAssembler) {
         this.commentAssembler = commentAssembler;
     }
 

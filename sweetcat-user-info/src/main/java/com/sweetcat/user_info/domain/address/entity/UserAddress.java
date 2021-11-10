@@ -1,11 +1,11 @@
 package com.sweetcat.user_info.domain.address.entity;
 
+import com.sweetcat.user_info.domain.address.exception.UserAddressPropertyException;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.regex.Pattern;
-
-import com.sweetcat.user_info.domain.address.exception.UserAddressPropertyException;
-import lombok.Getter;
 
 /**
  * t_user_address
@@ -91,17 +91,17 @@ public class UserAddress implements Serializable {
                        Long createTime,
                        Long updateTime) {
         this.addressId = addressId;
-        this.userId = userId;
-        this.receiverName = receiverName;
-        this.receiverPhone = receiverPhone;
-        this.provinceName = provinceName;
-        this.cityName = cityName;
-        this.areaName = areaName;
-        this.townName = townName;
-        this.detailAddress = detailAddress;
-        this.defaultAddress = defaultAddress;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
+        this.setUserId(userId);
+        this.setReceiverName(receiverName);
+        this.setReceiverPhone(receiverPhone);
+        this.setProvinceName(provinceName);
+        this.setCityName(cityName);
+        this.setAreaName(areaName);
+        this.setTownName(townName);
+        this.setDetailAddress(detailAddress);
+        this.setDefaultAddress(defaultAddress);
+        this.setCreateTime(createTime);
+        this.setUpdateTime(updateTime);
     }
 
     private void setUserId(Long userId) {

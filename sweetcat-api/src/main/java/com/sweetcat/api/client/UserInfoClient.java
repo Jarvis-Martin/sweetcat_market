@@ -22,6 +22,6 @@ public interface UserInfoClient {
      * @param userId userId
      * @return 用户详情
      */
-    @GetMapping("/user/rpc/{user_id}")
+    @GetMapping("/rpc/user/{user_id}")
     UserInfoRpcDTO getUserInfo(@PathVariable("user_id") Long userId);
 }

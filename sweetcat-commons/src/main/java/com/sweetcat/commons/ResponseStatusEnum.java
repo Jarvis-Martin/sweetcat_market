@@ -25,6 +25,14 @@ public enum ResponseStatusEnum {
      */
     PARAMETERFORMATILLEGALITY("c6000", "用户提供的参数格式"),
     /**
+     * 记录已存在
+     */
+    RECORDEEXISTED("A0201", "记录已存在"),
+    /**
+     * 记录已存在
+     */
+    RECORDENOTEXISTED("A0201", "记录不存在"),
+    /**
      * 用户账户不存在
      */
     USEREXISTED("A0201", "用户账户已存在"),
@@ -32,6 +40,10 @@ public enum ResponseStatusEnum {
      * 用户账户不存在
      */
     USERNOTEXISTED("A0201", "用户账户不存在"),
+    /**
+     * 商品邮费记录不存在
+     */
+    POSTCHARGENOTEXISTED("A0201", "商品邮费记录不存在"),
     /**
      * 该店铺不存在
      */

@@ -22,6 +22,7 @@
         <module>sweetcat-store-info</module>
         <module>sweetcat-store-commodity</module>
         <module>sweetcat-app-fileupload</module>
+        <module>sweetcat-app-geography</module>
     </modules>
 
     <properties>

@@ -5,7 +5,7 @@ import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storecommodity.application.command.AddStoreCommodityCommand;
 import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
 import com.sweetcat.storecommodity.interfaces.facade.CommodityInfoFacade;
-import com.sweetcat.storecommodity.interfaces.facade.assembler.CommodityAssembler;
+import com.sweetcat.storecommodity.interfaces.facade.assembler.CommodityRestAssembler;
 import com.sweetcat.storecommodity.interfaces.facade.restdto.CommodityInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +24,11 @@ import java.util.List;
 @RequestMapping("/commodity")
 public class CommodityInfoController {
     private CommodityInfoFacade commodityInfoFacade;
-    private CommodityAssembler commodityAssembler;
+    private CommodityRestAssembler commodityRestAssembler;
 
     @Autowired
-    public void setCommodityAssembler(CommodityAssembler commodityAssembler) {
-        this.commodityAssembler = commodityAssembler;
+    public void setCommodityAssembler(CommodityRestAssembler commodityRestAssembler) {
+        this.commodityRestAssembler = commodityRestAssembler;
     }
 
     @Autowired
@@ -47,7 +47,7 @@ public class CommodityInfoController {
         CommodityInfo commodityInfo = commodityInfoFacade.findByCommodityId(commodityId);
         HashMap<String, Object> dataSection = new HashMap<>(2);
         if (commodityInfo != null) {
-            dataSection.put("good_info", commodityAssembler.converterToCommodityInfoDTO(commodityInfo));
+            dataSection.put("good_info", commodityRestAssembler.converterToCommodityInfoDTO(commodityInfo));
         }
         return response("一切OK", dataSection);
     }
@@ -93,7 +93,7 @@ public class CommodityInfoController {
         if (commodities != null && commodities.size() != 0) {
             commodityInfoDTOS = commodities.stream().collect(
                     ArrayList<CommodityInfoDTO>::new,
-                    (con, commodityInfo) -> con.add(commodityAssembler.converterToCommodityInfoDTO(commodityInfo)),
+                    (con, commodityInfo) -> con.add(commodityRestAssembler.converterToCommodityInfoDTO(commodityInfo)),
                     ArrayList::addAll
             );
         }
