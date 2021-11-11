@@ -23,6 +23,7 @@
         <module>sweetcat-store-commodity</module>
         <module>sweetcat-app-fileupload</module>
         <module>sweetcat-app-geography</module>
+        <module>sweetcat-user-footprint</module>
     </modules>
 
     <properties>

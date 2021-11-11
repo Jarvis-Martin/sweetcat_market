@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="sweetcat-user-footprint" />
         <module name="sweetcat-store-info" />
         <module name="sweetcat-app-carousel" />
         <module name="sweetcat-scaffold" />
@@ -46,6 +47,7 @@
       <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
+      <module name="sweetcat-user-footprint" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />
       <module name="sweetcat_market" options="-parameters" />

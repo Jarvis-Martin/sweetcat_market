@@ -387,6 +387,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_user_footprint">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="UserFootprintMapper" />
+              <option name="daoPackage" value="com.sweetcat.footprint.infrastructure.dao" />
+              <option name="daoPostfix" value="Mapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="UserFootprint" />
+              <option name="modelPackage" value="com.sweetcat.footprint.infrastructure.po" />
+              <option name="name" value="t_user_footprint" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="footprint_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-footprint" />
+              <option name="tableName" value="t_user_footprint" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_user_info">
           <value>
             <Config>

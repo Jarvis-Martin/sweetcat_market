@@ -36,7 +36,7 @@ spring:
           uri: lb://sweetcat-app-fileupload
           predicates:
             - Path=/api/v1/file/**
-        # 买家域：地理位置
+        # 应用管理域：地理位置
         - id: sweetcat-app-geography
           uri: lb://sweetcat-app-geography
           predicates:
@@ -52,6 +52,11 @@ spring:
           uri: lb://sweetcat-user-relationship
           predicates:
             - Path=/api/v1/relationship/**
+        # 买家域：用户关系上下文
+        - id: sweetcat-user-footprint
+          uri: lb://sweetcat-user-footprint
+          predicates:
+            - Path=/api/v1/footprint/**
 
         #  卖家域：商家基本信息上下文
         - id: sweetcat-store-info
