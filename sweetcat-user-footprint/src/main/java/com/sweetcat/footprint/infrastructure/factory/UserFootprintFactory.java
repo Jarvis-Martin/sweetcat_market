@@ -1,6 +1,6 @@
 package com.sweetcat.footprint.infrastructure.factory;
 
-import com.sweetcat.footprint.domain.carousel.entity.UserFootprint;
+import com.sweetcat.footprint.domain.footprint.entity.UserFootprint;
 import com.sweetcat.footprint.infrastructure.po.UserFootprintPO;
 import org.springframework.stereotype.Component;
 

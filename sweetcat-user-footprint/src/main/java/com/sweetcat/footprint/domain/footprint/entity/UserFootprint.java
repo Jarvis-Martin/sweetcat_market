@@ -1,4 +1,4 @@
-package com.sweetcat.footprint.domain.carousel.entity;
+package com.sweetcat.footprint.domain.footprint.entity;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
@@ -72,13 +72,13 @@ public class UserFootprint implements Serializable {
     }
 
     public UserFootprint(Long footprintId, Long userId, Long commodityId, String picSmall, BigDecimal priceWhenBrowser, Long startTime, Integer browserDuration) {
-        this.footprintId = footprintId;
-        this.userId = userId;
-        this.commodityId = commodityId;
-        this.picSmall = picSmall;
-        this.priceWhenBrowser = priceWhenBrowser;
-        this.startTime = startTime;
-        this.browserDuration = browserDuration;
+        this.setFootprintId(footprintId);
+        this.setUserId(userId);
+        this.setCommodityId(commodityId);
+        this.setPicSmall(picSmall);
+        this.setPriceWhenBrowser(priceWhenBrowser);
+        this.setStartTime(startTime);
+        this.setBrowserDuration(browserDuration);
     }
 
     public void setFootprintId(Long footprintId) {

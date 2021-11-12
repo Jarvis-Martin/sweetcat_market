@@ -1,8 +1,8 @@
-package com.sweetcat.footprint.infrastructure;
+package com.sweetcat.favorite.infrastructure.rpc;
 
 import com.sweetcat.api.client.UserInfoClient;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
-import com.sweetcat.footprint.application.rpc.UserInfoRpc;
+import com.sweetcat.favorite.application.rpc.UserInfoRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version: 1.0
  */
 @Component
-public class rpcUserInfoRpcImpl implements UserInfoRpc {
+public class UserInfoRpcImpl implements UserInfoRpc {
     private UserInfoClient userInfoClient;
 
     @Autowired

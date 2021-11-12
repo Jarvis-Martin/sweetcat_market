@@ -24,6 +24,7 @@
         <module>sweetcat-app-fileupload</module>
         <module>sweetcat-app-geography</module>
         <module>sweetcat-user-footprint</module>
+        <module>sweetcat-user-favorite</module>
     </modules>
 
     <properties>

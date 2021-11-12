@@ -3,7 +3,7 @@ package com.sweetcat.footprint.interfaces.web;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.footprint.application.command.AddUserFootprintCommand;
-import com.sweetcat.footprint.domain.carousel.entity.UserFootprint;
+import com.sweetcat.footprint.domain.footprint.entity.UserFootprint;
 import com.sweetcat.footprint.interfaces.facade.UserFootprintFacade;
 import com.sweetcat.footprint.interfaces.facade.assembler.UserFootprintAssembler;
 import com.sweetcat.footprint.interfaces.facade.restdto.UserFootprintRestDTO;

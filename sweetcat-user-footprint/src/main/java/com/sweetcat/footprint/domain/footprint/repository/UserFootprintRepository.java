@@ -1,6 +1,6 @@
-package com.sweetcat.footprint.domain.carousel.repository;
+package com.sweetcat.footprint.domain.footprint.repository;
 
-import com.sweetcat.footprint.domain.carousel.entity.UserFootprint;
+import com.sweetcat.footprint.domain.footprint.entity.UserFootprint;
 
 import java.util.List;
 

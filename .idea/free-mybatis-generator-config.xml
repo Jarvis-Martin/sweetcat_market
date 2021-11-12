@@ -387,6 +387,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_user_favorate">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="UserFavorateMapper" />
+              <option name="daoPackage" value="generate" />
+              <option name="daoPostfix" value="UserFavorateMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="UserFavoratePO" />
+              <option name="modelPackage" value="com.sweetcat.favorite.infrastructure.po" />
+              <option name="name" value="t_user_favorate" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-favorite" />
+              <option name="tableName" value="t_user_favorate" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_user_footprint">
           <value>
             <Config>

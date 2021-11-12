@@ -1,6 +1,6 @@
 package com.sweetcat.footprint.interfaces.facade.assembler;
 
-import com.sweetcat.footprint.domain.carousel.entity.UserFootprint;
+import com.sweetcat.footprint.domain.footprint.entity.UserFootprint;
 import com.sweetcat.footprint.interfaces.facade.restdto.UserFootprintRestDTO;
 import org.springframework.stereotype.Component;
 

@@ -11,6 +11,7 @@
         <module name="sweetcat-store-info" />
         <module name="sweetcat-app-carousel" />
         <module name="sweetcat-scaffold" />
+        <module name="sweetcat-user-favorite" />
         <module name="sweetcat-user-relationship" />
         <module name="sweetcat-takeaway-man-info" />
         <module name="sweetcat-app-fileupload" />
@@ -47,6 +48,7 @@
       <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
+      <module name="sweetcat-user-favorite" options="-parameters" />
       <module name="sweetcat-user-footprint" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />

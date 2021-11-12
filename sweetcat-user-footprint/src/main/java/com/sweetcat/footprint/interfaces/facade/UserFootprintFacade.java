@@ -2,7 +2,7 @@ package com.sweetcat.footprint.interfaces.facade;
 
 import com.sweetcat.footprint.application.command.AddUserFootprintCommand;
 import com.sweetcat.footprint.application.service.UserFootprintApplicationService;
-import com.sweetcat.footprint.domain.carousel.entity.UserFootprint;
+import com.sweetcat.footprint.domain.footprint.entity.UserFootprint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
