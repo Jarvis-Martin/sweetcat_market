@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.favorite.infrastructure.dao.UserFavoriteMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.favorite.infrastructure.po.UserFavoritePO">
+        <result column="favorite_id" jdbcType="BIGINT" property="favoriteId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="price_when_favorite" jdbcType="DECIMAL" property="priceWhenFavorite"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_line">
+        favorite_id
+        ,user_id, commodity_id, price_when_favorite, create_time
+    </sql>
+    <insert id="addOne">
+        insert into t_user_favorite (<include refid="Base_Column_line"/>) values (#{favoriteId}, #{userId}, #{commodityId},
+        #{priceWhenFavorite}, #{createTime})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_favorite
+        where user_id = #{userId}
+          and commodity_id = #{commodityId}
+    </delete>
+    <select id="findPageByUserId" resultType="com.sweetcat.favorite.infrastructure.po.UserFavoritePO">
+        select
+        <include refid="Base_Column_line"/>
+        from t_user_favorite where user_id = #{userId} limit #{page}, #{limit}
+    </select>
+    <select id="findByFavoriteId" resultType="com.sweetcat.favorite.infrastructure.po.UserFavoritePO">
+        select
+        <include refid="Base_Column_line"/>
+        from t_user_favorite where favorite_id = #{favoriteId}
+    </select>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.footprint.infrastructure.dao.UserFootprintMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.footprint.infrastructure.po.UserFootprintPO">
+        <id column="footprint_id" jdbcType="BIGINT" property="footprintId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="price_when_browser" jdbcType="VARCHAR" property="priceWhenBrowser"/>
+        <result column="pic_small" jdbcType="VARCHAR" property="picSmall"/>
+        <result column="start_time" jdbcType="BIGINT" property="startTime"/>
+        <result column="browser_duration" jdbcType="INTEGER" property="browserDuration"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        footprint_id, user_id, commodity_id, pic_small, price_when_browser, start_time, browser_duration
+    </sql>
+    <insert id="addOne">
+        insert into t_user_footprint (<include refid="Base_Column_List"/>) values (#{footprintId}, #{userId},
+        #{commodityId}, #{picSmall}, #{priceWhenBrowser}, #{startTime}, #{browserDuration})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_footprint
+        where footprint_id = #{footprintId}
+    </delete>
+    <select id="findPageByDate" resultType="com.sweetcat.footprint.infrastructure.po.UserFootprintPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_footprint where user_id = #{userId} and start_time &lt;= #{date} limit #{page}, #{limit}
+    </select>
+    <select id="findByFootprintId" resultType="com.sweetcat.footprint.domain.footprint.entity.UserFootprint">
+        select <include refid="Base_Column_List" /> from t_user_footprint where footprint_id = #{footprintId}
+    </select>
+
+</mapper>
