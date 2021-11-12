@@ -57,11 +57,16 @@ spring:
           uri: lb://sweetcat-user-footprint
           predicates:
             - Path=/api/v1/footprint/**
-        # 买家域：商品收藏夹
+        # 买家域：商品收藏夹上下文
         - id: sweetcat-user-favorite
           uri: lb://sweetcat-user-favorite
           predicates:
             - Path=/api/v1/favorite/**
+        # 买家域：用户推荐商品上下文
+        - id: sweetcat-user-recommend
+          uri: lb://sweetcat-user-recommend
+          predicates:
+            - Path=/api/v1/recommend/**
 
         #  卖家域：商家基本信息上下文
         - id: sweetcat-store-info

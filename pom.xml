@@ -25,6 +25,7 @@
         <module>sweetcat-app-geography</module>
         <module>sweetcat-user-footprint</module>
         <module>sweetcat-user-favorite</module>
+        <module>sweetcat-user-recommend</module>
     </modules>
 
     <properties>
