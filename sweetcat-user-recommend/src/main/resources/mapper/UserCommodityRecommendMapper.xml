@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.recommend.infrastructure.dao.UserCommodityRecommendMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.recommend.infrastructure.po.UserCommodityRecommendPO">
+        <id column="record_id" jdbcType="BIGINT" property="recordId"/>
+        <result column="referrer_id" jdbcType="BIGINT" property="referrerId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="star" jdbcType="TINYINT" property="star"/>
+        <result column="commodity_pics" jdbcType="VARCHAR" property="commodityPics"
+                typeHandler="com.sweetcat.recommend.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="commodity_specification" jdbcType="VARCHAR" property="commoditySpecification"
+                typeHandler="com.sweetcat.recommend.infrastructure.dao.typehandler.ObjectStringTypeHandler"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        record_id
+        , referrer_id, commodity_id, reason, star, commodity_pics, commodity_specification, create_time
+    </sql>
+    <insert id="addOne">
+        insert into t_user_commodity_recommend
+        (<include refid="Base_Column_List"/>)
+        values (#{recordId}, #{referrer.referrerId},
+        #{commodity.commodityId}, #{reason}, #{star},
+        #{commodityPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.recommend.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{commodity.commoditySpecification, javaType=Object, jdbcType=VARCHAR, typeHandler=com.sweetcat.recommend.infrastructure.dao.typehandler.ObjectStringTypeHandler},
+        #{createTime})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_commodity_recommend
+        where record_id = #{recordId}
+    </delete>
+    <select id="findPageByReferrerId" resultType="com.sweetcat.recommend.infrastructure.po.UserCommodityRecommendPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_commodity_recommend where referrer_id = #{referrerId} limit #{page}, #{limit}
+    </select>
+    <select id="findByRecordId" resultType="com.sweetcat.recommend.infrastructure.po.UserCommodityRecommendPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_commodity_recommend
+        where record_id = #{recordId}
+    </select>
+
+</mapper>
