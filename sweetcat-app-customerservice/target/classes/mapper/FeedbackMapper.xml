@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.customerservice.infrastructure.dao.FeedbackMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.customerservice.infrastructure.po.FeedbackPO">
+        <id column="record_id" jdbcType="BIGINT" property="recordId"/>
+        <result column="feedback_id" jdbcType="BIGINT" property="feedbackId"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="process_time" jdbcType="BIGINT" property="processTime"/>
+        <result column="status" jdbcType="BIGINT" property="status"/>
+        <result column="receiver_id" jdbcType="BIGINT" property="receiverId"/>
+        <result column="customer_staff_id" jdbcType="BIGINT" property="staffId"/>
+        <result column="response_content" jdbcType="VARCHAR" property="responseContent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        record_id
+        , feedback_id, create_time, update_time, process_time, `status`, receiver_id, customer_staff_id,
+    response_content
+    </sql>
+    <insert id="addOne">
+        insert into t_app_customerservice_feedback_from_user (<include refid="Base_Column_List"/>) values (#{recordId},
+        #{feedbackId}, #{createTime}, #{updateTime}, #{processTime}, #{status}, #{receiver.receiverId}, #{informer.staffId},
+        #{responseContent})
+    </insert>
+    <update id="save">
+        update t_app_customerservice_feedback_from_user
+        set feedback_id       = #{feedbackId},
+            create_time       = #{createTime},
+            update_time       = #{updateTime},
+            process_time      = #{processTime},
+            `status`          = #{status},
+            receiver_id       = #{receiver.receiverId},
+            customer_staff_id = #{informer.staffId},
+            response_content  = #{responseContent}
+        where record_id = #{recordId}
+    </update>
+    <select id="findOneByRecordId" resultType="com.sweetcat.customerservice.infrastructure.po.FeedbackPO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_customerservice_feedback_from_user where record_id = #{recordId}
+    </select>
+
+</mapper>
