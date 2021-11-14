@@ -3,6 +3,7 @@ package com.sweetcat.app_feedback;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @Author: Coder_Jarvis
@@ -12,6 +13,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication(scanBasePackages = {"com.sweetcat"})
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.sweetcat.api")
 public class AppFeedbackApplication {
     public static void main(String[] args) {
         SpringApplication.run(AppFeedbackApplication.class, args);

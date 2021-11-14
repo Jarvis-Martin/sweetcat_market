@@ -1,19 +1,23 @@
 package com.sweetcat.app_feedback.domain.feedback.entity;
 
-import java.io.Serializable;
-import java.time.Instant;
+import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
+import lombok.Getter;
 
-import lombok.Data;
+import java.io.Serializable;
 
 /**
  * t_app_feedback
  *
  * @author
  */
+@Getter
 public class AppFeedback implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final Integer STATUS_PROCESSING = 0;
+
+    public static final Integer STATUS_PROCESSED = 1;
 
     /**
      * 反馈记录id
@@ -46,6 +50,16 @@ public class AppFeedback implements Serializable {
     private Long createTime;
 
     /**
+     * 处理人id
+     */
+    private Long processorId;
+
+    /**
+     * 响应内容
+     */
+    private String responseContent;
+
+    /**
      * 处理时间
      */
     private Long processTime;
@@ -54,21 +68,35 @@ public class AppFeedback implements Serializable {
         this.feedbackId = feedbackId;
     }
 
-    public AppFeedback(Long feedbackId, Long userId, String content, String feedbackPics, Integer status, Long processTime) {
+    public AppFeedback(Long feedbackId, Long userId, String content, String feedbackPics, Integer status, Long createTime, Long processorId, String responseContent, Long processTime) {
         this.feedbackId = feedbackId;
         this.userId = userId;
         this.content = content;
         this.feedbackPics = feedbackPics;
         this.status = status;
-        this.createTime = Instant.now().toEpochMilli();
+        this.createTime = createTime;
+        this.processorId = processorId;
+        this.responseContent = responseContent;
         this.processTime = processTime;
     }
 
-    private void setFeedbackId(Long feedbackId) {
+    public void setFeedbackId(Long feedbackId) {
+        if (feedbackId == null || feedbackId < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
         this.feedbackId = feedbackId;
     }
 
     public void setUserId(Long userId) {
+        if (userId == null || userId < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
         this.userId = userId;
     }
 
@@ -81,42 +109,34 @@ public class AppFeedback implements Serializable {
     }
 
     public void setStatus(Integer status) {
+        if (status == null || status < 0 || status > 1) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
         this.status = status;
+    }
+
+    public void setCreateTime(Long createTime) {
+        if (createTime == null || createTime < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.createTime = createTime;
+    }
+
+    public void setProcessorId(Long processorId) {
+        this.processorId = processorId;
+    }
+
+    public void setResponseContent(String responseContent) {
+        this.responseContent = responseContent;
     }
 
     public void setProcessTime(Long processTime) {
         this.processTime = processTime;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Long getFeedbackId() {
-        return feedbackId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getFeedbackPics() {
-        return feedbackPics;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    public Long getProcessTime() {
-        return processTime;
     }
 }

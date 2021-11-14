@@ -41,6 +41,14 @@ public enum ResponseStatusEnum {
      */
     USERNOTEXISTED("A0201", "用户账户不存在"),
     /**
+     * 用户账户不存在
+     */
+    CustomerServiceStaffNOTEXISTED("A0201", "该客服人员不存在"),
+    /**
+     * 反馈不存在
+     */
+    FEEDBACKSNOTEXISTED("A0201", "反馈不存在"),
+    /**
      * 商品邮费记录不存在
      */
     POSTCHARGENOTEXISTED("A0201", "商品邮费记录不存在"),

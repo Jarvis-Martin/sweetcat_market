@@ -26,6 +26,7 @@
         <module>sweetcat-user-footprint</module>
         <module>sweetcat-user-favorite</module>
         <module>sweetcat-user-recommend</module>
+        <module>sweetcat-app-customerservice</module>
     </modules>
 
     <properties>

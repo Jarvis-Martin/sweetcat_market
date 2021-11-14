@@ -51,6 +51,54 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_app_customerservice_feedback_from_user">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CustomerserviceFeedbackFromUserMapper" />
+              <option name="daoPackage" value="com.sweetcat.customerservice.infrastructure.dao" />
+              <option name="daoPostfix" value="CustomerserviceFeedbackFromUserMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CustomerServiceFeedbackFromUserPO" />
+              <option name="modelPackage" value="com.sweetcat.customerservice.infrastructure.po" />
+              <option name="name" value="t_app_customerservice_feedback_from_user" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="record_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-customerservice" />
+              <option name="tableName" value="t_app_customerservice_feedback_from_user" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
+        <entry key="t_app_customerservice_staff_info">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CustomerserviceStaffInfoMapper" />
+              <option name="daoPackage" value="com.sweetcat.customerservice.infrastructure.dao" />
+              <option name="daoPostfix" value="CustomerserviceStaffInfoMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CustomerserviceStaffInfoPO" />
+              <option name="modelPackage" value="com.sweetcat.customerservice.infrastructure.po" />
+              <option name="name" value="t_app_customerservice_staff_info" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="staff_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-customerservice" />
+              <option name="tableName" value="t_app_customerservice_staff_info" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_app_feedback">
           <value>
             <Config>

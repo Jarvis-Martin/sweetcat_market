@@ -1,5 +1,7 @@
 package com.sweetcat.app_feedback.infrastructure.factory;
 
+import com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback;
+import com.sweetcat.app_feedback.infrastructure.po.AppFeedbackPO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +12,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AppFeedbackFactory {
-
+    public AppFeedback create(AppFeedbackPO feedbackPO) {
+        AppFeedback appFeedback = new AppFeedback(feedbackPO.getFeedbackId());
+        appFeedback.setUserId(feedbackPO.getUserId());
+        appFeedback.setContent(feedbackPO.getContent());
+        appFeedback.setFeedbackPics(feedbackPO.getFeedbackPics());
+        appFeedback.setStatus(feedbackPO.getStatus());
+        appFeedback.setCreateTime(feedbackPO.getCreateTime());
+        appFeedback.setProcessTime(feedbackPO.getProcessTime());
+        return appFeedback;
+    }
 
 }

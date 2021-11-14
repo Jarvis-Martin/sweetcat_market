@@ -1,9 +1,9 @@
 package com.sweetcat.app_feedback.interfaces.facade;
 
 import com.sweetcat.app_feedback.application.service.AppFeedbackApplicationService;
+import com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @Author: Coder_Jarvis
@@ -22,5 +22,9 @@ public class AppFeedbackFacade {
 
     public void addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
         feedbackApplicationService.addAFeedback(userId, content, feedbackPics, feedbackTime);
+    }
+
+    public AppFeedback findOneByFeedbackId(Long feedbackId) {
+        return feedbackApplicationService.findOneByFeedbackId(feedbackId);
     }
 }

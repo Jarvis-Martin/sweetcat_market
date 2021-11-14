@@ -19,6 +19,7 @@
         <module name="sweetcat-gateway" />
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
+        <module name="sweetcat-app-customerservice" />
         <module name="sweetcat-app-feedback" />
         <module name="sweetcat-commons" />
         <module name="sweetcat-user-info" />
@@ -37,6 +38,7 @@
       <module name="sweetcat-api" options="-parameters" />
       <module name="sweetcat-app-activity" options="-parameters" />
       <module name="sweetcat-app-carousel" options="-parameters" />
+      <module name="sweetcat-app-customerservice" options="-parameters" />
       <module name="sweetcat-app-feedback" options="-parameters" />
       <module name="sweetcat-app-fileupload" options="-parameters" />
       <module name="sweetcat-app-geography" options="-parameters" />

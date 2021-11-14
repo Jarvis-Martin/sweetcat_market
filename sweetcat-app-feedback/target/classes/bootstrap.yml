@@ -21,5 +21,16 @@ spring:
       password: mysqladmin123
       url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_feedback?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
       max-active: 40 # 数据库最大活跃连接数
+# rocketmq 配置
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: sweetcat-app-feedback
+    # 发送异步消息失败时的重试次数：默认2
+    retry-times-when-send-async-failed: 2
+    # 发送同步消息失败时的重试次数：默认2
+    retry-times-when-send-failed: 2
+    # 发送消息超时时间。默认3s
+    send-message-timeout: 3000
 mybatis:
   mapper-locations: classpath:mapper/*.xml

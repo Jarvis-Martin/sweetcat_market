@@ -4,7 +4,7 @@ import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.*;
 import com.sweetcat.user_info.application.event.publish.DomainEventPublisher;
 import com.sweetcat.user_info.domain.user.entity.User;
-import com.sweetcat.user_info.domain.user.event.CaptchaRequestedEvent;
+import com.sweetcat.commons.domainevent.userinfo.CaptchaRequestedEvent;
 import com.sweetcat.user_info.domain.user.repository.UserRepository;
 import com.sweetcat.user_info.domain.user.service.authen_service.AuthenService;
 import com.sweetcat.user_info.domain.user.vo.UserDescriptor;
@@ -353,7 +353,8 @@ public class UserInfoApplicationService {
         String code = numberCaptchaService.generate(registerCaptchaLength);
         System.out.println("验证码：---------------" + code);
         // 触发 CaptchaRequestedEvent事件，触发发送短信操作
-        domainEventPublisher.syncSend("buyer_topic", new CaptchaRequestedEvent(phone));
+        domainEventPublisher.syncSend("buyer_topic:sms", new CaptchaRequestedEvent(phone, Instant.now().toEpochMilli()));
+        System.out.println("sweetcat-user-info 触发领域事件 CaptchaRequestedEvent 时间为：" + Instant.now().toEpochMilli());
         // 手机号存入 redis 60s
         redisService.setnx("phone:" + phone, phone, (long) (60));
         // 发送给用户的验证码存入 redis 5min

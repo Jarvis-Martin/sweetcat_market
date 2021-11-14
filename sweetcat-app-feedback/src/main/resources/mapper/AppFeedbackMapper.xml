@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sweetcat.app_feedback.infrastructure.dao.AppFeedbackMapper">
-    <resultMap id="BaseResultMap" type="com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback">
+    <resultMap id="BaseResultMap" type="com.sweetcat.app_feedback.infrastructure.po.AppFeedbackPO">
         <id column="feedback_id" jdbcType="BIGINT" property="feedbackId"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
         <result column="feedback_pics" jdbcType="VARCHAR" property="feedbackPics"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="processor_id" jdbcType="TINYINT" property="processorId"/>
+        <result column="response_content" jdbcType="BIGINT" property="responseContent"/>
         <result column="process_time" jdbcType="BIGINT" property="processTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        feedback_id, user_id, content, feedback_pics, `status`, create_time, process_time
+        feedback_id
+        , user_id, content, feedback_pics, `status`, create_time, processor_id, response_content, process_time
     </sql>
     <insert id="insertOne">
         insert into t_app_feedback(<include refid="Base_Column_List"/>) values (#{feedbackId}, #{userId},
-        #{content}, #{feedbackPics}, #{status}, #{createTime}, #{processTime})
+        #{content}, #{feedbackPics}, #{status}, #{createTime}, #{processorId}, #{responseContent}, #{processTime})
     </insert>
+    <update id="update">
+        update t_app_feedback
+        set content          = #{content},
+            feedback_pics    = #{feedbackPics},
+            `status`         = #{status},
+            create_time      = #{createTime},
+            processor_id     = #{processorId},
+            response_content = #{responseContent},
+            process_time     = #{processTime}
+        where feedback_id = #{feedbackId}
+    </update>
+    <select id="findByFeedbackId" resultType="com.sweetcat.app_feedback.infrastructure.po.AppFeedbackPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_feedback where feedback_id = #{feedbackId}
+    </select>
 
 </mapper>
