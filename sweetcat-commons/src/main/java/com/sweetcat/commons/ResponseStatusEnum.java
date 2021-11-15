@@ -45,6 +45,14 @@ public enum ResponseStatusEnum {
      */
     CustomerServiceStaffNOTEXISTED("A0201", "该客服人员不存在"),
     /**
+     * 用户已签到
+     */
+    CHECKEDIN("A0201", "您已签到过了，不能重复签到哈"),
+    /**
+     * 积分中心签到失败
+     */
+    CREDITCHECKINFAIL("A0201", "积分中心签到失败"),
+    /**
      * 反馈不存在
      */
     FEEDBACKSNOTEXISTED("A0201", "反馈不存在"),

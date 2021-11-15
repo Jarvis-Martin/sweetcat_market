@@ -27,6 +27,7 @@
         <module>sweetcat-user-favorite</module>
         <module>sweetcat-user-recommend</module>
         <module>sweetcat-app-customerservice</module>
+        <module>sweetcat-app-credit</module>
     </modules>
 
     <properties>

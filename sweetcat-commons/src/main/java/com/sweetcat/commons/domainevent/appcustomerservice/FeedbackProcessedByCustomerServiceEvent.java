@@ -1,8 +1,8 @@
 package com.sweetcat.commons.domainevent.appcustomerservice;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.Instant;
 
 /**
  * @author: Coder_Jarvis
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
  * @date: 2021-11-2021/11/13-19:13
  * @version: 1.0
  */
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 public class FeedbackProcessedByCustomerServiceEvent {
     /**
@@ -38,4 +38,10 @@ public class FeedbackProcessedByCustomerServiceEvent {
      * 事件发生时间
      */
     private Long occurOn;
+
+    public FeedbackProcessedByCustomerServiceEvent(Long feedbackId, Long processorId) {
+        this.feedbackId = feedbackId;
+        this.processorId = processorId;
+        this.occurOn = Instant.now().toEpochMilli();
+    }
 }

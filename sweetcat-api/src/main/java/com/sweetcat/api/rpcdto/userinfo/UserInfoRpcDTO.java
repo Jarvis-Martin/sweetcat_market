@@ -1,7 +1,6 @@
 package com.sweetcat.api.rpcdto.userinfo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 /**
  * @Author: Coder_Jarvis
@@ -9,7 +8,9 @@ import lombok.Data;
  * @Date: 2021-11-2021/11/4-21:31
  * @Version: 1.0
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoRpcDTO {
     /**

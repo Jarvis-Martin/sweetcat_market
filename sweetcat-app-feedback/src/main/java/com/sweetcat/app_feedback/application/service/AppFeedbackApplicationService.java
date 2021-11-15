@@ -99,10 +99,7 @@ public class AppFeedbackApplicationService {
         // 加入db
         feedbackRepository.add(feedback);
         // 构建 FeedbackSubmittedEvent
-        FeedbackSubmittedEvent feedbackSubmittedEvent = new FeedbackSubmittedEvent();
-        feedbackSubmittedEvent.setFeedbackId(feedbackId);
-        feedbackSubmittedEvent.setReceiverId(userId);
-        feedbackSubmittedEvent.setOccurOn(Instant.now().toEpochMilli());
+        FeedbackSubmittedEvent feedbackSubmittedEvent = new FeedbackSubmittedEvent(feedbackId, userId);
         // 触发领域事件 FeedbackSubmittedEvent
         eventPublisher.syncSend("feedback_topic", feedbackSubmittedEvent);
         System.out.println("sweetcat-app-feedback: 触发领域事件 feedbackSubmittedEvent 时间为：" + Instant.now().toEpochMilli());

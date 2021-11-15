@@ -1,6 +1,5 @@
 package com.sweetcat.commons.domainevent.userinfo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.time.Instant;
  * @Version: 1.0
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class CaptchaRequestedEvent {
     private String phone;
@@ -23,4 +21,10 @@ public class CaptchaRequestedEvent {
      */
     private Long occurOn;
 
+
+
+    public CaptchaRequestedEvent(String phone) {
+        this.phone = phone;
+        this.occurOn = Instant.now().toEpochMilli();
+    }
 }

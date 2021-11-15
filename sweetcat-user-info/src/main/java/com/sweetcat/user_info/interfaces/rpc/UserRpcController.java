@@ -41,7 +41,9 @@ public class UserRpcController {
     @GetMapping("/{user_id}")
     public UserInfoRpcDTO getUserInfo(@PathVariable("user_id") Long userId) {
         User user = userInfoFacade.getUserInfo(userId);
-
+        if (user == null) {
+            return null;
+        }
         return new UserInfoRpcDTO(userId, user.getNickname(), user.getAvatarPath(), user.getPersonalizedSignature());
     }
 }

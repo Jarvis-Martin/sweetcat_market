@@ -20,9 +20,8 @@
         , nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, phone, create_time, update_time
     </sql>
     <insert id="insertOne">
-        insert into t_user_info(nickname, `password`, avatar_path, gender, birthday, vip_level, is_referrer,
-                                personalized_signature, phone, create_time, update_time)
-        values (#{nickname}, #{password}, #{avatarPath}, #{gender}, #{birthday}, #{vipLevel}, #{referrer},
+        insert into t_user_info(<include refid="Base_Column_List" />)
+        values (#{userId}, #{nickname}, #{password}, #{avatarPath}, #{gender}, #{birthday}, #{vipLevel}, #{referrer},
                 #{personalizedSignature}, #{phone}, #{createTime}, #{updateTime})
     </insert>
     <update id="update">
@@ -39,8 +38,6 @@
             update_time            = #{updateTime}
         where user_id = #{userId}
     </update>
-    <!--  , avatar_path, gender, birthday, vip_level, is_referrer, personalized_signature, create_time, update_time-->
-    <!--  , #{avatarPath}, #{gender}, #{vipLevel}, #{referrer}, #{personalizedSignature}, #{createTime}, #{updateTime}-->
 
     <select id="getOne" resultType="com.sweetcat.user_info.infrastructure.po.UserPO" resultMap="BaseResultMap">
         select

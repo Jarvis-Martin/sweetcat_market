@@ -35,6 +35,16 @@ public class GlobalExceptionHandler {
                 JSONUtils.fromJson("{}", Object.class));
     }
 
+    @ExceptionHandler(CheckedInException.class)
+    @ResponseBody
+    public ResponseDTO CheckedInExceptionHandler(CheckedInException e) {
+        return new ResponseDTO(
+                e.getCode().toString(),
+                e.getMessage(),
+                e.getMessage(),
+                JSONUtils.fromJson("{}", Object.class));
+    }
+
     @ExceptionHandler(CaptchaTimeoutException.class)
     @ResponseBody
     public ResponseDTO CaptchaTimeoutExceptionHandler(CaptchaTimeoutException e) {

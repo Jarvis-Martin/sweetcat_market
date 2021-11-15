@@ -1,6 +1,7 @@
 package com.sweetcat.user_info.application.service;
 
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.userinfo.UserRegisteredEvent;
 import com.sweetcat.commons.exception.*;
 import com.sweetcat.user_info.application.event.publish.DomainEventPublisher;
 import com.sweetcat.user_info.domain.user.entity.User;
@@ -353,7 +354,7 @@ public class UserInfoApplicationService {
         String code = numberCaptchaService.generate(registerCaptchaLength);
         System.out.println("验证码：---------------" + code);
         // 触发 CaptchaRequestedEvent事件，触发发送短信操作
-        domainEventPublisher.syncSend("buyer_topic:sms", new CaptchaRequestedEvent(phone, Instant.now().toEpochMilli()));
+        domainEventPublisher.syncSend("buyer_topic:sms", new CaptchaRequestedEvent(phone));
         System.out.println("sweetcat-user-info 触发领域事件 CaptchaRequestedEvent 时间为：" + Instant.now().toEpochMilli());
         // 手机号存入 redis 60s
         redisService.setnx("phone:" + phone, phone, (long) (60));
@@ -486,6 +487,11 @@ public class UserInfoApplicationService {
         );
         // 插入 db
         userRepository.add(user);
+        // 触发领域事件 UserRegisteredEvent 事件
+        UserRegisteredEvent userRegisteredEvent = new UserRegisteredEvent(userId);
+        userRegisteredEvent.setUserRegisterTime(now);
+        domainEventPublisher.syncSend("user_info_topic:user_registered", userRegisteredEvent);
+        System.out.println("sweetcat-user-info: 触发领域事件 UserRegisteredEvent 时间为：" + Instant.now().toEpochMilli());
         // 再次通过 phone 找到刚注册的用户信息（以便获得其 userId）
         user = userRepository.find(phone);
         // 返回 userid

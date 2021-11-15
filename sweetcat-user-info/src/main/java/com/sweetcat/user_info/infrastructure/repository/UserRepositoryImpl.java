@@ -1,6 +1,5 @@
 package com.sweetcat.user_info.infrastructure.repository;
 
-import com.alibaba.druid.filter.AutoLoad;
 import com.sweetcat.user_info.domain.user.entity.User;
 import com.sweetcat.user_info.domain.user.repository.UserRepository;
 import com.sweetcat.user_info.infrastructure.dao.UserMapper;
@@ -33,6 +32,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User find(Long userId) {
         UserPO userPO = userMapper.getOne(userId);
+        if (userPO == null) {
+            return null;
+        }
         return userFactory.create(userPO);
     }
 

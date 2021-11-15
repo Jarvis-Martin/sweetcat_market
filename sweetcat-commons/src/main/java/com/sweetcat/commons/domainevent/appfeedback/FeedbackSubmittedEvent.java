@@ -1,8 +1,9 @@
 package com.sweetcat.commons.domainevent.appfeedback;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 /**
  * @author: Coder_Jarvis
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
  * @version: 1.0
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class FeedbackSubmittedEvent {
     private Long feedbackId;
@@ -21,4 +21,10 @@ public class FeedbackSubmittedEvent {
      * 事件发生时间
      */
     private Long occurOn;
+
+    public FeedbackSubmittedEvent(Long feedbackId, Long receiverId) {
+        this.feedbackId = feedbackId;
+        this.receiverId = receiverId;
+        this.occurOn = Instant.now().toEpochMilli();
+    }
 }

@@ -23,8 +23,6 @@ import com.sweetcat.customerservice.infrastructure.service.timestamp_format_verf
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-
 /**
  * @author: Coder_Jarvis
  * @description:
@@ -164,13 +162,10 @@ public class FeedbackApplicationService {
         // 保存修改
         feedbackRepository.save(feedback);
         // 创建事件 FeedbackProcessedByCustomerServiceEvent
-        FeedbackProcessedByCustomerServiceEvent feedbackProcessedByCustomerServiceEvent = new FeedbackProcessedByCustomerServiceEvent();
+        FeedbackProcessedByCustomerServiceEvent feedbackProcessedByCustomerServiceEvent = new FeedbackProcessedByCustomerServiceEvent(feedback.getFeedbackId(), staffId);
         // 填充领域事件
-        feedbackProcessedByCustomerServiceEvent.setFeedbackId(feedback.getFeedbackId());
-        feedbackProcessedByCustomerServiceEvent.setProcessorId(staffId);
         feedbackProcessedByCustomerServiceEvent.setProcessTime(processTime);
         feedbackProcessedByCustomerServiceEvent.setResponseContent(responseContent);
-        feedbackProcessedByCustomerServiceEvent.setOccurOn(Instant.now().toEpochMilli());
         // 发布领域时事件 FeedbackProcessedByCustomerServiceEvent
         eventPublisher.syncSend("customer_service_topic", feedbackProcessedByCustomerServiceEvent);
     }

@@ -85,35 +85,3 @@ management:
   health:
     db:
       enabled: false
-
-#  spring.shardingsphere.datasource.names=ds0,ds1
-#
-#  # 配置第一个数据库
-#  spring.shardingsphere.datasource.ds0.type=com.zaxxer.hikari.HikariDataSource
-#  spring.shardingsphere.datasource.ds0.driver-class-name=com.mysql.jdbc.Driver
-#  spring.shardingsphere.datasource.ds0.jdbc-url=jdbc:mysql://localhost:3306/ds0
-#  spring.shardingsphere.datasource.ds0.username=root
-#  spring.shardingsphere.datasource.ds0.password=123456
-#
-#  # 配置第二个数据库
-#  spring.shardingsphere.datasource.ds1.type=com.zaxxer.hikari.HikariDataSource
-#  spring.shardingsphere.datasource.ds1.driver-class-name=com.mysql.jdbc.Driver
-#  spring.shardingsphere.datasource.ds1.jdbc-url=jdbc:mysql://localhost:3306/ds1
-#  spring.shardingsphere.datasource.ds1.username=root
-#  spring.shardingsphere.datasource.ds1.password=123456
-#
-#  # 配置t_order表的分库策略
-#
-#  spring.shardingsphere.sharding.tables.t_order.database-strategy.standard.sharding-column=id
-#  # 自定义分库策略
-#  spring.shardingsphere.sharding.tables.t_order.database-strategy.standard.precise-algorithm-class-name=com.example.shardingjdbc.config.MyDbPreciseShardingAlgorithm
-#
-#  # 配置t_order的分表策略
-#  spring.shardingsphere.sharding.tables.t_order.actual-data-nodes=ds$->{0..1}.t_order$->{2021..2022}
-#  spring.shardingsphere.sharding.tables.t_order.table-strategy.standard.sharding-column=day_date
-#  # 自定义分表策略
-#  spring.shardingsphere.sharding.tables.t_order.table-strategy.standard.precise-algorithm-class-name=com.example.shardingjdbc.config.MyTablePreciseShardingAlgorithm
-#
-#  # 添加t_order表的id生成策略
-#  spring.shardingsphere.sharding.tables.t_order.key-generator.column=id
-#  spring.shardingsphere.sharding.tables.t_order.key-generator.type=SNOWFLAKE
