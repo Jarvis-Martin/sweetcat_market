@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.credit.infrastructure.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.credit.infrastructure.po.UserPO">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="total_credit" jdbcType="BIGINT" property="totalCredit"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id
+        , total_credit, create_time
+    </sql>
+    <insert id="addOne">
+        insert into t_app_user_credit (<include refid="Base_Column_List"/>) values (#{userId}, #{credit},
+        #{createTime})
+    </insert>
+    <update id="update">
+        update t_app_user_credit
+        set total_credit = #{credit}
+            where user_id = #{userId}
+    </update>
+    <select id="findOneByUserId" resultType="com.sweetcat.credit.infrastructure.po.UserPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_user_credit where user_id = #{userId}
+    </select>
+
+</mapper>
