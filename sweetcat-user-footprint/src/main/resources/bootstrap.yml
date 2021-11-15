@@ -34,15 +34,15 @@ spring:
         password: mysqladmin123
     # 分库配置 ， 根据good_id分库
     sharding:
-      default-database-strategy:
-        inline:
-          sharding-column: footprint_id
-          algorithm-expression: ds$->{footprint_id % 2}
-
       # 分表配置，根据member_id分表
       tables:
         t_user_footprint:
           actual-data-nodes: ds$->{0..1}.t_user_footprint$->{0..1}
+          logical-table: t_user_footprint
+          database-strategy:
+            inline:
+              sharding-column: footprint_id
+              algorithm-expression: ds$->{footprint_id % 2}
           table-strategy:
             inline:
               sharding-column: footprint_id

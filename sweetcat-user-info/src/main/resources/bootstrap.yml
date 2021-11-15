@@ -34,15 +34,15 @@ spring:
         password: mysqladmin123
     # 分库配置 ， 根据good_id分库
     sharding:
-      default-database-strategy:
-        inline:
-          sharding-column: user_id
-          algorithm-expression: ds$->{user_id % 2}
-
       # 分表配置，根据member_id分表
       tables:
         t_user_info:
           actual-data-nodes: ds$->{0..1}.t_user_info$->{0..1}
+          logical-table: t_user_info
+          database-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: ds$->{user_id % 2}
           table-strategy:
             inline:
               sharding-column: user_id
@@ -52,6 +52,11 @@ spring:
             type: SNOWFLAKE
         t_user_address:
           actual-data-nodes: ds$->{0..1}.t_user_address$->{0..1}
+          logical-table: t_user_address
+          database-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: ds$->{user_id % 2}
           table-strategy:
             inline:
               sharding-column: user_id
@@ -59,8 +64,6 @@ spring:
           key-generator:
             column: user_id
             type: SNOWFLAKE
-      broadcast-tables:
-        - t_area
   # redis 基础配置
   redis:
     database: 0
@@ -68,7 +71,7 @@ spring:
     port: 6379
     password: 123456
     timeout: 3000
-#    lettuce 连接池配置
+    #    lettuce 连接池配置
     lettuce:
       pool:
         # 连接池最大活跃连接数

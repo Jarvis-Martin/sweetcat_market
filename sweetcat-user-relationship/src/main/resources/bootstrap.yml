@@ -36,15 +36,15 @@ spring:
         password: mysqladmin123
     # 分库配置 ， 根据good_id分库
     sharding:
-      default-database-strategy:
-        inline:
-          sharding-column: user_id
-          algorithm-expression: ds$->{user_id % 2}
-
       # 分表配置，根据member_id分表
       tables:
         t_user_fans:
           actual-data-nodes: ds$->{0..1}.t_user_fans$->{0..1}
+          logical-table: t_user_fans
+          database-strategy:
+            inline:
+              sharding-column: user_id
+              algorithm-expression: ds$->{user_id % 2}
           table-strategy:
             inline:
               sharding-column: user_id
