@@ -43,6 +43,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findOneByUserId(Long userId) {
         UserPO userPO = userMapper.findOneByUserId(userId);
+        if (userPO == null) {
+            return null;
+        }
         return userFactory.create(userPO);
     }
 

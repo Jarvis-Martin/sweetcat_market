@@ -23,7 +23,7 @@ import java.time.Instant;
         topic = "user_info_topic",
         selectorType = SelectorType.TAG,
         selectorExpression = "user_registered",
-        consumerGroup = "sweetcat-app-credit",
+        consumerGroup = "CG_sweetcat_app_credit_register",
         consumeMode = ConsumeMode.ORDERLY
 )
 public class UserRegisteredEventSubscriber implements RocketMQListener<UserRegisteredEvent> {

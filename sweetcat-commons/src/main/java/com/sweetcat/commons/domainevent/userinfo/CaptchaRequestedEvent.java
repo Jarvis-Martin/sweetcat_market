@@ -21,8 +21,6 @@ public class CaptchaRequestedEvent {
      */
     private Long occurOn;
 
-
-
     public CaptchaRequestedEvent(String phone) {
         this.phone = phone;
         this.occurOn = Instant.now().toEpochMilli();

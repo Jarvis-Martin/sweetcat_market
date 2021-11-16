@@ -50,7 +50,7 @@ spring:
         - id: sweetcat-app-credit
           uri: lb://sweetcat-app-credit
           predicates:
-            - Path=/api/v1/credit/user/**
+            - Path=/api/v1/credit/**
 
         # 买家域：用户基本信息上下问
         - id: sweetcat-user-info

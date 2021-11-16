@@ -1,7 +1,7 @@
 package com.sweetcat.credit.interfaces.facade.assembler;
 
 import com.sweetcat.credit.domain.user.entity.User;
-import com.sweetcat.credit.interfaces.facade.rpcdto.UserRestDTO;
+import com.sweetcat.credit.interfaces.facade.restdto.UserRestDTO;
 import org.springframework.stereotype.Component;
 
 /**

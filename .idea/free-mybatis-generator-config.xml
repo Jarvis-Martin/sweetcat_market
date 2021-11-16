@@ -51,6 +51,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_app_credit_log">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CreditLogMapper" />
+              <option name="daoPackage" value="com.sweetcat.credit.infrastructure.dao" />
+              <option name="daoPostfix" value="CreditLogMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CreditLogPO" />
+              <option name="modelPackage" value="com.sweetcat.credit.infrastructure.po" />
+              <option name="name" value="t_app_credit_log" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="credit_log_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-credit" />
+              <option name="tableName" value="t_app_credit_log" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_app_customerservice_feedback_from_user">
           <value>
             <Config>

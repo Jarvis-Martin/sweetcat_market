@@ -1,4 +1,4 @@
-package com.sweetcat.credit.interfaces.facade.rpcdto;
+package com.sweetcat.credit.interfaces.facade.restdto;
 
 import lombok.Data;
 

@@ -2,11 +2,13 @@ package com.sweetcat.credit.application.service;
 
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.creditcenter.CreditCenterCheckedInEvent;
 import com.sweetcat.commons.exception.CheckedInException;
-import com.sweetcat.commons.exception.CreditCheckInFailException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.credit.application.command.AddUserCommand;
+import com.sweetcat.credit.application.event.publish.DomainEventPublisher;
 import com.sweetcat.credit.application.rpc.UserInfoRpc;
+import com.sweetcat.credit.domain.creditlog.entity.CreditLog;
 import com.sweetcat.credit.domain.user.entity.User;
 import com.sweetcat.credit.domain.user.repository.UserRepository;
 import com.sweetcat.credit.domain.user.service.UserDomainService;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
@@ -31,6 +34,12 @@ public class UserApplicationService {
     private UserRepository userRepository;
     private UserInfoRpc userInfoRpc;
     private UserDomainService userDomainService;
+    private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
+        this.domainEventPublisher = domainEventPublisher;
+    }
 
     @Autowired
     public void setUserDomainService(UserDomainService userDomainService) {
@@ -119,14 +128,7 @@ public class UserApplicationService {
             );
         }
         // 签到
-        Boolean isCheckInOK = userDomainService.checkIn(user, now);
-        // 签到失败
-        if (!isCheckInOK) {
-            throw new CreditCheckInFailException(
-                    ResponseStatusEnum.CREDITCHECKINFAIL.getErrorCode(),
-                    ResponseStatusEnum.CREDITCHECKINFAIL.getErrorMessage()
-            );
-        }
+        userDomainService.checkIn(user, now);
         // 用户连签天数
         Integer continuousCheckInDays = userDomainService.getContinuousCheckInDays(user);
         continuousCheckInDays = continuousCheckInDays == null ? 0 : continuousCheckInDays;
@@ -136,6 +138,15 @@ public class UserApplicationService {
         user.acquire((long) creditBonus);
         // 保存进db
         userRepository.save(user);
+        // 触发领域事件 CreditCenterCheckedInEvent
+        CreditCenterCheckedInEvent creditCenterCheckedInEvent = new CreditCenterCheckedInEvent(userId);
+        creditCenterCheckedInEvent.setLogType(CreditLog.LOGTYPE_ACQUIRE);
+        creditCenterCheckedInEvent.setDescription("积分中心签到，积分收入: " + creditBonus);
+        creditCenterCheckedInEvent.setCreditNumber(creditBonus);
+        creditCenterCheckedInEvent.setOccurOn(Instant.now().toEpochMilli());
+        System.out.println("sweetcat-app-credit: 触发领域事件 CreditCenterCheckedInEvent 时间为：" + Instant.now().toEpochMilli());
+        System.out.println(creditCenterCheckedInEvent.getUserId());
+        domainEventPublisher.syncSend("credit_center_topic:checkin", creditCenterCheckedInEvent);
     }
 
 }
