@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.credit.infrastructure.dao.CreditLogMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.credit.infrastructure.po.CreditLogPO">
+        <id column="credit_log_id" jdbcType="BIGINT" property="creditLogId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="log_type" jdbcType="INTEGER" property="logType"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="credit_number" jdbcType="INTEGER" property="creditNumber"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        credit_log_id
+        , user_id, log_type, description, credit_number, create_time
+    </sql>
+    <insert id="addOne">
+        insert into t_app_credit_log (<include refid="Base_Column_List"/>) values (#{creditLogId}, #{creditLogUser.userId},
+        #{logType}, #{description}, #{creditNumber}, #{createTime})
+    </insert>
+    <select id="findPageBetween" resultType="com.sweetcat.credit.infrastructure.po.CreditLogPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_credit_log where user_id = #{userId} and create_time &gt; #{startDate} and create_time &lt;
+        #{deadline} limit #{page}, #{limit}
+    </select>
+
+</mapper>
