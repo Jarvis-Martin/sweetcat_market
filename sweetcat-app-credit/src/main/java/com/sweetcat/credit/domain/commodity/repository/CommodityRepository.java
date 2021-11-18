@@ -11,6 +11,11 @@ import java.util.List;
  * @version: 1.0
  */
 public interface CommodityRepository {
+    /**
+     * 添加一件商品（各种商品共有的一部分数据）
+     * @param commodity
+     */
+    void addOne(BaseCommodity commodity);
 
     /**
      * 查询所有商品的分页数据

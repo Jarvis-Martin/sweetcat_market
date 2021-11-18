@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * t_market_commodity_coupon
@@ -38,7 +39,7 @@ public class CouponPO extends BaseCommodityPO implements Serializable {
     /**
      * 优惠券使用对象类别表示；0通用券，1商品券
      */
-    private Byte targetType;
+    private Integer targetType;
 
     /**
      * 商品对应的店家id
@@ -58,7 +59,7 @@ public class CouponPO extends BaseCommodityPO implements Serializable {
     /**
      * 商品正面图（small） 3张最佳
      */
-    private String commodityPicSmall;
+    private List<String> commodityPicSmall;
 
     /**
      * 商品名
@@ -68,7 +69,7 @@ public class CouponPO extends BaseCommodityPO implements Serializable {
     /**
      * 券的时间类型：0限时券；1区间券
      */
-    private Byte timeType;
+    private Integer timeType;
 
     /**
      * 显示券的有效时长，自领取时开始计算

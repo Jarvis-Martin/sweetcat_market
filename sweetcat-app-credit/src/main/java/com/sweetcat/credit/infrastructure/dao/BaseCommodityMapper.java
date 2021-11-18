@@ -1,5 +1,6 @@
 package com.sweetcat.credit.infrastructure.dao;
 
+import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
 import com.sweetcat.credit.infrastructure.po.BaseCommodityPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,11 +26,16 @@ public interface BaseCommodityMapper {
     List<BaseCommodityPO> findPage(@Param("page") Integer page, @Param("limit") Integer limit);
     /**
      * 在所有积分可兑换商品中查询分页数据
-     * @param CommodityType
+     * @param commodityType
      * @param page
      * @param limit
      * @return
      */
-    List<BaseCommodityPO> findPageByCommodityType(@Param("CommodityType") Integer CommodityType, @Param("page") Integer page, @Param("limit") Integer limit);
+    List<BaseCommodityPO> findPageByCommodityType(@Param("commodityType") Integer commodityType, @Param("page") Integer page, @Param("limit") Integer limit);
 
+    /**
+     * 添加一件商品（各种商品共有的一部分数据）
+     * @param commodity
+     */
+    void addOne(BaseCommodity commodity);
 }

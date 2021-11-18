@@ -42,6 +42,15 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     /**
+     * 添加一种优惠券
+     * @param coupon
+     */
+    @Override
+    public void addOne(Coupon coupon) {
+        couponMapper.addOne(coupon);
+    }
+
+    /**
      * find data of coupon by targetType of coupon
      * @param targetType
      * @param page

@@ -48,6 +48,15 @@ public class CommodityRepositoryImpl implements CommodityRepository {
     }
 
     /**
+     * 添加一件商品（各种商品共有的一部分数据）
+     * @param commodity
+     */
+    @Override
+    public void addOne(BaseCommodity commodity) {
+        baseCommodityInfoMapper.addOne(commodity);
+    }
+
+    /**
      * 查询所有商品的分页数据
      *
      * @param page

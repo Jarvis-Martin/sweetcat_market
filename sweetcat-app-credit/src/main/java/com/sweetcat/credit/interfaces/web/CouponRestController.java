@@ -2,15 +2,13 @@ package com.sweetcat.credit.interfaces.web;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
-import com.sweetcat.credit.application.service.CouponApplicationService;
+import com.sweetcat.credit.application.command.AddCouponCommand;
 import com.sweetcat.credit.domain.commodity.entity.Coupon;
+import com.sweetcat.credit.interfaces.facade.CouponFacade;
 import com.sweetcat.credit.interfaces.facade.assembler.CommodityAssembler;
 import com.sweetcat.credit.interfaces.facade.restdto.CreditCenterCommodityRestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,21 +23,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/credit/coupon")
 public class CouponRestController {
-    private CouponApplicationService couponApplicationService;
+
+    private CouponFacade couponFacade;
     private CommodityAssembler commodityAssembler;
+
+    @Autowired
+    public void setCouponFacade(CouponFacade couponFacade) {
+        this.couponFacade = couponFacade;
+    }
 
     @Autowired
     public void setCommodityAssembler(CommodityAssembler commodityAssembler) {
         this.commodityAssembler = commodityAssembler;
     }
 
-    @Autowired
-    public void setCouponApplicationService(CouponApplicationService couponApplicationService) {
-        this.couponApplicationService = couponApplicationService;
+    /**
+     * 添加一种优惠券
+     *
+     * @param command
+     */
+    @PostMapping("/add")
+    public ResponseDTO addOne(AddCouponCommand command) {
+        couponFacade.addOne(command);
+        return response("插入积分优惠券成功", "{}");
     }
 
     /**
      * find data of coupon by targetType of coupon
+     *
      * @param targetType
      * @param page
      * @param limit
@@ -47,7 +58,7 @@ public class CouponRestController {
      */
     @GetMapping(value = "/commodities", params = {"targetType", "_page", "_limit"})
     public ResponseDTO findPageByTargetType(Long targetType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<Coupon> couponPage = couponApplicationService.findPageByTargetType(targetType, page, limit);
+        List<Coupon> couponPage = couponFacade.findPageByTargetType(targetType, page, limit);
         if (couponPage == null) {
             return response("查询成功", "{}");
         }
@@ -65,6 +76,7 @@ public class CouponRestController {
 
     /**
      * find page data of timeType of coupon
+     *
      * @param timeType
      * @param page
      * @param limit
@@ -72,7 +84,7 @@ public class CouponRestController {
      */
     @GetMapping(value = "/commodities", params = {"timeType", "_page", "_limit"})
     public ResponseDTO findPageByTimeType(Long timeType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<Coupon> couponPage = couponApplicationService.findPageByTargetType(timeType, page, limit);
+        List<Coupon> couponPage = couponFacade.findPageByTargetType(timeType, page, limit);
         if (couponPage == null) {
             return response("查询成功", "{}");
         }

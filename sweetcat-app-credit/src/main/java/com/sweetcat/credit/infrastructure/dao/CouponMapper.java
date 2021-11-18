@@ -1,5 +1,6 @@
 package com.sweetcat.credit.infrastructure.dao;
 
+import com.sweetcat.credit.domain.commodity.entity.Coupon;
 import com.sweetcat.credit.infrastructure.po.CouponPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,4 +32,10 @@ public interface CouponMapper {
      * @return
      */
     List<CouponPO> findPageByTimeType(@Param("timeType") Long timeType, @Param("page") Integer page, @Param("limit") Integer limit);
+
+    /**
+     * 添加一种优惠券
+     * @param coupon
+     */
+    void addOne(Coupon coupon);
 }

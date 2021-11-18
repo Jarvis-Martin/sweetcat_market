@@ -1,22 +1,47 @@
-package com.sweetcat.credit.interfaces.facade.restdto;
+package com.sweetcat.credit.application.command;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author: Coder_Jarvis
  * @description:
- * @date: 2021-11-2021/11/17-20:56
+ * @date: 2021-11-2021/11/18-19:18
  * @version: 1.0
  */
 @Data
-public class CreditCenterCouponRestDTO extends CreditCenterCommodityRestDTO {
+public class AddCouponCommand {
+    /**
+     * 创建人id：如店家id
+     */
+    private Long creatorId;
 
     /**
-     * 目标优惠券id
+     * 创建人名称：如店家名
      */
-    private Long couponId;
+    private String creatorName;
+
+    /**
+     * 商品库存
+     */
+    private Long stock;
+
+    /**
+     * 创建时间
+     */
+    private Long createTime;
+
+    /**
+     * 兑换商品所需积分数
+     */
+    private Integer creditNumber;
+
+    /**
+     * 商品类别：0优惠券；1实物商品
+     */
+    private Integer commodityType;
 
     /**
      * 最低可使用价格
@@ -51,7 +76,7 @@ public class CreditCenterCouponRestDTO extends CreditCenterCommodityRestDTO {
     /**
      * 商品正面图（small） 3张最佳
      */
-    private String commodityPicSmall;
+    private List<String> commodityPicSmall;
 
     /**
      * 商品名

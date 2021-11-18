@@ -4,6 +4,7 @@ import com.sweetcat.credit.domain.commodity.vo.Creator;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author: Coder_Jarvis
@@ -13,6 +14,11 @@ import java.math.BigDecimal;
  */
 @Getter
 public class Coupon extends BaseCommodity {
+    /**
+     * 和位于 t_app_credit_market 中的 market_item_id 相对应
+     */
+    private Long marketItemId;
+
 
     /**
      * 目标优惠券id
@@ -32,7 +38,7 @@ public class Coupon extends BaseCommodity {
     /**
      * 优惠券使用对象类别表示；0通用券，1商品券
      */
-    private Byte targetType;
+    private Integer targetType;
 
     /**
      * 商品对应的店家id
@@ -52,7 +58,7 @@ public class Coupon extends BaseCommodity {
     /**
      * 商品正面图（small） 3张最佳
      */
-    private String commodityPicSmall;
+    private List<String> commodityPicSmall;
 
     /**
      * 商品名
@@ -62,7 +68,7 @@ public class Coupon extends BaseCommodity {
     /**
      * 券的时间类型：0限时券；1区间券
      */
-    private Byte timeType;
+    private Integer timeType;
 
     /**
      * 显示券的有效时长，自领取时开始计算
@@ -81,6 +87,7 @@ public class Coupon extends BaseCommodity {
 
     public Coupon(Long marketItemId, Creator creator, Long stock, Long createTime, Long updateTime, Integer creditNumber, Integer commodityType) {
         super(marketItemId, creator, stock, createTime, updateTime, creditNumber, commodityType);
+        this.marketItemId = marketItemId;
     }
 
     public Coupon(BaseCommodity baseCommodity) {
@@ -92,6 +99,7 @@ public class Coupon extends BaseCommodity {
                 baseCommodity.getCreditNumber(),
                 baseCommodity.getCommodityType()
         );
+        this.marketItemId = baseCommodity.getMarketItemId();
     }
 
     public void setCouponId(Long couponId) {
@@ -106,7 +114,7 @@ public class Coupon extends BaseCommodity {
         this.counteractPrice = counteractPrice;
     }
 
-    public void setTargetType(Byte targetType) {
+    public void setTargetType(Integer targetType) {
         this.targetType = targetType;
     }
 
@@ -122,7 +130,7 @@ public class Coupon extends BaseCommodity {
         this.commodityId = commodityId;
     }
 
-    public void setCommodityPicSmall(String commodityPicSmall) {
+    public void setCommodityPicSmall(List<String> commodityPicSmall) {
         this.commodityPicSmall = commodityPicSmall;
     }
 
@@ -130,7 +138,7 @@ public class Coupon extends BaseCommodity {
         this.commodityName = commodityName;
     }
 
-    public void setTimeType(Byte timeType) {
+    public void setTimeType(Integer timeType) {
         this.timeType = timeType;
     }
 

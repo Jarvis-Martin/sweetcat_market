@@ -1,5 +1,6 @@
 package com.sweetcat.credit.interfaces.facade;
 
+import com.sweetcat.credit.application.command.AddCouponCommand;
 import com.sweetcat.credit.application.service.CouponApplicationService;
 import com.sweetcat.credit.domain.commodity.entity.Coupon;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +22,15 @@ public class CouponFacade {
     @Autowired
     public void setCouponApplicationService(CouponApplicationService couponApplicationService) {
         this.couponApplicationService = couponApplicationService;
+    }
+
+    /**
+     * 添加一种优惠券
+     *
+     * @param command
+     */
+    public void addOne(AddCouponCommand command) {
+        couponApplicationService.addOne(command);
     }
 
     /**

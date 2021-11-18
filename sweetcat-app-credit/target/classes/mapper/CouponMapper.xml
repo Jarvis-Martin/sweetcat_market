@@ -10,7 +10,7 @@
         <result column="store_id" jdbcType="BIGINT" property="storeId"/>
         <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
         <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
-        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"/>
+        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall" typeHandler="com.sweetcat.credit.infrastructure.dao.typehandler.ListCharTypeHandler"/>
         <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
         <result column="time_type" jdbcType="TINYINT" property="timeType"/>
         <result column="valid_duration" jdbcType="BIGINT" property="validDuration"/>
@@ -23,6 +23,14 @@
     store_name, commodity_id, commodity_pic_small, commodity_name, time_type, valid_duration, 
     start_time, deadline
     </sql>
+    <insert id="addOne">
+        insert into t_credit_market_commodity_coupon (<include refid="Base_Column_List"/>) values (#{marketItemId}
+        , #{couponId}, #{thresholdPrice}, #{counteractPrice}, #{targetType}, #{storeId},
+        #{storeName}, #{commodityId},
+        #{commodityPicSmall, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.credit.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{commodityName}, #{timeType}, #{validDuration},
+        #{startTime}, #{deadline})
+    </insert>
     <select id="findOneByMarketItemId" resultType="com.sweetcat.credit.infrastructure.po.CouponPO">
         select
         <include refid="Base_Column_List"/>

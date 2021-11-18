@@ -1,7 +1,11 @@
 package com.sweetcat.credit.application.service;
 
+import com.sweetcat.credit.application.command.AddBaseCommodityCommand;
 import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
 import com.sweetcat.credit.domain.commodity.repository.CommodityRepository;
+import com.sweetcat.credit.domain.commodity.vo.Creator;
+import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
+import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +20,48 @@ import java.util.List;
 @Service
 public class CommodityApplicationService {
     private CommodityRepository commodityRepository;
+    private VerifyIdFormatService verifyIdFormatService;
+    private SnowFlakeService snowFlakeService;
+
+    @Autowired
+    public void setVerifyIdFormatService(VerifyIdFormatService verifyIdFormatService) {
+        this.verifyIdFormatService = verifyIdFormatService;
+    }
+
+    @Autowired
+    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
+        this.snowFlakeService = snowFlakeService;
+    }
 
     @Autowired
     public void setCommodityRepository(CommodityRepository commodityRepository) {
         this.commodityRepository = commodityRepository;
+    }
+
+    /**
+     * 添加一件商品（各种商品共有的一部分数据）
+     *
+     * @param commodity
+     */
+    public void addOne(AddBaseCommodityCommand commodity) {
+        Long creatorId = commodity.getCreatorId();
+        // 创建创建人id
+        verifyIdFormatService.verifyIds(creatorId);
+        // 构建 creator
+        Creator creator = new Creator(commodity.getCreatorId());
+        creator.setCreatorName(commodity.getCreatorName());
+        // 构建 BaseCommodity
+        BaseCommodity baseCommodity = new BaseCommodity(
+                commodity.getMarketItemId(),
+                creator,
+                commodity.getStock(),
+                commodity.getCreateTime(),
+                commodity.getUpdateTime(),
+                commodity.getCreditNumber(),
+                commodity.getCommodityType()
+        );
+        // 加入db
+        commodityRepository.addOne(baseCommodity);
     }
 
     /**

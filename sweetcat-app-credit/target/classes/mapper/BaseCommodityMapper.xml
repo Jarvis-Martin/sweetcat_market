@@ -15,6 +15,10 @@
         market_item_id
         , creator_id, creator_name, stock, create_time, update_time, credit_number, commodity_type
     </sql>
+    <insert id="addOne">
+        insert into t_app_credit_market (<include refid="Base_Column_List"/>) values (#{marketItemId}, #{creator.creatorId},
+        #{creator.creatorName}, #{stock}, #{createTime}, #{updateTime}, #{creditNumber}, #{commodityType})
+    </insert>
     <select id="findPage" resultType="com.sweetcat.credit.infrastructure.po.BaseCommodityPO">
         select
         <include refid="Base_Column_List"/>
@@ -23,10 +27,12 @@
     <select id="findPageByCommodityType" resultType="com.sweetcat.credit.infrastructure.po.BaseCommodityPO">
         select
         <include refid="Base_Column_List"/>
-        from t_app_credit_market where commodity_type = #{CommodityType} limit #{page}, #{limit}
+        from t_app_credit_market where commodity_type = #{commodityType} limit #{page}, #{limit}
     </select>
     <select id="findOneByMarketItemId" resultType="com.sweetcat.credit.infrastructure.po.BaseCommodityPO">
-        select <include refid="Base_Column_List" /> from t_app_credit_market where market_item_id = #{marketItemId}
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_credit_market where market_item_id = #{marketItemId}
     </select>
 
 </mapper>

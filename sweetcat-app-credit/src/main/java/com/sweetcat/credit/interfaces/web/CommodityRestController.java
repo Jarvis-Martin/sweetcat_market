@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/credit")
-public class CreditCenterCommodityRestController {
+public class CommodityRestController {
     private CommodityFacade commodityFacade;
     private CommodityAssembler commodityAssembler;
     private CommodityApplicationService commodityApplicationService;

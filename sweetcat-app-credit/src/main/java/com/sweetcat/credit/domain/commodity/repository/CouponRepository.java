@@ -12,8 +12,17 @@ import java.util.List;
  * @version: 1.0
  */
 public interface CouponRepository {
+
+
+    /**
+     * 添加一种优惠券
+     *
+     * @param coupon
+     */
+     void addOne(Coupon coupon);
     /**
      * find data of coupon by targetType of coupon
+     *
      * @param targetType
      * @param page
      * @param limit
@@ -23,6 +32,7 @@ public interface CouponRepository {
 
     /**
      * find page data of timeType of coupon
+     *
      * @param timeType
      * @param page
      * @param limit
