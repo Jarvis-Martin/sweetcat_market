@@ -1,0 +1,33 @@
+package com.sweetcat.credit.domain.commodity.repository;
+
+import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
+
+import java.util.List;
+
+/**
+ * @author: Coder_Jarvis
+ * @description:
+ * @date: 2021-11-2021/11/16-22:39
+ * @version: 1.0
+ */
+public interface CommodityRepository {
+
+    /**
+     * 查询所有商品的分页数据
+     *
+     * @param page
+     * @param limit
+     * @return
+     */
+    List<BaseCommodity> findPage(Integer page, Integer limit);
+
+    /**
+     * 根据 商品分类查找商品分页数据
+     *
+     * @param commodityType
+     * @param page
+     * @param limit
+     * @return
+     */
+    List<BaseCommodity> findPageByCommodityType(Integer commodityType, Integer page, Integer limit);
+}

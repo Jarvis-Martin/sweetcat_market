@@ -64,6 +64,34 @@ spring:
           key-generator:
             column: credit_log_id
             type: SNOWFLAKE
+        t_app_credit_market:
+          actual-data-nodes: ds$->{0..1}.t_app_credit_market$->{0..1}
+          logical-table: t_app_credit_market
+          database-strategy:
+            inline:
+              sharding-column: market_item_id
+              algorithm-expression: ds$->{market_item_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: market_item_id
+              algorithm-expression: t_app_credit_market$->{market_item_id % 2}
+          key-generator:
+            column: market_item_id
+            type: SNOWFLAKE
+        t_credit_market_commodity_coupon:
+          actual-data-nodes: ds$->{0..1}.t_credit_market_commodity_coupon$->{0..1}
+          logical-table: t_credit_market_commodity_coupon
+          database-strategy:
+            inline:
+              sharding-column: market_item_id
+              algorithm-expression: ds$->{market_item_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: market_item_id
+              algorithm-expression: t_credit_market_commodity_coupon$->{market_item_id % 2}
+          key-generator:
+            column: market_item_id
+            type: SNOWFLAKE
 
   # redis 基础配置
   redis:

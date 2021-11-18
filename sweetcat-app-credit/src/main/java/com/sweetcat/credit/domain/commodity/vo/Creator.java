@@ -1,4 +1,4 @@
-package com.sweetcat.credit.domain.commodity.entity;
+package com.sweetcat.credit.domain.commodity.vo;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
