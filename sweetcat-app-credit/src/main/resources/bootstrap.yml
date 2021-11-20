@@ -92,6 +92,20 @@ spring:
           key-generator:
             column: market_item_id
             type: SNOWFLAKE
+        t_app_redeem_log:
+          actual-data-nodes: ds$->{0..1}.t_app_redeem_log$->{0..1}
+          logical-table: t_app_redeem_log
+          database-strategy:
+            inline:
+              sharding-column: redeem_log_id
+              algorithm-expression: ds$->{redeem_log_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: redeem_log_id
+              algorithm-expression: t_app_redeem_log$->{redeem_log_id % 2}
+          key-generator:
+            column: redeem_log_id
+            type: SNOWFLAKE
 
   # redis 基础配置
   redis:

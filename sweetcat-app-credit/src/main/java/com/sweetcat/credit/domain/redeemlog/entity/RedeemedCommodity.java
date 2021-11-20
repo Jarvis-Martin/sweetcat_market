@@ -19,26 +19,16 @@ public class RedeemedCommodity {
      */
     private Long commodityId;
     /**
-     * 被兑换商品名
-     */
-    private String commodityName;
-    /**
-     * 商品主图 3张最佳
-     */
-    private List<String> picSmall;
-    /**
      * 兑换商品所需积分书
      */
-    private Integer costCreditNumber;
+    private Long costCreditNumber;
 
     public RedeemedCommodity(Long commodityId) {
         this.setCommodityId(commodityId);
     }
 
-    public RedeemedCommodity(Long commodityId, String commodityName, List<String> picSmall, Integer costCreditNumber) {
+    public RedeemedCommodity(Long commodityId, String commodityName, List<String> picSmall, Long costCreditNumber) {
         this.setCommodityId(commodityId);
-        this.setCommodityName(commodityName);
-        this.setPicSmall(picSmall);
         this.setCostCreditNumber(costCreditNumber);
     }
 
@@ -52,27 +42,7 @@ public class RedeemedCommodity {
         this.commodityId = commodityId;
     }
 
-    public void setCommodityName(String commodityName) {
-        if (commodityName == null || commodityName.length() <= 0) {
-            throw new ParameterFormatIllegalityException(
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
-            );
-        }
-        this.commodityName = commodityName;
-    }
-
-    public void setPicSmall(List<String> picSmall) {
-        if (picSmall == null || picSmall.size() < 0) {
-            throw new ParameterFormatIllegalityException(
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
-            );
-        }
-        this.picSmall = picSmall;
-    }
-
-    public void setCostCreditNumber(Integer costCreditNumber) {
+    public void setCostCreditNumber(Long costCreditNumber) {
         if (costCreditNumber == null || costCreditNumber < 0) {
             throw new ParameterFormatIllegalityException(
                     ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),

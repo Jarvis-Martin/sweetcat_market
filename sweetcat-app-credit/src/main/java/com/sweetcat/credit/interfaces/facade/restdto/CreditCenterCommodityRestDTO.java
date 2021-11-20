@@ -49,7 +49,7 @@ public class CreditCenterCommodityRestDTO {
     /**
      * 兑换商品所需积分数
      */
-    private Integer creditNumber;
+    private Long creditNumber;
 
     /**
      * 商品类别：0优惠券；1实物商品

@@ -14,9 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommodityFactory {
     public BaseCommodity create(BaseCommodityPO commodityInfoPO) {
+        Creator creator = new Creator(commodityInfoPO.getCreatorId());
+        creator.setCreatorName(commodityInfoPO.getCreatorName());
         BaseCommodity commodity = new BaseCommodity(
                 commodityInfoPO.getMarketItemId(),
-                new Creator(commodityInfoPO.getCreatorId()),
+                creator,
                 commodityInfoPO.getStock(),
                 commodityInfoPO.getCreateTime(),
                 commodityInfoPO.getUpdateTime(),

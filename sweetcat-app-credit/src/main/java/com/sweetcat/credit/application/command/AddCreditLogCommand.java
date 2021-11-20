@@ -34,7 +34,7 @@ public class AddCreditLogCommand {
     /**
      * 纪录涉及的积分数量
      */
-    private Integer creditNumber;
+    private Long creditNumber;
 
     /**
      * 记录创建时间

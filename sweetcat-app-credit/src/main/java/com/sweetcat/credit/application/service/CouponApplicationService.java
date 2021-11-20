@@ -63,7 +63,7 @@ public class CouponApplicationService {
         String creatorName = command.getCreatorName();
         long stock = command.getStock();
         long createTime = command.getCreateTime();
-        int creditNumber = command.getCreditNumber();
+        long creditNumber = command.getCreditNumber();
         int commodityType = command.getCommodityType();
         BigDecimal thresholdPrice = command.getThresholdPrice();
         BigDecimal counteractPrice = command.getCounteractPrice();

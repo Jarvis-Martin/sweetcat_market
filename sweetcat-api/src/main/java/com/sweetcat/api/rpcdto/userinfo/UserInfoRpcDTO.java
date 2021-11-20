@@ -29,5 +29,9 @@ public class UserInfoRpcDTO {
      * 个性签名
      */
     private String personalizedSignature;
+    /**
+     * 账号创建时间
+     */
+    private Long createTime;
 
 }

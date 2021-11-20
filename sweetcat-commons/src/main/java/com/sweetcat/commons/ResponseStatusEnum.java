@@ -45,6 +45,14 @@ public enum ResponseStatusEnum {
      */
     CustomerServiceStaffNOTEXISTED("A0201", "该客服人员不存在"),
     /**
+     * 商品缺货
+     */
+    StockOut("A0201", "商品缺货"),
+    /**
+     * 用户积分不足
+     */
+    CreditNotEnough("A0201", "用户积分不足"),
+    /**
      * 用户已签到
      */
     CHECKEDIN("A0201", "您已签到过了，不能重复签到哈"),

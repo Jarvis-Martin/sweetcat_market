@@ -38,4 +38,10 @@ public interface BaseCommodityMapper {
      * @param commodity
      */
     void addOne(BaseCommodity commodity);
+
+    /**
+     * 保存 commodity 的变化
+     * @param commodity
+     */
+    void update(BaseCommodity commodity);
 }

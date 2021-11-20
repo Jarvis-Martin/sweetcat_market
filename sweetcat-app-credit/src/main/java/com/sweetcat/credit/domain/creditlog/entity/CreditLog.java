@@ -40,7 +40,7 @@ public class CreditLog {
     /**
      * 纪录涉及的积分数量
      */
-    private Integer creditNumber;
+    private Long creditNumber;
     /**
      * 记录创建时间
      */
@@ -50,7 +50,7 @@ public class CreditLog {
         this.setCreditLogId(creditLogId);
     }
 
-    public CreditLog(Long creditLogId, CreditLogUser creditedUser, Integer logType, String description, Integer creditNumber, Long createTime) {
+    public CreditLog(Long creditLogId, CreditLogUser creditedUser, Integer logType, String description, Long creditNumber, Long createTime) {
         this.setCreditLogId(creditLogId);
         this.setCreditLogUser(creditedUser);
         this.setLogType(logType);
@@ -93,7 +93,7 @@ public class CreditLog {
         this.description = description;
     }
 
-    public void setCreditNumber(Integer creditNumber) {
+    public void setCreditNumber(Long creditNumber) {
         if (creditNumber == null || creditNumber < 0) {
             throw new ParameterFormatIllegalityException(
                     ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),

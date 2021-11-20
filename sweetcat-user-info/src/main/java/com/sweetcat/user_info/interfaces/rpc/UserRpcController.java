@@ -44,6 +44,6 @@ public class UserRpcController {
         if (user == null) {
             return null;
         }
-        return new UserInfoRpcDTO(userId, user.getNickname(), user.getAvatarPath(), user.getPersonalizedSignature());
+        return new UserInfoRpcDTO(userId, user.getNickname(), user.getAvatarPath(), user.getPersonalizedSignature(), user.getCreateTime());
     }
 }

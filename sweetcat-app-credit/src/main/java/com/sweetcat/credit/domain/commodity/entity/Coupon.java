@@ -85,7 +85,7 @@ public class Coupon extends BaseCommodity {
      */
     private Long deadline;
 
-    public Coupon(Long marketItemId, Creator creator, Long stock, Long createTime, Long updateTime, Integer creditNumber, Integer commodityType) {
+    public Coupon(Long marketItemId, Creator creator, Long stock, Long createTime, Long updateTime, Long creditNumber, Integer commodityType) {
         super(marketItemId, creator, stock, createTime, updateTime, creditNumber, commodityType);
         this.marketItemId = marketItemId;
     }

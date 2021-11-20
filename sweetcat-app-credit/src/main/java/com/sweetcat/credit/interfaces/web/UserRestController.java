@@ -6,10 +6,7 @@ import com.sweetcat.credit.domain.user.entity.User;
 import com.sweetcat.credit.interfaces.facade.UserFacade;
 import com.sweetcat.credit.interfaces.facade.assembler.UserAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -52,6 +49,19 @@ public class UserRestController {
     public ResponseDTO checkIn(Long userId) {
         userFacade.checkIn(userId);
         return response("签到成功", "{}");
+    }
+
+
+    /**
+     * 用户兑换兑换商品
+     *
+     * @param userId
+     * @param marketItemId
+     */
+    @PostMapping("/redeem/commodity/{commodity_id}")
+    public ResponseDTO redeemCommodity(Long userId, @PathVariable("commodity_id") Long marketItemId, Long createTime) {
+        userFacade.redeemCommodity(userId, marketItemId, createTime);
+        return response("兑换商品成功", "{}");
     }
 
     /**

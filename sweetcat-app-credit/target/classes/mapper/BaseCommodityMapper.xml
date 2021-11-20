@@ -16,9 +16,19 @@
         , creator_id, creator_name, stock, create_time, update_time, credit_number, commodity_type
     </sql>
     <insert id="addOne">
-        insert into t_app_credit_market (<include refid="Base_Column_List"/>) values (#{marketItemId}, #{creator.creatorId},
+        insert into t_app_credit_market (<include refid="Base_Column_List"/>) values (#{marketItemId},
+        #{creator.creatorId},
         #{creator.creatorName}, #{stock}, #{createTime}, #{updateTime}, #{creditNumber}, #{commodityType})
     </insert>
+    <update id="update">
+        update t_app_credit_market
+        set creator_name   = #{creator.creatorName},
+            stock          = #{stock},
+            update_time    = #{updateTime},
+            credit_number  = #{creditNumber},
+            commodity_type = #{commodityType}
+        where market_item_id = #{marketItemId}
+    </update>
     <select id="findPage" resultType="com.sweetcat.credit.infrastructure.po.BaseCommodityPO">
         select
         <include refid="Base_Column_List"/>

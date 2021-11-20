@@ -89,7 +89,7 @@ public class CouponPO extends BaseCommodityPO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    public CouponPO(Long marketItemId, Long creatorId, String creatorName, Long stock, Long createTime, Long updateTime, Integer creditNumber, Integer commodityType) {
+    public CouponPO(Long marketItemId, Long creatorId, String creatorName, Long stock, Long createTime, Long updateTime, Long creditNumber, Integer commodityType) {
         super(marketItemId, creatorId, creatorName, stock, createTime, updateTime, creditNumber, commodityType);
     }
     public CouponPO(BaseCommodityPO baseCommodityPO) {

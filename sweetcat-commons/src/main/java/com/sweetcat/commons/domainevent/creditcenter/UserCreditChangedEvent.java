@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreditCenterCheckedInEvent {
+public class UserCreditChangedEvent {
     /**
      * 积分记录用户
      */
@@ -34,14 +34,14 @@ public class CreditCenterCheckedInEvent {
     /**
      * 纪录涉及的积分数量
      */
-    private Integer creditNumber;
+    private Long creditNumber;
 
     /**
      * 记录创建时间
      */
     private Long occurOn;
 
-    public CreditCenterCheckedInEvent(Long userId) {
+    public UserCreditChangedEvent(Long userId) {
         this.userId = userId;
     }
 }

@@ -12,6 +12,13 @@ import java.util.List;
  */
 public interface CommodityRepository {
     /**
+     * 根据 marketItemId 查找 BaseCommodity
+     * @param marketItemId
+     * @return
+     */
+    BaseCommodity findOneMarketItemId(Long marketItemId);
+
+    /**
      * 添加一件商品（各种商品共有的一部分数据）
      * @param commodity
      */
@@ -35,4 +42,10 @@ public interface CommodityRepository {
      * @return
      */
     List<BaseCommodity> findPageByCommodityType(Integer commodityType, Integer page, Integer limit);
+
+    /**
+     * 保存 commodity 的变化
+     * @param commodity
+     */
+    void save(BaseCommodity commodity);
 }

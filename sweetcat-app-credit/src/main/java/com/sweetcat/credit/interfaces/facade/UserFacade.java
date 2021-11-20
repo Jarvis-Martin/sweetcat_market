@@ -31,4 +31,14 @@ public class UserFacade {
     public void checkIn(Long userId) {
         userApplicationService.checkIn(userId);
     }
+
+    /**
+     * 用户兑换兑换商品
+     *
+     * @param userId
+     * @param marketItemId
+     */
+    public void redeemCommodity(Long userId, Long marketItemId, Long createTime) {
+        userApplicationService.redeemCommodity(userId, marketItemId, createTime);
+    }
 }

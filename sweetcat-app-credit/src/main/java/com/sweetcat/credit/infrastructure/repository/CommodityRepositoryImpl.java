@@ -47,6 +47,21 @@ public class CommodityRepositoryImpl implements CommodityRepository {
         this.commodityFactory = commodityFactory;
     }
 
+
+    /**
+     * 根据 marketItemId 查找 BaseCommodity
+     * @param marketItemId
+     * @return
+     */
+    @Override
+    public BaseCommodity findOneMarketItemId(Long marketItemId) {
+        BaseCommodityPO baseCommodityPO = baseCommodityInfoMapper.findOneByMarketItemId(marketItemId);
+        if (baseCommodityPO == null) {
+            return null;
+        }
+        return commodityFactory.create(baseCommodityPO);
+    }
+
     /**
      * 添加一件商品（各种商品共有的一部分数据）
      * @param commodity
@@ -108,4 +123,12 @@ public class CommodityRepositoryImpl implements CommodityRepository {
         return baseCommoditiePage;
     }
 
+    /**
+     * 保存 commodity 的变化
+     * @param commodity
+     */
+    @Override
+    public void save(BaseCommodity commodity) {
+        baseCommodityInfoMapper.update(commodity);
+    }
 }
