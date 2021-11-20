@@ -28,6 +28,7 @@
         <module>sweetcat-user-recommend</module>
         <module>sweetcat-app-customerservice</module>
         <module>sweetcat-app-credit</module>
+        <module>sweetcat-app-couponcenter</module>
     </modules>
 
     <properties>

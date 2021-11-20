@@ -149,6 +149,11 @@ public class CommodityInfo {
     private BigDecimal subjoinChargePerGood;
 
     /**
+     * 是否为积分可抵扣购买金额商品 0不可抵扣，1可抵扣。creditCanOffset > 0时，值必须为1
+     */
+    private Integer creditCanOffset;
+
+    /**
      * 金币抵扣率,取值范围：0% ~ 99%
      */
     private BigDecimal coinCounteractRate;
@@ -199,6 +204,7 @@ public class CommodityInfo {
         this.setDefaultPostCharge(defaultPostCharge);
         this.setSubjoinChargePerGood(subjoinChargePerGood);
         this.setCoinCounteractRate(coinCounteractRate);
+        this.setCreditCanOffset(BigDecimal.ZERO.compareTo(this.coinCounteractRate) < 0 ? 1 : 0);
         // 金币可抵扣率 * 现价
         this.coinCounteractNumber = currentPrice.multiply(coinCounteractRate);
         // 现价取整 * 0.5
@@ -445,6 +451,16 @@ public class CommodityInfo {
             );
         }
         this.subjoinChargePerGood = subjoinChargePerGood;
+    }
+
+    public void setCreditCanOffset(Integer creditCanOffset) {
+        if (creditCanOffset == null || creditCanOffset < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.creditCanOffset = creditCanOffset;
     }
 
     public void setCoinCounteractRate(BigDecimal coinCounteractRate) {

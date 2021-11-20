@@ -1,9 +1,8 @@
 package com.sweetcat.storecommodity.application.service;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.StoreNotExistedException;
-import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
-import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storecommodity.application.command.AddStoreCommodityCommand;
 import com.sweetcat.storecommodity.application.rpc.StoreInfoRpc;
 import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
@@ -12,7 +11,6 @@ import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_servi
 import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -54,6 +52,18 @@ public class CommodityInfoApplicationService {
         verifyIdFormatService.verifyId(commodityId);
         // 查找商品信息 by commodity id
         return commodityInfoRepository.findByCommodityId(commodityId);
+    }
+
+    /**
+     * 查找积分可抵扣部分金额的商品
+     * @param page
+     * @param limit
+     * @return
+     */
+    public List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
+        limit = limit < 0 ? 15 : limit;
+        page = page < 0 ? 0 : page * limit;
+        return commodityInfoRepository.findPageCreditCanOffsetAPart(page, limit);
     }
 
     public List<CommodityInfo> findPageByStoreId(Long storeId, Integer page, Integer limit) {

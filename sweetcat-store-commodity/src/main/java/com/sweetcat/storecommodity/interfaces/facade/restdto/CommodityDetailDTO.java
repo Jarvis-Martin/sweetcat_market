@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommodityInfoDTO {
+public class CommodityDetailDTO {
     /**
      * 商品od
      */

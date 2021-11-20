@@ -7,7 +7,8 @@
         <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
         <result column="brand" jdbcType="VARCHAR" property="brand"/>
         <result column="pic_small" jdbcType="VARCHAR" property="picSmall"/>
-        <result column="pic_big" jdbcType="VARCHAR" property="picBig" typeHandler="com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="pic_big" jdbcType="VARCHAR" property="picBig"
+                typeHandler="com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
         <result column="first_category" jdbcType="VARCHAR" property="firstCategory"/>
         <result column="second_category" jdbcType="VARCHAR" property="secondCategory"/>
         <result column="third_category" jdbcType="VARCHAR" property="thirdCategory"/>
@@ -28,23 +29,26 @@
         <result column="comment_number" jdbcType="BIGINT" property="commentNumber"/>
         <result column="default_post_charge" jdbcType="DECIMAL" property="defaultPostCharge"/>
         <result column="subjoin_charge_per_good" jdbcType="DECIMAL" property="subjoinChargePerGood"/>
+        <result column="is_credit_can_offset" jdbcType="DECIMAL" property="creditCanOffset"/>
         <result column="coin_counteract_rate" jdbcType="DECIMAL" property="coinCounteractRate"/>
     </resultMap>
     <sql id="Base_Column_List">
-    commodity_id, store_id, commodity_name, brand, pic_small, pic_big, first_category,
+        commodity_id
+        , store_id, commodity_name, brand, pic_small, pic_big, first_category,
     second_category, third_category, use_times, production_area, old_price, current_price, 
     description, stock, monthly_sales, add_to_car_number, collect_number, guarantee, 
     create_time, update_time, `status`, specification, comment_number, default_post_charge, 
-    subjoin_charge_per_good, coin_counteract_rate
+    subjoin_charge_per_good, is_credit_can_offset, coin_counteract_rate
     </sql>
     <insert id="addOne">
-        insert into t_store_commodity_info(<include refid="Base_Column_List"/>) values (
+        insert into t_store_commodity_info (<include refid="Base_Column_List" />) values (
         #{commodityId}, #{storeId}, #{commodityName}, #{brand},#{picSmall},
-         #{picBig, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler},
-         #{firstCategory}, #{secondCategory}, #{thirdCategory}, #{useTimes}, #{productionArea}, #{oldPrice}, #{currentPrice},
+        #{picBig, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{firstCategory}, #{secondCategory}, #{thirdCategory}, #{useTimes}, #{productionArea}, #{oldPrice},
+        #{currentPrice},
         #{description}, #{stock}, #{monthlySales}, #{addToCarNumber}, #{collectNumber}, #{guarantee},
         #{createTime}, #{updateTime}, #{status}, #{specification}, #{commentNumber}, #{defaultPostCharge},
-        #{subjoinChargePerGood}, #{coinCounteractRate})
+        #{subjoinChargePerGood}, #{creditCanOffset}, #{coinCounteractRate})
     </insert>
     <select id="findByCommodityId" resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO">
         select
@@ -65,6 +69,14 @@
         from t_store_commodity_info
         where status = 1
         order by create_time desc
+        limit #{page}, #{limit}
+    </select>
+    <select id="findPageCreditCanOffsetAPart"
+            resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_commodity_info
+        where is_credit_can_offset = 1
         limit #{page}, #{limit}
     </select>
 

@@ -1,10 +1,13 @@
 package com.sweetcat.storecommodity.infrastructure.po;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-
-import lombok.*;
 
 /**
  * t_store_commodity_info
@@ -144,6 +147,11 @@ public class CommodityInfoPO implements Serializable {
      * 商品多余一件时，多出的商品每件多少运费
      */
     private BigDecimal subjoinChargePerGood;
+
+    /**
+     * 是否为积分可抵扣购买金额商品 0不可抵扣，1可抵扣。creditCanOffset > 0时，值必须为1
+     */
+    private Integer creditCanOffset;
 
     /**
      * 金币抵扣率,取值范围：0% ~ 99%

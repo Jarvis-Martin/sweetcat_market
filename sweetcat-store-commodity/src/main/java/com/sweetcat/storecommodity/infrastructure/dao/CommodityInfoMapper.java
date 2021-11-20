@@ -40,4 +40,12 @@ public interface CommodityInfoMapper {
      * @return
      */
     List<CommodityInfoPO> findPageNewCommodities(@Param("page") Integer page, @Param("limit") Integer limit);
+
+    /**
+     * 查找积分可抵扣部分金额的商品
+     * @param page
+     * @param limit
+     * @return
+     */
+    List<CommodityInfoPO> findPageCreditCanOffsetAPart(Integer page, Integer limit);
 }

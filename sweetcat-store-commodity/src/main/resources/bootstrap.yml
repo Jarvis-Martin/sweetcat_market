@@ -49,7 +49,7 @@ spring:
               sharding-column: commodity_id
               algorithm-expression: t_store_commodity_info$->{commodity_id % 2}
           key-generator:
-            column: comment_id
+            column: commodity_id
             type: SNOWFLAKE
         t_store_commodity_comment:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_comment$->{0..1}

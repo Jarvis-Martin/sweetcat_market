@@ -5,7 +5,6 @@ import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfo
 import com.sweetcat.storecommodity.infrastructure.dao.CommodityInfoMapper;
 import com.sweetcat.storecommodity.infrastructure.factory.CommodityInfoFactory;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO;
-import com.sweetcat.storecommodity.interfaces.facade.CommodityInfoFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -71,5 +70,25 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     @Override
     public void addOne(CommodityInfo commodityInfo) {
         commodityInfoMapper.addOne(commodityInfo);
+    }
+
+
+    /**
+     * 查找积分可抵扣部分金额的商品
+     * @param page
+     * @param limit
+     * @return
+     */
+    @Override
+    public List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
+        List<CommodityInfoPO> commodityPageCreditCanOffsetAPart = commodityInfoMapper.findPageCreditCanOffsetAPart(page, limit);
+        if (commodityPageCreditCanOffsetAPart == null) {
+            return null;
+        }
+        return commodityPageCreditCanOffsetAPart.stream().collect(
+                ArrayList<CommodityInfo>::new,
+                (con, commodityInfoPO) -> con.add(commodityInfoFactory.create(commodityInfoPO)),
+                ArrayList::addAll
+        );
     }
 }

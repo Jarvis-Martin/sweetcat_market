@@ -37,4 +37,8 @@ public class CommodityInfoFacade {
     public void addOne(AddStoreCommodityCommand addStoreCommodityCommand) {
         commodityInfoApplicationService.addOne(addStoreCommodityCommand);
     }
+
+    public List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
+        return commodityInfoApplicationService.findPageCreditCanOffsetAPart(page, limit);
+    }
 }

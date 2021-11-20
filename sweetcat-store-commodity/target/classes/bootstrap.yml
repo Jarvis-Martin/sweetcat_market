@@ -35,24 +35,29 @@ spring:
         password: mysqladmin123
     # 分库配置 ， 根据good_id分库
     sharding:
-      default-database-strategy:
-        inline:
-          sharding-column: commodity_id
-          algorithm-expression: ds$->{commodity_id % 2}
-
       # 分表配置，根据member_id分表
       tables:
         t_store_commodity_info:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_info$->{0..1}
+          logical-table: t_store_commodity_info
+          database-strategy:
+            inline:
+              sharding-column: commodity_id
+              algorithm-expression: ds$->{commodity_id % 2}
           table-strategy:
             inline:
               sharding-column: commodity_id
               algorithm-expression: t_store_commodity_info$->{commodity_id % 2}
           key-generator:
-            column: comment_id
+            column: commodity_id
             type: SNOWFLAKE
         t_store_commodity_comment:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_comment$->{0..1}
+          logical-table: t_store_commodity_comment
+          database-strategy:
+            inline:
+              sharding-column: commodity_id
+              algorithm-expression: ds$->{commodity_id % 2}
           table-strategy:
             inline:
               sharding-column: comment_id
@@ -62,6 +67,11 @@ spring:
             type: SNOWFLAKE
         t_store_commodity_post_charge:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_post_charge$->{0..1}
+          logical-table: t_store_commodity_post_charge
+          database-strategy:
+            inline:
+              sharding-column: charge_id
+              algorithm-expression: ds$->{charge_id % 2}
           table-strategy:
             inline:
               sharding-column: charge_id

@@ -79,4 +79,5 @@ public class CommodityApplicationService {
         // 查询并返回
         return commodityRepository.findPageByCommodityType(commodityType, page, limit);
     }
+
 }

@@ -1,6 +1,5 @@
 package com.sweetcat.storecommodity.domain.commodityinfo.repository;
 
-import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
 
 import java.util.List;
@@ -43,4 +42,12 @@ public interface CommodityInfoRepository {
      * @param commodityInfo commodityInfo
      */
     void addOne(CommodityInfo commodityInfo);
+
+    /**
+     * 查找积分可抵扣部分金额的商品
+     * @param page
+     * @param limit
+     * @return
+     */
+    List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit);
 }
