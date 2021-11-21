@@ -1,6 +1,7 @@
 package com.sweetcat.storecommodity.infrastructure.rpc;
 
 import com.sweetcat.api.client.StoreInfoClient;
+import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 import com.sweetcat.storecommodity.application.rpc.StoreInfoRpc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,10 @@ public class StoreInfoRpcImpl implements StoreInfoRpc {
     @Override
     public StoreIsExistedRpcDTO storeIsExisted(Long storeId) {
         return storeInfoClient.storeIsExisted(storeId);
+    }
+
+    @Override
+    public StoreInfoRpcDTO findOneByStoreId(Long storeId) {
+        return storeInfoClient.findOneByStoreId(storeId);
     }
 }

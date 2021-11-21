@@ -1,6 +1,8 @@
 package com.sweetcat.storeinfo.interfaces.rpc;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
+import com.sweetcat.storeinfo.domain.storeinfo.entity.StoreInfo;
 import com.sweetcat.storeinfo.interfaces.facade.StoreInfoFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,4 +34,18 @@ public class StoreInfoRpcController {
         Boolean storeIsExisted = storeInfoFacade.storeIsExisted(storeId);
         return new StoreIsExistedRpcDTO(storeId.toString(), storeIsExisted, Instant.now().toEpochMilli());
     }
+
+    @GetMapping("/storeinfo/{store_id}")
+    public StoreInfoRpcDTO findStoreInfo(@PathVariable("store_id") Long storeId) {
+        StoreInfo storeInfo = storeInfoFacade.getOneById(storeId);
+        StoreInfoRpcDTO storeInfoRpcDTO = new StoreInfoRpcDTO(storeId);
+        storeInfoRpcDTO.setStoreName(storeInfo.getStoreName());
+        storeInfoRpcDTO.setPrincipalName(storeInfo.getPrincipalName());
+        storeInfoRpcDTO.setPrincipalPhone(storeInfo.getPrincipalPhone());
+        storeInfoRpcDTO.setMainBusiness(storeInfo.getMainBusiness());
+        storeInfoRpcDTO.setType(storeInfo.getType());
+        storeInfoRpcDTO.setCreateTime(storeInfo.getCreateTime());
+        return storeInfoRpcDTO;
+    }
+
 }

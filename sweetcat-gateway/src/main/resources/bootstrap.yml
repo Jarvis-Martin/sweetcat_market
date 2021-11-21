@@ -51,6 +51,11 @@ spring:
           uri: lb://sweetcat-app-credit
           predicates:
             - Path=/api/v1/credit/**
+        # 应用管理域：领券中心上下文
+        - id: sweetcat-app-credit
+          uri: lb://sweetcat-app-couponcenter
+          predicates:
+            - Path=/api/v1/coupon_center/**
 
         # 买家域：用户基本信息上下问
         - id: sweetcat-user-info

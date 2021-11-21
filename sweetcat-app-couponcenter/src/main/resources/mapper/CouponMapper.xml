@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.couponcenter.infrastructure.dao.CouponMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.couponcenter.infrastructure.po.CouponPO">
+        <id column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="threshold_price" jdbcType="DECIMAL" property="thresholdPrice"/>
+        <result column="counteract_price" jdbcType="DECIMAL" property="counteractPrice"/>
+        <result column="creator_id" jdbcType="BIGINT" property="creatorId"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="stock" jdbcType="BIGINT" property="stock"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        coupon_id
+        , threshold_price, counteract_price, creator_id, create_time, update_time, stock
+    </sql>
+    <insert id="addOne">
+        insert into t_app_couponcenter (<include refid="Base_Column_List"/>) values (#{couponId},
+        #{thresholdPrice}, #{counteractPrice}, #{creator.creatorId}, #{createTime}, #{updateTime}, #{stock})
+    </insert>
+    <select id="findByCouponId" resultType="com.sweetcat.couponcenter.infrastructure.po.CouponPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_couponcenter where coupon_id = #{couponId}
+    </select>
+
+</mapper>

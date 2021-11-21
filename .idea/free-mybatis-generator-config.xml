@@ -51,6 +51,58 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_app_coupon_center_coupon">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CouponCenterCouponMapper" />
+              <option name="daoPackage" value="com.sweetcat.couponcenter.infrastructure.dao" />
+              <option name="daoPostfix" value="CouponCenterCouponMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CouponCenterCouponPO" />
+              <option name="modelPackage" value="com.sweetcat.couponcenter.infrastructure.po" />
+              <option name="name" value="t_app_coupon_center_coupon" />
+              <option name="offsetLimit" value="true" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-couponcenter" />
+              <option name="tableName" value="t_app_coupon_center_coupon" />
+              <option name="useActualColumnNames" value="true" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
+        <entry key="t_app_couponcenter">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CouponMapper" />
+              <option name="daoPackage" value="com.sweetcat.couponcenter.infrastructure.dao" />
+              <option name="daoPostfix" value="CouponMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CouponPO" />
+              <option name="modelPackage" value="com.sweetcat.couponcenter.infrastructure.po" />
+              <option name="name" value="t_app_couponcenter" />
+              <option name="offsetLimit" value="true" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="coupon_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-app-couponcenter" />
+              <option name="tableName" value="t_app_couponcenter" />
+              <option name="useActualColumnNames" value="true" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_app_credit_log">
           <value>
             <Config>

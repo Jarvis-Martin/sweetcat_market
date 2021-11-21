@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.couponcenter.infrastructure.dao.ConcreteCouponMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.couponcenter.infrastructure.po.ConcreteCouponPO">
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="target_type" jdbcType="TINYINT" property="targetType"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"
+                typeHandler="com.sweetcat.couponcenter.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="time_type" jdbcType="TINYINT" property="timeType"/>
+        <result column="valid_duration" jdbcType="BIGINT" property="validDuration"/>
+        <result column="start_time" jdbcType="BIGINT" property="startTime"/>
+        <result column="deadline" jdbcType="BIGINT" property="deadline"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        coupon_id
+        ,target_type,store_id,store_name,commodity_id,commodity_pic_small,commodity_name,time_type,valid_duration,start_time,deadline
+    </sql>
+    <sql id="Base_Column_List_For_Commodity_Coupon">
+        coupon_id
+        ,target_type,store_id,store_name,commodity_id,commodity_pic_small,commodity_name,time_type,valid_duration,start_time,deadline
+    </sql>
+    <sql id="Base_Column_List_For_Universal_Coupon">
+        coupon_id
+        ,target_type,time_type,valid_duration,start_time,deadline
+    </sql>
+    <insert id="addOneCommodityCoupon">
+        insert into t_app_coupon_center_coupon (<include refid="Base_Column_List_For_Commodity_Coupon"/>) values (#{couponId}, #{targetType},
+        #{store.storeId},
+        #{store.storeName}, #{commodity.commodityId},
+        #{commodity.commodityPicSmall, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.couponcenter.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{commodity.commodityName},
+        #{timeType}, #{validDuration}, #{startTime}, #{deadline})
+    </insert>
+    <insert id="addOneUniversalCoupon">
+        insert into t_app_coupon_center_coupon (<include refid="Base_Column_List_For_Universal_Coupon"/>) values (#{couponId}, #{targetType},
+        #{timeType}, #{validDuration}, #{startTime}, #{deadline})
+    </insert>
+
+    <select id="findPage" resultType="com.sweetcat.couponcenter.infrastructure.po.ConcreteCouponPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_coupon_center_coupon where target_type = #{targetType}
+        limit #{page}, #{limit}
+    </select>
+
+
+</mapper>

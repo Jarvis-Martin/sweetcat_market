@@ -57,7 +57,15 @@ public class StoreInfoApplicationService {
         return storeInfoRepository.find(storeId);
     }
 
-    // 添加 store
+    /**
+     * 添加 store
+     * @param storeName
+     * @param principalName
+     * @param principalPhone
+     * @param mainBusiness
+     * @param type
+     * @param createTime
+     */
     public void addOne(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime) {
         // 检查 店铺名，开店人姓名， 主营业务mainBusiness可以为null
         verifyString(storeName, principalName);

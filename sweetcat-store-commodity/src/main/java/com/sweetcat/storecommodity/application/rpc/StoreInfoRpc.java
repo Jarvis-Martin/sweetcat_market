@@ -1,5 +1,6 @@
 package com.sweetcat.storecommodity.application.rpc;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 
 /**
@@ -16,4 +17,13 @@ public interface StoreInfoRpc {
      * @return
      */
     StoreIsExistedRpcDTO storeIsExisted(Long storeId);
+
+    /**
+     * find store by store id
+     *
+     * @param storeId storeId
+     * @return
+     */
+    StoreInfoRpcDTO findOneByStoreId(Long storeId);
+
 }

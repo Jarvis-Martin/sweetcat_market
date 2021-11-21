@@ -1,0 +1,78 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        group: SWEETCAT_GROUP
+        prefix: sweetcat-app-couponcenter
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            file-extension: yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_couponcenter0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_couponcenter1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    sharding:
+      tables:
+        t_app_couponcenter:
+          actual-data-nodes: ds$->{0..1}.t_app_couponcenter$->{0..1}
+          logical-table: t_app_couponcenter
+          database-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: ds$->{coupon_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: t_app_couponcenter$->{coupon_id % 2}
+          key-generator:
+            column: coupon_id
+            type: SNOWFLAKE
+
+        t_app_coupon_center_coupon:
+          actual-data-nodes: ds$->{0..1}.t_app_coupon_center_coupon$->{0..1}
+          logical-table: t_app_coupon_center_coupon
+          database-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: ds$->{coupon_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: t_app_coupon_center_coupon$->{coupon_id % 2}
+          key-generator:
+            column: coupon_id
+            type: SNOWFLAKE
+
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-handlers-package: com.sweetcat.couponcenter.infrastructure.dao.typehandler
