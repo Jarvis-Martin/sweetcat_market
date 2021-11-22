@@ -107,4 +107,17 @@ public class CouponRepositoryImpl implements CouponRepository {
         );
         return couponPage;
     }
+
+    @Override
+    public Coupon findOneByMarketItemId(Long marketItemId) {
+        BaseCommodityPO baseCommodityPO = baseCommodityMapper.findOneByMarketItemId(marketItemId);
+        if (baseCommodityPO == null) {
+            return null;
+        }
+        CouponPO couponPO = couponMapper.findOneByMarketItemId(marketItemId);
+        if (couponPO == null) {
+            return null;
+        }
+        return couponFactory.create(baseCommodityPO, couponPO);
+    }
 }

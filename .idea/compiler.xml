@@ -18,6 +18,7 @@
         <module name="sweetcat-app-fileupload" />
         <module name="sweetcat-gateway" />
         <module name="sweetcat-app-couponcenter" />
+        <module name="sweetcat-user-coupon" />
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
         <module name="sweetcat-app-credit" />
@@ -55,6 +56,7 @@
       <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
+      <module name="sweetcat-user-coupon" options="-parameters" />
       <module name="sweetcat-user-favorite" options="-parameters" />
       <module name="sweetcat-user-footprint" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />

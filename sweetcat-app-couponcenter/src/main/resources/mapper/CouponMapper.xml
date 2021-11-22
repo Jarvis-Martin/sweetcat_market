@@ -9,15 +9,29 @@
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
         <result column="stock" jdbcType="BIGINT" property="stock"/>
+        <result column="target_type" jdbcType="BIGINT" property="targetType"/>
     </resultMap>
     <sql id="Base_Column_List">
         coupon_id
-        , threshold_price, counteract_price, creator_id, create_time, update_time, stock
+        , threshold_price, counteract_price, creator_id, create_time, update_time, stock, target_type
     </sql>
     <insert id="addOne">
         insert into t_app_couponcenter (<include refid="Base_Column_List"/>) values (#{couponId},
-        #{thresholdPrice}, #{counteractPrice}, #{creator.creatorId}, #{createTime}, #{updateTime}, #{stock})
+        #{thresholdPrice}, #{counteractPrice}, #{creator.creatorId}, #{createTime}, #{updateTime}, #{stock},
+        #{targetType})
     </insert>
+    <update id="updateOne">
+        update t_app_couponcenter
+        set coupon_id        = #{couponId},
+            threshold_price  = #{thresholdPrice},
+            counteract_price = #{counteractPrice},
+            creator_id       = #{creator.creatorId},
+            create_time      = #{createTime},
+            update_time      = #{updateTime},
+            stock            = #{stock},
+            target_type      = #{targetType}
+        where coupon_id = #{couponId}
+    </update>
     <select id="findByCouponId" resultType="com.sweetcat.couponcenter.infrastructure.po.CouponPO">
         select
         <include refid="Base_Column_List"/>

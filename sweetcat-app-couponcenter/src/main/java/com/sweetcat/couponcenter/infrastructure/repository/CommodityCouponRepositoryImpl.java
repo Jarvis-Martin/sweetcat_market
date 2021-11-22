@@ -49,6 +49,9 @@ public class CommodityCouponRepositoryImpl implements CommodityCouponRepository 
     @Override
     public List<CommodityCoupon> findPage(Integer targetType, Integer page, Integer limit) {
         List<ConcreteCouponPO> couponPOPage = concreteCouponMapper.findPage(targetType, page, limit);
+        if (couponPOPage == null || couponPOPage.size() <= 0) {
+            return null;
+        }
         return couponPOPage.stream().collect(
                 ArrayList<CommodityCoupon>::new,
                 (con, concreteCouponPO) -> {
@@ -68,5 +71,18 @@ public class CommodityCouponRepositoryImpl implements CommodityCouponRepository 
     public void addOne(CommodityCoupon commodityCoupon) {
         couponMapper.addOne(commodityCoupon);
         concreteCouponMapper.addOneCommodityCoupon(commodityCoupon);
+    }
+
+    @Override
+    public CommodityCoupon findOneByCouponId(Long couponId) {
+        CouponPO couponPO = couponMapper.findByCouponId(couponId);
+        if (couponPO == null) {
+            return null;
+        }
+        ConcreteCouponPO concreteCouponPO = concreteCouponMapper.findOneByCouponId(couponId);
+        if (concreteCouponPO == null) {
+            return null;
+        }
+        return commodityCouponFactory.create(couponPO, concreteCouponPO);
     }
 }

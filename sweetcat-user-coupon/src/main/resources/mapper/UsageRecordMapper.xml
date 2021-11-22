@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.usercoupon.infrastructure.dao.UsageRecordMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.usercoupon.infrastructure.po.UsageRecordPO">
+        <id column="record_id" jdbcType="BIGINT" property="recordId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="time" jdbcType="BIGINT" property="time"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        record_id
+        , user_id, coupon_id, `type`, `time`
+    </sql>
+    <insert id="addOne">
+        insert into t_user_coupon_usage_record (<include refid="Base_Column_List"/>) values (#{recordId}, #{userId},
+        #{couponId}, #{type}, #{time})
+    </insert>
+
+</mapper>

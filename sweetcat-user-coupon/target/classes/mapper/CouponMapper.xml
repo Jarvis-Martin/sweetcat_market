@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.usercoupon.infrastructure.dao.CouponMapper">
+  <resultMap id="BaseResultMap" type="com.sweetcat.usercoupon.infrastructure.po.CouponPO">
+    <id column="coupon_id" jdbcType="BIGINT" property="couponId" />
+    <result column="store_id" jdbcType="BIGINT" property="storeId" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
+    <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall" />
+    <result column="commodity_name" jdbcType="VARCHAR" property="commodityName" />
+    <result column="time_type" jdbcType="TINYINT" property="timeType" />
+    <result column="valid_duration" jdbcType="BIGINT" property="validDuration" />
+    <result column="start_time" jdbcType="BIGINT" property="startTime" />
+    <result column="deadline" jdbcType="BIGINT" property="deadline" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    coupon_id, store_id, store_name, commodity_id, commodity_pic_small, commodity_name, 
+    time_type, valid_duration, start_time, deadline
+  </sql>
+
+</mapper>

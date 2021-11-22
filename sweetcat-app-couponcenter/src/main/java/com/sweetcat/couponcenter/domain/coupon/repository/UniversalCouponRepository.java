@@ -27,4 +27,6 @@ public interface UniversalCouponRepository {
      * @param universalCoupon
      */
     void addOne(UniversalCoupon universalCoupon);
+
+    UniversalCoupon findOneByCouponId(Long couponId);
 }

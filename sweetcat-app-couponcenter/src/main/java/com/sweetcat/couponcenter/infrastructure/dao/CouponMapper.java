@@ -23,4 +23,6 @@ public interface CouponMapper {
      * @param coupon
      */
     <T extends Coupon> void addOne(T coupon);
+
+    void updateOne(Coupon coupon);
 }

@@ -26,4 +26,6 @@ public interface CommodityCouponRepository {
      * @param commodityCoupon
      */
     void addOne(CommodityCoupon commodityCoupon);
+
+    CommodityCoupon findOneByCouponId(Long couponId);
 }

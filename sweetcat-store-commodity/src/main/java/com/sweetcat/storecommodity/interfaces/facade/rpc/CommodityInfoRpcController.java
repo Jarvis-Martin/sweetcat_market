@@ -41,6 +41,9 @@ public class CommodityInfoRpcController {
     @GetMapping("/{commodity_id}")
     public CommodityInfoRpcDTO findByCommodityId(@PathVariable("commodity_id") Long commodityId) {
        CommodityInfo commodityInfo = commodityInfoFacade.findByCommodityId(commodityId);
+        if (commodityInfo == null) {
+            return null;
+        }
         return commodityInfoRpcAssemlber.converterToCommodityInfoRpcDTO(commodityInfo);
     }
 }

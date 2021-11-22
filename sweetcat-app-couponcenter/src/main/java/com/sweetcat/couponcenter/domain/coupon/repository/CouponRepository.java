@@ -15,4 +15,6 @@ public interface CouponRepository {
      * @return
      */
     Coupon findByCouponId(Long couponId);
+
+    void save(Coupon coupon);
 }

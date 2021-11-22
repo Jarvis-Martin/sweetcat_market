@@ -95,7 +95,8 @@ public class UniversalCouponApplicationService {
                 creator,
                 createTime,
                 createTime,
-                command.getStock()
+                command.getStock(),
+                command.getTargetType()
         );
         universalCoupon.setTargetType(command.getTargetType());
         universalCoupon.setTimeType(command.getTimeType());
@@ -104,5 +105,10 @@ public class UniversalCouponApplicationService {
         universalCoupon.setDeadline(command.getDeadline());
         // 入库
         universalCouponRepository.addOne(universalCoupon);
+    }
+
+    public UniversalCoupon findOneByCouponId(Long couponId) {
+        verifyIdFormatService.verifyIds(couponId);
+        return universalCouponRepository.findOneByCouponId(couponId);
     }
 }

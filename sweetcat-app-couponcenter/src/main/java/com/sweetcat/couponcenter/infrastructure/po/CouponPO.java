@@ -45,6 +45,7 @@ public class CouponPO implements Serializable {
      * 优惠券库存
      */
     private Long stock;
+    private Integer targetType;
 
     private static final long serialVersionUID = 1L;
 }

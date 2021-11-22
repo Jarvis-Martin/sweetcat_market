@@ -39,4 +39,7 @@ public class UniversalCouponFacade {
         universalCouponApplicationService.addOne(command);
     }
 
+    public UniversalCoupon findOneByCouponId(Long couponId) {
+        return universalCouponApplicationService.findOneByCouponId(couponId);
+    }
 }

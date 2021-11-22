@@ -27,7 +27,8 @@ public class CommodityCouponFactory {
                 creator,
                 couponPO.getCreateTime(),
                 Instant.now().toEpochMilli(),
-                couponPO.getStock()
+                couponPO.getStock(),
+                couponPO.getTargetType()
         );
         commodityCoupon.setTargetType(concreteCouponPO.getTargetType());
         Store store = new Store(concreteCouponPO.getStoreId());

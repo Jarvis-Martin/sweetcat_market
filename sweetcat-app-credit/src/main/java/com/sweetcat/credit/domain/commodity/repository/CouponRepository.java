@@ -40,4 +40,5 @@ public interface CouponRepository {
      */
     List<Coupon> findPageByTimeType(@Param("timeType") Long timeType, @Param("page") Integer page, @Param("limit") Integer limit);
 
+    Coupon findOneByMarketItemId(Long marketItemId);
 }

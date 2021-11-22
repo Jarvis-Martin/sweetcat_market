@@ -146,3 +146,6 @@ management:
   health:
     db:
       enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-handlers-package: com.sweetcat.credit.infrastructure.dao.typehandler

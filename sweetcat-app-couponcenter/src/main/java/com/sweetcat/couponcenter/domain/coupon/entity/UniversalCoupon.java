@@ -42,6 +42,11 @@ public class UniversalCoupon extends Coupon {
      */
     private Long deadline;
 
+    public UniversalCoupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock, Integer targetType) {
+        super(couponId, thresholdPrice, counteractPrice, creator, createTime, updateTime, stock, targetType);
+        this.setCouponId(couponId);
+    }
+
     public void setTargetType(Integer targetType) {
         if (targetType == null || targetType < 0) {
             throw new ParameterFormatIllegalityException(
@@ -92,10 +97,7 @@ public class UniversalCoupon extends Coupon {
         this.deadline = deadline;
     }
 
-    public UniversalCoupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock) {
-        super(couponId, thresholdPrice, counteractPrice, creator, createTime, updateTime, stock);
-        this.setCouponId(couponId);
-    }
+
 
     @Override
     public void setCouponId(Long couponId) {

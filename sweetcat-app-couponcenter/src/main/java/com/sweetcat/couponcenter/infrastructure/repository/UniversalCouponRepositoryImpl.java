@@ -70,4 +70,16 @@ public class UniversalCouponRepositoryImpl implements UniversalCouponRepository 
         couponMapper.addOne(universalCoupon);
         concreteCouponMapper.addOneUniversalCoupon(universalCoupon);
     }
+    @Override
+    public UniversalCoupon findOneByCouponId(Long couponId) {
+        CouponPO couponPO = couponMapper.findByCouponId(couponId);
+        if (couponPO == null) {
+            return null;
+        }
+        ConcreteCouponPO concreteCouponPO = concreteCouponMapper.findOneByCouponId(couponId);
+        if (concreteCouponPO == null) {
+            return null;
+        }
+        return universalCouponFactory.create(couponPO, concreteCouponPO);
+    }
 }

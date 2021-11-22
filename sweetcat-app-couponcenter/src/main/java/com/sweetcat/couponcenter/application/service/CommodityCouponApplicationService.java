@@ -12,6 +12,7 @@ import com.sweetcat.couponcenter.application.rpc.CommodityInfoRpc;
 import com.sweetcat.couponcenter.application.rpc.StoreInfoRpc;
 import com.sweetcat.couponcenter.application.rpc.UserInfoRpc;
 import com.sweetcat.couponcenter.domain.coupon.entity.CommodityCoupon;
+import com.sweetcat.couponcenter.domain.coupon.entity.Coupon;
 import com.sweetcat.couponcenter.domain.coupon.repository.CommodityCouponRepository;
 import com.sweetcat.couponcenter.domain.coupon.vo.Commodity;
 import com.sweetcat.couponcenter.domain.coupon.vo.Creator;
@@ -83,6 +84,11 @@ public class CommodityCouponApplicationService {
         return commodityCouponRepository.findPage(targetType, page, limit);
     }
 
+    public CommodityCoupon findOneByCouponId(Long couponId) {
+        verifyIdFormatService.verifyIds(couponId);
+        return commodityCouponRepository.findOneByCouponId(couponId);
+    }
+
     /**
      * add a commodity coupon
      * @param command
@@ -136,7 +142,8 @@ public class CommodityCouponApplicationService {
                 creator,
                 createTime,
                 createTime,
-                command.getStock()
+                command.getStock(),
+                command.getTargetType()
         );
         // 商品券商家信息
         Store store = new Store(storeId);

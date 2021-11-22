@@ -7,8 +7,9 @@ import com.sweetcat.couponcenter.application.command.AddUniversalCouponCommand;
 import com.sweetcat.couponcenter.domain.coupon.entity.CommodityCoupon;
 import com.sweetcat.couponcenter.domain.coupon.entity.UniversalCoupon;
 import com.sweetcat.couponcenter.interfaces.facade.CommodityCouponFacade;
+import com.sweetcat.couponcenter.interfaces.facade.CouponFacade;
 import com.sweetcat.couponcenter.interfaces.facade.UniversalCouponFacade;
-import com.sweetcat.couponcenter.interfaces.facade.assembler.CouponAssembler;
+import com.sweetcat.couponcenter.interfaces.facade.assembler.CouponRestAssembler;
 import com.sweetcat.couponcenter.interfaces.facade.restdto.CouponRestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +27,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/coupon_center")
 public class CouponRestController {
+    private CouponFacade couponFacade;
     private UniversalCouponFacade universalCouponFacade;
     private CommodityCouponFacade commodityCouponFacade;
-    private CouponAssembler couponAssembler;
+    private CouponRestAssembler couponAssembler;
 
     @Autowired
-    public void setCouponAssembler(CouponAssembler couponAssembler) {
+    public void setCouponFacade(CouponFacade couponFacade) {
+        this.couponFacade = couponFacade;
+    }
+
+    @Autowired
+    public void setCouponAssembler(CouponRestAssembler couponAssembler) {
         this.couponAssembler = couponAssembler;
     }
 
@@ -109,6 +116,19 @@ public class CouponRestController {
 
         return response("插入成功", "{}");
 
+    }
+
+    /**
+     * 领取优惠券
+     * @param userId
+     * @param couponId
+     * @return
+     */
+    @PostMapping("/coupon/{coupon_id}")
+    public ResponseDTO getOneCoupon(Long userId, @PathVariable("coupon_id") Long couponId) {
+        couponFacade.getOneCoupon(userId, couponId);
+
+        return response("领取优惠券成功", "{}");
     }
 
     /**

@@ -46,6 +46,11 @@
         from t_app_coupon_center_coupon where target_type = #{targetType}
         limit #{page}, #{limit}
     </select>
+    <select id="findOneByCouponId" resultType="com.sweetcat.couponcenter.infrastructure.po.ConcreteCouponPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_coupon_center_coupon where coupon_id = #{couponId}
+    </select>
 
 
 </mapper>

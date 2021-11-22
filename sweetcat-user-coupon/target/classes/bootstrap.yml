@@ -1,0 +1,75 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: dev
+        group: SWEETCAT_GROUP
+        prefix: sweetcat-user-coupon
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            file-extension: yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_user_coupon0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_user_coupon1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    sharding:
+      tables:
+        t_user_coupon:
+          actual-data-nodes: ds$->{0..1}.t_user_coupon$->{0..1}
+          logical-table: t_user_coupon
+          database-strategy:
+            inline:
+              sharding-column: record_id
+              algorithm-expression: ds$->{record_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: record_id
+              algorithm-expression: t_user_coupon$->{record_id % 2}
+          key-generator:
+            column: record_id
+            type: SNOWFLAKE
+
+# rocketmq 配置
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: sweetcat-user-info
+    # 发送异步消息失败时的重试次数：默认2
+    retry-times-when-send-async-failed: 2
+    # 发送同步消息失败时的重试次数：默认2
+    retry-times-when-send-failed: 2
+    # 发送消息超时时间。默认3s
+    send-message-timeout: 3000
+
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-handlers-package: com.sweetcat.credit.infrastructure.dao.typehandler

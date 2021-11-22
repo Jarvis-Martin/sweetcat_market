@@ -24,7 +24,8 @@ public class CouponFactory {
                 creator,
                 couponPO.getCreateTime(),
                 Instant.now().toEpochMilli(),
-                couponPO.getStock()
+                couponPO.getStock(),
+                couponPO.getTargetType()
         );
     }
 }

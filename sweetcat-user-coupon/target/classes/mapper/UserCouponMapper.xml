@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.usercoupon.infrastructure.dao.UserCouponMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.usercoupon.infrastructure.po.UserCouponPO">
+        <id column="record_id" jdbcType="BIGINT" property="recordId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="threshold_price" jdbcType="DECIMAL" property="thresholdPrice"/>
+        <result column="counteract_price" jdbcType="DECIMAL" property="counteractPrice"/>
+        <result column="obtain_time" jdbcType="BIGINT" property="obtainTime"/>
+        <result column="target_type" jdbcType="TINYINT" property="targetType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        record_id
+        , user_id, coupon_id, threshold_price, counteract_price, obtain_time, target_type
+    </sql>
+    <insert id="addOne">
+        insert into t_user_coupon (<include refid="Base_Column_List"/>) values (#{recordId}, #{user.userId},
+        #{coupon.couponId}, #{coupon.thresholdPrice}, #{coupon.counteractPrice}, #{obtainTime}, #{targetType})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_coupon
+        where record_id = #{recordeId}
+    </delete>
+    <select id="findPageByUserId" resultType="com.sweetcat.usercoupon.infrastructure.po.UserCouponPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_coupon where user_id = #{userId} limit #{page}, #{limit}
+    </select>
+    <select id="findOneByUserIdAndCouponId"
+            resultType="com.sweetcat.usercoupon.infrastructure.po.UserCouponPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_coupon where user_id = #{userId} and coupon_id = #{couponId}
+    </select>
+
+</mapper>

@@ -27,4 +27,6 @@ public interface ConcreteCouponMapper {
     void addOneCommodityCoupon(CommodityCoupon coupon);
 
     void addOneUniversalCoupon(UniversalCoupon coupon);
+
+    ConcreteCouponPO findOneByCouponId(Long couponId);
 }

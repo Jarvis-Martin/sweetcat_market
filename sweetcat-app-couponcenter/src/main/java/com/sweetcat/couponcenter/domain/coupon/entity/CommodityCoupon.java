@@ -51,8 +51,8 @@ public class CommodityCoupon extends Coupon {
      */
     private Long deadline;
 
-    public CommodityCoupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock) {
-        super(couponId, thresholdPrice, counteractPrice, creator, createTime, updateTime, stock);
+    public CommodityCoupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock, Integer targetType) {
+        super(couponId, thresholdPrice, counteractPrice, creator, createTime, updateTime, stock, targetType);
         this.setCouponId(couponId);
     }
 

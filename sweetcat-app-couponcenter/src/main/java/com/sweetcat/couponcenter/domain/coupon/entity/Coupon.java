@@ -50,7 +50,12 @@ public class Coupon {
      */
     private Long stock;
 
-    public Coupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock) {
+    /**
+     * 优惠券使用对象类别表示；0通用券，1商品券
+     */
+    private Integer targetType;
+
+    public Coupon(Long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, Creator creator, Long createTime, Long updateTime, Long stock, Integer targetType) {
         this.couponId = couponId;
         this.thresholdPrice = thresholdPrice;
         this.counteractPrice = counteractPrice;
@@ -58,6 +63,7 @@ public class Coupon {
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.stock = stock;
+        this.targetType = targetType;
     }
 
     public void setCouponId(Long couponId) {
@@ -113,5 +119,19 @@ public class Coupon {
             );
         }
         this.updateTime = updateTime;
+    }
+
+    public void setStock(Long stock) {
+        if (stock == null || stock < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.stock = stock;
+    }
+
+    public void stock(Long stock) {
+        this.setStock(stock);
     }
 }

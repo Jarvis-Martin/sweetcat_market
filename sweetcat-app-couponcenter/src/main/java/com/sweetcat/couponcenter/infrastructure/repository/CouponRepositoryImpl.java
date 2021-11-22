@@ -6,6 +6,7 @@ import com.sweetcat.couponcenter.infrastructure.dao.CouponMapper;
 import com.sweetcat.couponcenter.infrastructure.factory.CouponFactory;
 import com.sweetcat.couponcenter.infrastructure.po.CouponPO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author: Coder_Jarvis
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date: 2021-11-2021/11/20-20:44
  * @version: 1.0
  */
+@Repository
 public class CouponRepositoryImpl implements CouponRepository {
     private CouponMapper couponMapper;
     private CouponFactory couponFactory;
@@ -39,5 +41,10 @@ public class CouponRepositoryImpl implements CouponRepository {
             return null;
         }
         return couponFactory.create(couponPO);
+    }
+
+    @Override
+    public void save(Coupon coupon) {
+        couponMapper.updateOne(coupon);
     }
 }

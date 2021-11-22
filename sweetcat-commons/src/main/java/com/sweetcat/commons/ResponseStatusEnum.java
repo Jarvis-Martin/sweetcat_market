@@ -41,6 +41,14 @@ public enum ResponseStatusEnum {
      */
     USERNOTEXISTED("A0201", "用户账户不存在"),
     /**
+     * 优惠券不存在
+     */
+    CouponNotExisted("A0201", "优惠券不存在"),
+    /**
+     * 物品不足
+     */
+    COMMODITYNOTENOUGH("A0201", "物品不足"),
+    /**
      * 用户账户不存在
      */
     CustomerServiceStaffNOTEXISTED("A0201", "该客服人员不存在"),
@@ -48,6 +56,10 @@ public enum ResponseStatusEnum {
      * 商品缺货
      */
     StockOut("A0201", "商品缺货"),
+    /**
+     * 优惠券已失效
+     */
+    CouponInvalidated("A0201", "优惠券已失效"),
     /**
      * 用户积分不足
      */

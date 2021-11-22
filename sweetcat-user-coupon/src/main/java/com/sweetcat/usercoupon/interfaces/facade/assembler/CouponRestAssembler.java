@@ -1,11 +1,12 @@
-package com.sweetcat.couponcenter.interfaces.facade.assembler;
+package com.sweetcat.usercoupon.interfaces.facade.assembler;
 
-import com.sweetcat.couponcenter.domain.coupon.entity.CommodityCoupon;
-import com.sweetcat.couponcenter.domain.coupon.entity.Coupon;
-import com.sweetcat.couponcenter.domain.coupon.entity.UniversalCoupon;
-import com.sweetcat.couponcenter.interfaces.facade.restdto.CommodityCouponRestDTO;
-import com.sweetcat.couponcenter.interfaces.facade.restdto.CouponRestDTO;
-import com.sweetcat.couponcenter.interfaces.facade.restdto.UniversalCouponRestDTO;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.CommodityCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.Coupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.UniversalCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
+import com.sweetcat.usercoupon.interfaces.facade.restdto.CommodityCouponRestDTO;
+import com.sweetcat.usercoupon.interfaces.facade.restdto.CouponRestDTO;
+import com.sweetcat.usercoupon.interfaces.facade.restdto.UniversalCouponRestDTO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,15 +16,16 @@ import org.springframework.stereotype.Component;
  * @version: 1.0
  */
 @Component
-public class CouponAssembler {
-    public <T extends Coupon> CouponRestDTO converterToCouponRestDTO(T coupon) {
+public class CouponRestAssembler {
+    public CouponRestDTO converterToCouponRestDTO(UserCoupon userCoupon) {
+        Coupon coupon = userCoupon.getCoupon();
         if (coupon instanceof CommodityCoupon) {
             CommodityCoupon commodityCoupon = (CommodityCoupon) coupon;
             CommodityCouponRestDTO commodityCouponRestDTO = new CommodityCouponRestDTO(
                     coupon.getCouponId(),
                     coupon.getThresholdPrice(),
                     coupon.getCounteractPrice(),
-                    coupon.getStock()
+                    userCoupon.getObtainTime()
             );
             commodityCouponRestDTO.setTargetType(commodityCoupon.getTargetType());
             commodityCouponRestDTO.setStoreId(commodityCoupon.getStore().getStoreId());
@@ -45,7 +47,7 @@ public class CouponAssembler {
                     coupon.getCouponId(),
                     coupon.getThresholdPrice(),
                     coupon.getCounteractPrice(),
-                    coupon.getStock()
+                    userCoupon.getObtainTime()
             );
             universalCouponRestDTO.setTargetType(universalCoupon.getTargetType());
             universalCouponRestDTO.setTimeType(universalCoupon.getTimeType());

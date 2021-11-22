@@ -2,6 +2,7 @@ package com.sweetcat.credit.application.service;
 
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.couponcenter.UserAcquiredCommodityCouponEvent;
 import com.sweetcat.commons.domainevent.creditcenter.CreditRedeemedCommodityEvent;
 import com.sweetcat.commons.domainevent.creditcenter.UserCreditChangedEvent;
 import com.sweetcat.commons.exception.*;
@@ -9,7 +10,9 @@ import com.sweetcat.credit.application.command.AddUserCommand;
 import com.sweetcat.credit.application.event.publish.DomainEventPublisher;
 import com.sweetcat.credit.application.rpc.UserInfoRpc;
 import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
+import com.sweetcat.credit.domain.commodity.entity.Coupon;
 import com.sweetcat.credit.domain.commodity.repository.CommodityRepository;
+import com.sweetcat.credit.domain.commodity.repository.CouponRepository;
 import com.sweetcat.credit.domain.creditlog.entity.CreditLog;
 import com.sweetcat.credit.domain.redeemlog.repository.RedeemLogRepository;
 import com.sweetcat.credit.domain.user.entity.User;
@@ -42,6 +45,12 @@ public class UserApplicationService {
     private CommodityRepository commodityRepository;
     private RedeemLogRepository redeemLogRepository;
     private SnowFlakeService snowFlakeService;
+    private CouponRepository couponRepository;
+
+    @Autowired
+    public void setCouponRepository(CouponRepository couponRepository) {
+        this.couponRepository = couponRepository;
+    }
 
     @Autowired
     public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
@@ -242,6 +251,28 @@ public class UserApplicationService {
             creditRedeemedCommodityEvent.setOccurOn(createTime);
             System.out.println("sweetcat-app-credit: 触发领域事件 CreditRedeemedCommodityEvent 时间为：" + Instant.now().toEpochMilli());
             domainEventPublisher.syncSend("credit_center_topic:credit_redeem_coupon", creditRedeemedCommodityEvent);
+            // 构建领域时间 UserAcquireCommodityCouponEvent
+            UserAcquiredCommodityCouponEvent userAcquiredCommodityCouponEvent = new UserAcquiredCommodityCouponEvent();
+            // 获得 coupon data 以便于填充 UserAcquiredCommodityCouponEvent
+            Coupon coupon = couponRepository.findOneByMarketItemId(marketItemId);
+            userAcquiredCommodityCouponEvent.setUserId(userId);
+            userAcquiredCommodityCouponEvent.setCouponId(coupon.getCouponId());
+            userAcquiredCommodityCouponEvent.setThresholdPrice(coupon.getThresholdPrice());
+            userAcquiredCommodityCouponEvent.setCounteractPrice(coupon.getCounteractPrice());
+            userAcquiredCommodityCouponEvent.setTargetType(coupon.getTargetType());
+            userAcquiredCommodityCouponEvent.setStoreId(coupon.getStoreId());
+            userAcquiredCommodityCouponEvent.setStoreName(coupon.getStoreName());
+            userAcquiredCommodityCouponEvent.setCommodityId(coupon.getCommodityId());
+            userAcquiredCommodityCouponEvent.setCommodityPicSmall(coupon.getCommodityPicSmall());
+            userAcquiredCommodityCouponEvent.setCommodityName(coupon.getCommodityName());
+            userAcquiredCommodityCouponEvent.setTimeType(coupon.getTimeType());
+            userAcquiredCommodityCouponEvent.setValidDuration(coupon.getValidDuration());
+            userAcquiredCommodityCouponEvent.setStartTime(coupon.getStartTime());
+            userAcquiredCommodityCouponEvent.setDeadline(coupon.getDeadline());
+            userAcquiredCommodityCouponEvent.setObtainTime(Instant.now().toEpochMilli());
+            userAcquiredCommodityCouponEvent.setOccurOn(Instant.now().toEpochMilli());
+            System.out.println("sweetcat-app-credit: 触发领域事件 UserAcquireCommodityCouponEvent 时间为：" + Instant.now().toEpochMilli());
+            domainEventPublisher.syncSend("credit_center_topic:user_acquire_commodity_coupon", userAcquiredCommodityCouponEvent);
         }
         // 构建领域事件 UserCreditChangedEvent
         UserCreditChangedEvent creditChangedEvent = new UserCreditChangedEvent(userId);

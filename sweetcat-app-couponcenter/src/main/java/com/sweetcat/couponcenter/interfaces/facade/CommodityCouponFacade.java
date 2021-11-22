@@ -38,4 +38,9 @@ public class CommodityCouponFacade {
     public void addOne(AddCommodityCouponCommand command) {
         commodityCouponApplicationService.addOne(command);
     }
+
+
+    public CommodityCoupon findOneByCouponId(Long couponId) {
+        return commodityCouponApplicationService.findOneByCouponId(couponId);
+    }
 }
