@@ -11,7 +11,7 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class UserCoupon {
+public class UserCoupon<T extends Coupon> {
     /**
      * 记录id
      */
@@ -25,7 +25,7 @@ public class UserCoupon {
     /**
      * 优惠券
      */
-    private Coupon coupon;
+    private T coupon;
 
     /**
      * 获得时间
@@ -61,7 +61,7 @@ public class UserCoupon {
         this.user = user;
     }
 
-    public void setCoupon(Coupon coupon) {
+    public void setCoupon(T coupon) {
         if (coupon == null) {
             throw new ParameterFormatIllegalityException(
                     ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),

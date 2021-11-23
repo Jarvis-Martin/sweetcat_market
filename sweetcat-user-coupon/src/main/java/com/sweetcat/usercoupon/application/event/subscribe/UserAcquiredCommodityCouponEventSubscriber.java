@@ -41,22 +41,31 @@ public class UserAcquiredCommodityCouponEventSubscriber implements RocketMQListe
         // 一张优惠券 userCoupon
         if (CouponTargetType.TARGETTYPE_COMMODITY.equals(event.getTargetType())) {
             AddCommodityCouponCommand addCommodityCouponCommand = new AddCommodityCouponCommand();
-            addCommodityCouponCommand.setUserId(event.getUserId());
-            addCommodityCouponCommand.setCouponId(event.getCouponId());
-            addCommodityCouponCommand.setThresholdPrice(event.getThresholdPrice());
-            addCommodityCouponCommand.setCounteractPrice(event.getCounteractPrice());
-            addCommodityCouponCommand.setObtainTime(event.getObtainTime());
-            addCommodityCouponCommand.setTargetType(event.getTargetType());
-            addCommodityCouponCommand.setStoreId(event.getStoreId());
-            addCommodityCouponCommand.setStoreName(event.getStoreName());
-            addCommodityCouponCommand.setCommodityId(event.getCommodityId());
-            addCommodityCouponCommand.setCommodityName(event.getCommodityName());
-            addCommodityCouponCommand.setCommodityPicSmall(event.getCommodityPicSmall());
-            addCommodityCouponCommand.setTimeType(event.getTimeType());
-            addCommodityCouponCommand.setValidDuration(event.getValidDuration());
-            addCommodityCouponCommand.setStartTime(event.getStartTime());
-            addCommodityCouponCommand.setDeadline(event.getDeadline());
+            inflateAddCommodityCouponCommand(event, addCommodityCouponCommand);
             userCouponApplicationService.addOneCommodityCoupon(addCommodityCouponCommand);
         }
+    }
+
+    /**
+     * 填充 addCommodityCouponCommand 对象
+     * @param event
+     * @param addCommodityCouponCommand
+     */
+    private void inflateAddCommodityCouponCommand(UserAcquiredCommodityCouponEvent event, AddCommodityCouponCommand addCommodityCouponCommand) {
+        addCommodityCouponCommand.setUserId(event.getUserId());
+        addCommodityCouponCommand.setCouponId(event.getCouponId());
+        addCommodityCouponCommand.setThresholdPrice(event.getThresholdPrice());
+        addCommodityCouponCommand.setCounteractPrice(event.getCounteractPrice());
+        addCommodityCouponCommand.setObtainTime(event.getObtainTime());
+        addCommodityCouponCommand.setTargetType(event.getTargetType());
+        addCommodityCouponCommand.setStoreId(event.getStoreId());
+        addCommodityCouponCommand.setStoreName(event.getStoreName());
+        addCommodityCouponCommand.setCommodityId(event.getCommodityId());
+        addCommodityCouponCommand.setCommodityName(event.getCommodityName());
+        addCommodityCouponCommand.setCommodityPicSmall(event.getCommodityPicSmall());
+        addCommodityCouponCommand.setTimeType(event.getTimeType());
+        addCommodityCouponCommand.setValidDuration(event.getValidDuration());
+        addCommodityCouponCommand.setStartTime(event.getStartTime());
+        addCommodityCouponCommand.setDeadline(event.getDeadline());
     }
 }

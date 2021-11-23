@@ -17,6 +17,7 @@ import com.sweetcat.usercoupon.domain.usercoupon.entity.CommodityCoupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.UniversalCoupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.User;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.repository.CouponInfoRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.repository.UserCouponRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.vo.Commodity;
 import com.sweetcat.usercoupon.domain.usercoupon.vo.Store;
@@ -42,6 +43,12 @@ public class UserCouponApplicationService {
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
     private UserCouponRepository userCouponRepository;
+    private CouponInfoRepository couponInfoRepository;
+
+    @Autowired
+    public void setCouponRepository(CouponInfoRepository couponInfoRepository) {
+        this.couponInfoRepository = couponInfoRepository;
+    }
 
     @Autowired
     public void setCouponRpc(CouponRpc couponRpc) {
@@ -131,25 +138,35 @@ public class UserCouponApplicationService {
         long recordId = snowFlakeService.snowflakeId();
         // 构建 userCoupon
         UserCoupon userCoupon = new UserCoupon(recordId);
-        // set 获得时间 of usercoupon
-        userCoupon.setObtainTime(command.getObtainTime());
-        // set user of usercoupon
+        // 构建 user of usercoupon
         User user = new User(userId);
-        userCoupon.setUser(user);
         // 构建 commodityCoupon of user Coupon
         CommodityCoupon commodityCoupon = new CommodityCoupon(
                 couponId,
                 command.getThresholdPrice(),
                 command.getCounteractPrice()
         );
-        // 构建、填充 商品券商家部分
+        // 填充 commodityCoupon
+        inflateCommodityCoupon(command, storeId, commodityId, commodityCoupon);
+        // 填充 userCoupon
+        inflateUserCoupon(command, userCoupon, user, commodityCoupon);
+        // userCoupon 入库
+        userCouponRepository.addOne(userCoupon);
+        // userCoupon 对应的 coupon 入库
+        couponInfoRepository.addOne(commodityCoupon);
+    }
+
+    private void inflateCommodityCoupon(AddCommodityCouponCommand command, Long storeId, Long commodityId, CommodityCoupon commodityCoupon) {
+        // 构建 商品券商家部分
         Store store = new Store(storeId);
         store.setStoreName(command.getStoreName());
-        commodityCoupon.setStore(store);
-        // 构建、填充 商品券的商品部分
+        // 构建 商品券的商品部分
         Commodity commodity = new Commodity(commodityId);
         commodity.setCommodityName(command.getCommodityName());
         commodity.setCommodityPicSmall(command.getCommodityPicSmall());
+        // -- 填充
+        commodityCoupon.setObtainTime(command.getObtainTime());
+        commodityCoupon.setStore(store);
         commodityCoupon.setCommodity(commodity);
         // 商品券设置目标商品类型 0商品券；1通用券
         commodityCoupon.setTargetType(command.getTargetType());
@@ -161,11 +178,14 @@ public class UserCouponApplicationService {
         commodityCoupon.setStartTime(command.getStartTime());
         // 商品券 时间区间型的 结束时间
         commodityCoupon.setDeadline(command.getDeadline());
-        userCoupon.setCoupon(commodityCoupon);
+    }
 
+    private void inflateUserCoupon(AddCommodityCouponCommand command, UserCoupon userCoupon, User user, CommodityCoupon commodityCoupon) {
+        // set 获得时间 of usercoupon
+        userCoupon.setObtainTime(command.getObtainTime());
+        userCoupon.setUser(user);
+        userCoupon.setCoupon(commodityCoupon);
         userCoupon.setTargetType(command.getTargetType());
-        // 入库
-        userCouponRepository.addOne(userCoupon);
     }
 
     /**

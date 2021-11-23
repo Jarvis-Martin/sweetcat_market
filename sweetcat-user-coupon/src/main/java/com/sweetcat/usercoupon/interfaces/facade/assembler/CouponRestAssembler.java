@@ -4,6 +4,7 @@ import com.sweetcat.usercoupon.domain.usercoupon.entity.CommodityCoupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.Coupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.UniversalCoupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.vo.CouponTargetType;
 import com.sweetcat.usercoupon.interfaces.facade.restdto.CommodityCouponRestDTO;
 import com.sweetcat.usercoupon.interfaces.facade.restdto.CouponRestDTO;
 import com.sweetcat.usercoupon.interfaces.facade.restdto.UniversalCouponRestDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class CouponRestAssembler {
     public CouponRestDTO converterToCouponRestDTO(UserCoupon userCoupon) {
         Coupon coupon = userCoupon.getCoupon();
-        if (coupon instanceof CommodityCoupon) {
+        if (CouponTargetType.TARGETTYPE_COMMODITY.equals(userCoupon.getTargetType())) {
             CommodityCoupon commodityCoupon = (CommodityCoupon) coupon;
             CommodityCouponRestDTO commodityCouponRestDTO = new CommodityCouponRestDTO(
                     coupon.getCouponId(),
@@ -41,7 +42,7 @@ public class CouponRestAssembler {
             commodityCouponRestDTO.setDeadline(commodityCoupon.getDeadline());
             return commodityCouponRestDTO;
         }
-        if (coupon instanceof UniversalCoupon) {
+        if (CouponTargetType.TARGETTYPE_UNIVERSAL.equals(userCoupon.getTargetType())) {
             UniversalCoupon universalCoupon = (UniversalCoupon) coupon;
             UniversalCouponRestDTO universalCouponRestDTO = new UniversalCouponRestDTO(
                     coupon.getCouponId(),

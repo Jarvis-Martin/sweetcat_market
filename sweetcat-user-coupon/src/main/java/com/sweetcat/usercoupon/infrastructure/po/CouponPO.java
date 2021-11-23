@@ -3,6 +3,7 @@ package com.sweetcat.usercoupon.infrastructure.po;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * t_user_coupon_coupon_info
@@ -33,7 +34,7 @@ public class CouponPO implements Serializable {
     /**
      * 鍟嗗搧姝ｉ潰鍥撅紙small锛?3寮犳渶浣?
      */
-    private String commodityPicSmall;
+    private List<String> commodityPicSmall;
 
     /**
      * 商品名

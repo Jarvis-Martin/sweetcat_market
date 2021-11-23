@@ -86,7 +86,7 @@ spring:
         - id: sweetcat-user-coupon
           uri: lb://sweetcat-user-coupon
           predicates:
-            - Path=/api/v1/userer_coupon/**
+            - Path=/api/v1/user_coupon/**
 
         #  卖家域：商家基本信息上下文
         - id: sweetcat-store-info

@@ -6,7 +6,8 @@
         <result column="store_id" jdbcType="BIGINT" property="storeId"/>
         <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
         <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
-        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"/>
+        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"
+                typeHandler="com.sweetcat.usercoupon.infrastructure.dao.typehandler.ListCharTypeHandler"/>
         <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
         <result column="time_type" jdbcType="TINYINT" property="timeType"/>
         <result column="obtain_time" jdbcType="BIGINT" property="obtainTime"/>
@@ -19,6 +20,17 @@
         , store_id, store_name, commodity_id, commodity_pic_small, commodity_name,
     time_type, obtain_time, valid_duration, start_time, deadline
     </sql>
+    <insert id="addOne">
+        insert into t_user_coupon_coupon_info (<include refid="Base_Column_List"/>) values (#{couponId},
+        #{store.storeId}, #{store.storeName}, #{commodity.commodityId},
+        #{commodity.commodityPicSmall, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.usercoupon.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{commodity.commodityName}, #{timeType}, #{obtainTime}, #{validDuration}, #{startTime}, #{deadline})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_coupon_coupon_info
+        where coupon_id = #{couponId}
+    </delete>
     <select id="findOneByCouponId" resultType="com.sweetcat.usercoupon.infrastructure.po.CouponPO">
         select
         <include refid="Base_Column_List"/>

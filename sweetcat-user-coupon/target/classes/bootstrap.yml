@@ -51,6 +51,36 @@ spring:
             column: record_id
             type: SNOWFLAKE
 
+        t_user_coupon_coupon_info:
+          actual-data-nodes: ds$->{0..1}.t_user_coupon_coupon_info$->{0..1}
+          logical-table: t_user_coupon_coupon_info
+          database-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: ds$->{coupon_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: coupon_id
+              algorithm-expression: t_user_coupon_coupon_info$->{coupon_id % 2}
+          key-generator:
+            column: coupon_id
+            type: SNOWFLAKE
+
+        t_user_coupon_usage_record:
+          actual-data-nodes: ds$->{0..1}.t_user_coupon_usage_record$->{0..1}
+          logical-table: t_user_coupon_usage_record
+          database-strategy:
+            inline:
+              sharding-column: record_id
+              algorithm-expression: ds$->{record_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: record_id
+              algorithm-expression: t_user_coupon_usage_record$->{record_id % 2}
+          key-generator:
+            column: record_id
+            type: SNOWFLAKE
+
 # rocketmq 配置
 rocketmq:
   name-server: 127.0.0.1:9876
@@ -72,4 +102,4 @@ management:
       enabled: false
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-handlers-package: com.sweetcat.credit.infrastructure.dao.typehandler
+  type-handlers-package: com.sweetcat.usercoupon.infrastructure.dao.typehandler

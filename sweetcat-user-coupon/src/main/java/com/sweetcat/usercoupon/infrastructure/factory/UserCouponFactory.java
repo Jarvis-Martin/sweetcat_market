@@ -26,37 +26,42 @@ public class UserCouponFactory {
     }
 
     public UserCoupon create(UserCouponPO userCouponPO, CouponPO couponPO) {
-        UserCoupon userCoupon = new UserCoupon(userCouponPO.getCouponId());
-        User user = new User(userCouponPO.getUserId());
-        userCoupon.setUser(user);
-        Coupon coupon = new Coupon(
-                userCouponPO.getCouponId(),
-                userCouponPO.getThresholdPrice(),
-                userCouponPO.getCounteractPrice()
-        );
+        UserCoupon userCoupon = null;
         if (CouponTargetType.TARGETTYPE_COMMODITY.equals(userCouponPO.getTargetType())) {
-            concreateCommodityCoupon(userCouponPO, couponPO);
+            userCoupon = new UserCoupon<CommodityCoupon>(userCouponPO.getCouponId());
+            CommodityCoupon commodityCoupon = new CommodityCoupon(
+                    userCouponPO.getCouponId(),
+                    userCouponPO.getThresholdPrice(),
+                    userCouponPO.getCounteractPrice()
+            );
+            concreateCommodityCoupon(commodityCoupon, userCouponPO, couponPO);
+            userCoupon.setCoupon(commodityCoupon);
         }
         if (CouponTargetType.TARGETTYPE_UNIVERSAL.equals(userCouponPO.getTargetType())) {
-            concreateUniversalCoupon(userCouponPO, couponPO);
+            userCoupon = new UserCoupon<UniversalCoupon>(userCouponPO.getCouponId());
+            UniversalCoupon universalCoupon = new UniversalCoupon(
+                    userCouponPO.getCouponId(),
+                    userCouponPO.getThresholdPrice(),
+                    userCouponPO.getCounteractPrice()
+            );
+            concreateUniversalCoupon(universalCoupon, userCouponPO, couponPO);
+            userCoupon.setCoupon(universalCoupon);
         }
-        userCoupon.setCoupon(coupon);
+        User user = new User(userCouponPO.getUserId());
+        userCoupon.setUser(user);
+        userCoupon.setObtainTime(userCouponPO.getObtainTime());
+        userCoupon.setTargetType(userCouponPO.getTargetType());
         return userCoupon;
     }
 
-    private void concreateCommodityCoupon(UserCouponPO userCouponPO, CouponPO couponPO) {
-        CommodityCoupon commodityCoupon = new CommodityCoupon(
-                couponPO.getCouponId(),
-                userCouponPO.getThresholdPrice(),
-                userCouponPO.getCounteractPrice()
-        );
+    private void concreateCommodityCoupon(CommodityCoupon commodityCoupon, UserCouponPO userCouponPO, CouponPO couponPO) {
         commodityCoupon.setObtainTime(userCouponPO.getObtainTime());
         Store store = new Store(couponPO.getStoreId());
         store.setStoreName(couponPO.getStoreName());
         commodityCoupon.setStore(store);
         Commodity commodity = new Commodity(couponPO.getCommodityId());
         commodity.setCommodityName(couponPO.getCommodityName());
-        commodity.setCommodityPicSmall(commodity.getCommodityPicSmall());
+        commodity.setCommodityPicSmall(couponPO.getCommodityPicSmall());
         commodityCoupon.setCommodity(commodity);
         commodityCoupon.setTimeType(couponPO.getTimeType());
         commodityCoupon.setTargetType(userCouponPO.getTargetType());
@@ -65,12 +70,7 @@ public class UserCouponFactory {
         commodityCoupon.setDeadline(couponPO.getDeadline());
     }
 
-    private void concreateUniversalCoupon(UserCouponPO userCouponPO, CouponPO couponPO) {
-        UniversalCoupon universalCoupon = new UniversalCoupon(
-                couponPO.getCouponId(),
-                userCouponPO.getThresholdPrice(),
-                userCouponPO.getCounteractPrice()
-        );
+    private void concreateUniversalCoupon(UniversalCoupon universalCoupon, UserCouponPO userCouponPO, CouponPO couponPO) {
         universalCoupon.setObtainTime(userCouponPO.getObtainTime());
         universalCoupon.setTimeType(couponPO.getTimeType());
         universalCoupon.setTargetType(userCouponPO.getTargetType());

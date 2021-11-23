@@ -48,14 +48,14 @@ public class UserCouponRestController {
         if (userCouponPage == null) {
             return response("查询优惠券成功", "{}");
         }
-        ArrayList<CouponRestDTO> collect = userCouponPage.stream().collect(
+        ArrayList<CouponRestDTO> couponRestDTOPage = userCouponPage.stream().collect(
                 ArrayList<CouponRestDTO>::new,
                 (con, userCoupon) -> con.add(couponRestAssembler.converterToCouponRestDTO(userCoupon)),
                 ArrayList<CouponRestDTO>::addAll
         );
 
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("coupons", dataSection);
+        dataSection.put("coupons", couponRestDTOPage);
         return response("查询成功", dataSection);
     }
 
