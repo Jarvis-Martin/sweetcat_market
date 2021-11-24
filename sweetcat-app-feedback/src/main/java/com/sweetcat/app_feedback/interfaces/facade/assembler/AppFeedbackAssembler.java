@@ -22,6 +22,7 @@ public class AppFeedbackAssembler {
         appFeedbackRpcDTO.setCreateTime(feedback.getCreateTime());
         appFeedbackRpcDTO.setProcessorId(feedback.getProcessorId());
         appFeedbackRpcDTO.setResponseContent(feedback.getResponseContent());
+        appFeedbackRpcDTO.setResponseTitle(feedback.getResponseTitle());
         appFeedbackRpcDTO.setProcessTime(feedback.getProcessTime());
         return appFeedbackRpcDTO;
     }

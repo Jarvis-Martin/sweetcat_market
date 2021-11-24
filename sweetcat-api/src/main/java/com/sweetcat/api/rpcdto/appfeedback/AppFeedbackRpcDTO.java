@@ -54,6 +54,12 @@ public class AppFeedbackRpcDTO {
      * 响应内容
      */
     private String responseContent;
+
+    /**
+     * 响应标题
+     */
+    private String responseTitle;
+
     /**
      * 处理时间
      */

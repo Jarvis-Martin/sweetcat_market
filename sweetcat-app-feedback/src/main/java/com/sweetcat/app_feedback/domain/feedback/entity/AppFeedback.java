@@ -60,6 +60,11 @@ public class AppFeedback implements Serializable {
     private String responseContent;
 
     /**
+     * 响应标题
+     */
+    private String responseTitle;
+
+    /**
      * 处理时间
      */
     private Long processTime;
@@ -68,7 +73,7 @@ public class AppFeedback implements Serializable {
         this.feedbackId = feedbackId;
     }
 
-    public AppFeedback(Long feedbackId, Long userId, String content, String feedbackPics, Integer status, Long createTime, Long processorId, String responseContent, Long processTime) {
+    public AppFeedback(Long feedbackId, Long userId, String content, String feedbackPics, Integer status, Long createTime, Long processorId, String responseContent, Long processTime, String responseTitle) {
         this.feedbackId = feedbackId;
         this.userId = userId;
         this.content = content;
@@ -78,6 +83,11 @@ public class AppFeedback implements Serializable {
         this.processorId = processorId;
         this.responseContent = responseContent;
         this.processTime = processTime;
+        this.setResponseTitle(responseTitle);
+    }
+
+    public void setResponseTitle(String responseTitle) {
+        this.responseTitle = responseTitle;
     }
 
     public void setFeedbackId(Long feedbackId) {

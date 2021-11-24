@@ -92,6 +92,7 @@ public class AppFeedbackApplicationService {
         AppFeedback feedback = new AppFeedback(feedbackId);
         feedback.setUserId(userId);
         feedback.setContent(content);
+        feedback.setResponseTitle(null);
         feedback.setFeedbackPics(feedbackPicsStr);
         feedback.setStatus(AppFeedback.STATUS_PROCESSING);
         feedback.setCreateTime(feedbackTime);
@@ -138,6 +139,7 @@ public class AppFeedbackApplicationService {
         AppFeedback feedback = feedbackRepository.findOneByFeedbackId(command.getFeedbackId());
         feedback.setProcessorId(command.getProcessorId());
         feedback.setResponseContent(command.getResponseContent());
+        feedback.setResponseTitle(command.getResponseTitle());
         feedback.setProcessTime(command.getProcessTime());
         feedbackRepository.save(feedback);
     }

@@ -1,6 +1,9 @@
 package com.sweetcat.app_feedback.infrastructure.po;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -9,6 +12,9 @@ import java.io.Serializable;
  * @author 
  */
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AppFeedbackPO implements Serializable {
     /**
      * 反馈记录id
@@ -51,59 +57,14 @@ public class AppFeedbackPO implements Serializable {
     private String responseContent;
 
     /**
+     * 响应标题
+     */
+    private String responseTitle;
+
+    /**
      * 处理时间
      */
     private Long processTime;
-
-    public AppFeedbackPO() {}
-
-    public AppFeedbackPO(Long feedbackId, Long userId, String content, String feedbackPics, Integer status, Long createTime, Long processorId, String responseContent, Long processTime) {
-        this.feedbackId = feedbackId;
-        this.userId = userId;
-        this.content = content;
-        this.feedbackPics = feedbackPics;
-        this.status = status;
-        this.createTime = createTime;
-        this.processorId = processorId;
-        this.responseContent = responseContent;
-        this.processTime = processTime;
-    }
-
-    public void setFeedbackId(Long feedbackId) {
-        this.feedbackId = feedbackId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setFeedbackPics(String feedbackPics) {
-        this.feedbackPics = feedbackPics;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setProcessorId(Long processorId) {
-        this.processorId = processorId;
-    }
-
-    public void setResponseContent(String responseContent) {
-        this.responseContent = responseContent;
-    }
-
-    public void setProcessTime(Long processTime) {
-        this.processTime = processTime;
-    }
 
     private static final long serialVersionUID = 1L;
 }

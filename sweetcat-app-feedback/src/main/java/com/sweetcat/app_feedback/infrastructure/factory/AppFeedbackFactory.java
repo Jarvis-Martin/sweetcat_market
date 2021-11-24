@@ -20,6 +20,7 @@ public class AppFeedbackFactory {
         appFeedback.setStatus(feedbackPO.getStatus());
         appFeedback.setCreateTime(feedbackPO.getCreateTime());
         appFeedback.setProcessTime(feedbackPO.getProcessTime());
+        appFeedback.setResponseTitle(feedbackPO.getResponseTitle());
         return appFeedback;
     }
 
