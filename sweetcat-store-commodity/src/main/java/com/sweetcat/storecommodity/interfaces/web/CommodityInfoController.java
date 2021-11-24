@@ -3,7 +3,7 @@ package com.sweetcat.storecommodity.interfaces.web;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storecommodity.application.command.AddStoreCommodityCommand;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.interfaces.facade.CommodityInfoFacade;
 import com.sweetcat.storecommodity.interfaces.facade.assembler.CommodityRestAssembler;
 import com.sweetcat.storecommodity.interfaces.facade.restdto.CommodityDetailDTO;
@@ -45,10 +45,10 @@ public class CommodityInfoController {
      */
     @GetMapping("/{commodity_id}")
     public ResponseDTO findByCommodityId(@PathVariable("commodity_id") Long commodityId) {
-        CommodityInfo commodityInfo = commodityInfoFacade.findByCommodityId(commodityId);
+        Commodity commodity = commodityInfoFacade.findByCommodityId(commodityId);
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        if (commodityInfo != null) {
-            dataSection.put("good_info", commodityRestAssembler.converterToCommodityInfoDTO(commodityInfo));
+        if (commodity != null) {
+            dataSection.put("good_info", commodityRestAssembler.converterToCommodityInfoDTO(commodity));
         }
         return response("一切OK", dataSection);
     }
@@ -63,9 +63,9 @@ public class CommodityInfoController {
      */
     @GetMapping("/credit/commodities")
     public ResponseDTO findPageCreditCanOffsetAPart(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<CommodityInfo> commodityInfoPage = commodityInfoFacade.findPageCreditCanOffsetAPart(page, limit);
+        List<Commodity> commodityPage = commodityInfoFacade.findPageCreditCanOffsetAPart(page, limit);
 
-        ArrayList<CommoditySummaryInfoRestDTO> commoditySummaryInfoRestDTOPage = commodityInfoPage.stream().collect(
+        ArrayList<CommoditySummaryInfoRestDTO> commoditySummaryInfoRestDTOPage = commodityPage.stream().collect(
                 ArrayList<CommoditySummaryInfoRestDTO>::new,
                 (con, commodityInfo) -> con.add(commodityRestAssembler.converterToCommoditySummaryInfoRestDTO(commodityInfo)),
                 ArrayList<CommoditySummaryInfoRestDTO>::addAll
@@ -87,9 +87,9 @@ public class CommodityInfoController {
      */
     @GetMapping("/store/commodities")
     public ResponseDTO findPageByStoreId(@PathVariable("store_id") Long storeId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<CommodityInfo> commodityInfoPage = commodityInfoFacade.findPageByStoreId(storeId, page, limit);
+        List<Commodity> commodityPage = commodityInfoFacade.findPageByStoreId(storeId, page, limit);
 
-        List<CommodityDetailDTO> commodityDetailDTOS = converterCommodityInfoListToCommodityInfoDTOList(commodityInfoPage);
+        List<CommodityDetailDTO> commodityDetailDTOS = converterCommodityInfoListToCommodityInfoDTOList(commodityPage);
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("commodities", commodityDetailDTOS);
 
@@ -98,7 +98,7 @@ public class CommodityInfoController {
 
     @GetMapping("/new_commodities")
     public ResponseDTO findPageNewCommodities(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<CommodityInfo> pageNewCommodities = commodityInfoFacade.findPageNewCommodities(page, limit);
+        List<Commodity> pageNewCommodities = commodityInfoFacade.findPageNewCommodities(page, limit);
 
         List<CommodityDetailDTO> newCommodityDetailDTOS = converterCommodityInfoListToCommodityInfoDTOList(pageNewCommodities);
         HashMap<String, Object> dataSection = new HashMap<>(2);
@@ -113,7 +113,7 @@ public class CommodityInfoController {
      * @param commodities List<CommodityInfo>
      * @return
      */
-    private List<CommodityDetailDTO> converterCommodityInfoListToCommodityInfoDTOList(List<CommodityInfo> commodities) {
+    private List<CommodityDetailDTO> converterCommodityInfoListToCommodityInfoDTOList(List<Commodity> commodities) {
         ArrayList<CommodityDetailDTO> commodityDetailDTOS = null;
         if (commodities != null && commodities.size() != 0) {
             commodityDetailDTOS = commodities.stream().collect(

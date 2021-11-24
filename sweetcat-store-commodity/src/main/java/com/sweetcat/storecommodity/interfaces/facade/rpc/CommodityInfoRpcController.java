@@ -1,7 +1,7 @@
 package com.sweetcat.storecommodity.interfaces.facade.rpc;
 
 import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.interfaces.facade.CommodityInfoFacade;
 import com.sweetcat.storecommodity.interfaces.facade.assembler.rpc.CommodityInfoRpcAssemlber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,10 @@ public class CommodityInfoRpcController {
      */
     @GetMapping("/{commodity_id}")
     public CommodityInfoRpcDTO findByCommodityId(@PathVariable("commodity_id") Long commodityId) {
-       CommodityInfo commodityInfo = commodityInfoFacade.findByCommodityId(commodityId);
-        if (commodityInfo == null) {
+       Commodity commodity = commodityInfoFacade.findByCommodityId(commodityId);
+        if (commodity == null) {
             return null;
         }
-        return commodityInfoRpcAssemlber.converterToCommodityInfoRpcDTO(commodityInfo);
+        return commodityInfoRpcAssemlber.converterToCommodityInfoRpcDTO(commodity);
     }
 }

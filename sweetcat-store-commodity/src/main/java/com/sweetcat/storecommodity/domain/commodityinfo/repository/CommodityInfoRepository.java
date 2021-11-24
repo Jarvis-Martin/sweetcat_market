@@ -1,6 +1,6 @@
 package com.sweetcat.storecommodity.domain.commodityinfo.repository;
 
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface CommodityInfoRepository {
      * @param commodityId commodityId
      * @return CommodityInfo
      */
-    CommodityInfo findByCommodityId(Long commodityId);
+    Commodity findByCommodityId(Long commodityId);
 
     /**
      * 根据 storeId 获取商品
@@ -25,7 +25,7 @@ public interface CommodityInfoRepository {
      * @param storeId storeId
      * @return CommodityInfo
      */
-    List<CommodityInfo> findPageByStoreId(Long storeId, Integer page, Integer limit);
+    List<Commodity> findPageByStoreId(Long storeId, Integer page, Integer limit);
 
 
     /**
@@ -34,14 +34,14 @@ public interface CommodityInfoRepository {
      * @param limit limit
      * @return
      */
-    List<CommodityInfo> findPageNewCommodities(Integer page, Integer limit);
+    List<Commodity> findPageNewCommodities(Integer page, Integer limit);
 
     /**
      * 添加
      *
-     * @param commodityInfo commodityInfo
+     * @param commodity commodityInfo
      */
-    void addOne(CommodityInfo commodityInfo);
+    void addOne(Commodity commodity);
 
     /**
      * 查找积分可抵扣部分金额的商品
@@ -49,5 +49,11 @@ public interface CommodityInfoRepository {
      * @param limit
      * @return
      */
-    List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit);
+    List<Commodity> findPageCreditCanOffsetAPart(Integer page, Integer limit);
+
+    /**
+     * 保存 commodity 的修改
+     * @param commodity
+     */
+    void save(Commodity commodity);
 }

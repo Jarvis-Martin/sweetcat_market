@@ -1,6 +1,7 @@
 package com.sweetcat.storecommodity.infrastructure.dao;
 
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

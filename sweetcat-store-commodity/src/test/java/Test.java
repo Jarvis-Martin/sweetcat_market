@@ -1,8 +1,3 @@
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author: Coder_Jarvis
  * @description:
@@ -11,16 +6,17 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add(0, "123");
-        strings.add(0, "1456");
-        strings.add(0, "789");
-        strings.add(0, "147");
-        Gson gson = new Gson();
-
-        String json = gson.toJson(strings);
-        System.out.println(json);
-        Object from = gson.fromJson(json, List.class);
-        System.out.println(from);
+//        ArrayList<String> strings = new ArrayList<>();
+//        strings.add(0, "123");
+//        strings.add(0, "1456");
+//        strings.add(0, "789");
+//        strings.add(0, "147");
+//        Gson gson = new Gson();
+//
+//        String json = gson.toJson(strings);
+//        System.out.println(json);
+//        Object from = gson.fromJson(json, List.class);
+//        System.out.println(from);
+        System.out.println(Student.class.getName());
     }
 }

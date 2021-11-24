@@ -5,7 +5,7 @@ import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.StoreNotExistedException;
 import com.sweetcat.storecommodity.application.command.AddStoreCommodityCommand;
 import com.sweetcat.storecommodity.application.rpc.StoreInfoRpc;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfoRepository;
 import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
@@ -47,7 +47,7 @@ public class CommodityInfoApplicationService {
         this.commodityInfoRepository = commodityInfoRepository;
     }
 
-    public CommodityInfo findByCommodityId(Long commodityId) {
+    public Commodity findByCommodityId(Long commodityId) {
         // 检查 commodityId
         verifyIdFormatService.verifyId(commodityId);
         // 查找商品信息 by commodity id
@@ -60,13 +60,13 @@ public class CommodityInfoApplicationService {
      * @param limit
      * @return
      */
-    public List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
+    public List<Commodity> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
         limit = limit < 0 ? 15 : limit;
         page = page < 0 ? 0 : page * limit;
         return commodityInfoRepository.findPageCreditCanOffsetAPart(page, limit);
     }
 
-    public List<CommodityInfo> findPageByStoreId(Long storeId, Integer page, Integer limit) {
+    public List<Commodity> findPageByStoreId(Long storeId, Integer page, Integer limit) {
         // 检查 storeId
         verifyIdFormatService.verifyId(storeId);
         limit = limit < 0 ? 15 : limit;
@@ -74,7 +74,7 @@ public class CommodityInfoApplicationService {
         return commodityInfoRepository.findPageByStoreId(storeId, page, limit);
     }
 
-    public List<CommodityInfo> findPageNewCommodities(Integer page, Integer limit) {
+    public List<Commodity> findPageNewCommodities(Integer page, Integer limit) {
         // 见参数检查
         limit = limit < 0 ? 15 : limit;
         page = page < 0 ? 0 : page * limit;
@@ -98,7 +98,7 @@ public class CommodityInfoApplicationService {
         // 生成商品编号
         long commodityId = snowFlakeService.snowflakeId();
         // 构造商品对象
-        CommodityInfo commodityInfo = new CommodityInfo(
+        Commodity commodity = new Commodity(
                 commodityId,
                 storeId,
                 addStoreCommodityCommand.getCommodityName(),
@@ -120,7 +120,7 @@ public class CommodityInfoApplicationService {
                 addStoreCommodityCommand.getGuarantee(),
                 addStoreCommodityCommand.getCreateTime(),
                 addStoreCommodityCommand.getCreateTime(),
-                CommodityInfo.STATUS_AUDITING,
+                Commodity.STATUS_AUDITING,
                 addStoreCommodityCommand.getSpecification(),
                 0L,
                 addStoreCommodityCommand.getDefaultPostCharge(),
@@ -128,7 +128,7 @@ public class CommodityInfoApplicationService {
                 addStoreCommodityCommand.getCoinCounteractRate()
                 );
         // 添加如 db
-        commodityInfoRepository.addOne(commodityInfo);
+        commodityInfoRepository.addOne(commodity);
     }
 
 }

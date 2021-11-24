@@ -6,12 +6,14 @@
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
-        <result column="content_pics" jdbcType="VARCHAR" property="contentPics" typeHandler="com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="content_pics" jdbcType="VARCHAR" property="contentPics"
+                typeHandler="com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
         <result column="stars" jdbcType="TINYINT" property="stars"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        comment_id, user_id, commodity_id, content, content_pics, stars, create_time
+        comment_id
+        , user_id, commodity_id, content, content_pics, stars, create_time
     </sql>
     <insert id="insertOne">
         insert into t_store_commodity_comment(<include refid="Base_Column_List"/>) values (#{commentId}, #{userId},

@@ -8,7 +8,7 @@ import com.sweetcat.commons.exception.RecodeNotExistedException;
 import com.sweetcat.storecommodity.application.command.AddCommodityPostChargeCommand;
 import com.sweetcat.storecommodity.application.rpc.GeographyRpc;
 import com.sweetcat.storecommodity.application.rpc.StoreInfoRpc;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfoRepository;
 import com.sweetcat.storecommodity.domain.commonditypostcharge.entity.CommodityPostCharge;
 import com.sweetcat.storecommodity.domain.commonditypostcharge.repository.CommodityPostChargeRepository;
@@ -83,9 +83,9 @@ public class CommodityPostChargeApplicationService {
             );
         }
         // 商品是否存在
-        CommodityInfo commodityInfo = commodityInfoRepository.findByCommodityId(commodityId);
+        Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
         // 商品不存在
-        if (commodityInfo == null) {
+        if (commodity == null) {
             throw new RecodeNotExistedException(
                     ResponseStatusEnum.RECORDENOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.RECORDENOTEXISTED.getErrorMessage()
@@ -122,9 +122,9 @@ public class CommodityPostChargeApplicationService {
         // 检查id 格式
         verifyIdFormatService.verifyId(commodityId);
         // 检查 commodityid 对应商品是否存在
-        CommodityInfo commodityInfo = commodityInfoRepository.findByCommodityId(commodityId);
+        Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
         // 商品不存在
-        if (commodityInfo == null) {
+        if (commodity == null) {
             throw new ParameterFormatIllegalityException(
                     ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
                     ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()

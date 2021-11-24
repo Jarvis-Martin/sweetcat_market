@@ -1,6 +1,6 @@
 package com.sweetcat.storecommodity.infrastructure.dao;
 
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,9 +28,9 @@ public interface CommodityInfoMapper {
     /**
      * 添加
      *
-     * @param commodityInfo commodityInfo
+     * @param commodity commodityInfo
      */
-    void addOne(CommodityInfo commodityInfo);
+    void addOne(Commodity commodity);
 
     /**
      * 查找新商家商品分页数据
@@ -48,4 +48,10 @@ public interface CommodityInfoMapper {
      * @return
      */
     List<CommodityInfoPO> findPageCreditCanOffsetAPart(Integer page, Integer limit);
+
+    /**
+     * 保存 commodity 的修改
+     * @param commodity
+     */
+    void updateOne(Commodity commodity);
 }

@@ -1,11 +1,8 @@
 package com.sweetcat.storecommodity.infrastructure.factory;
 
-import com.sweetcat.commons.util.JSONUtils;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @Author: Coder_Jarvis
@@ -16,8 +13,8 @@ import java.util.List;
 @Component
 public class CommodityInfoFactory {
 
-    public CommodityInfo create(CommodityInfoPO commodityInfoPO) {
-        CommodityInfo commodityInfo = new CommodityInfo(
+    public Commodity create(CommodityInfoPO commodityInfoPO) {
+        Commodity commodity = new Commodity(
                 commodityInfoPO.getCommodityId(),
                 commodityInfoPO.getStoreId(),
                 commodityInfoPO.getCommodityName(),
@@ -45,6 +42,6 @@ public class CommodityInfoFactory {
                 commodityInfoPO.getDefaultPostCharge(),
                 commodityInfoPO.getSubjoinChargePerGood(),
                 commodityInfoPO.getCoinCounteractRate());
-        return commodityInfo;
+        return commodity;
     }
 }

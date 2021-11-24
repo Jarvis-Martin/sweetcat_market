@@ -2,6 +2,7 @@ package com.sweetcat.storecommodity.infrastructure.repository;
 
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
 import com.sweetcat.storecommodity.domain.commoditycomment.repository.CommodityCommentRepository;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.infrastructure.dao.CommodityCommentMapper;
 import com.sweetcat.storecommodity.infrastructure.factory.CommodityCommentFactory;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO;
@@ -65,5 +66,4 @@ public class CommodityCommentRepositoryImpl implements CommodityCommentRepositor
     public void removeOne(CommodityComment commodityComment) {
         commentMapper.deleteOne(commodityComment);
     }
-
 }

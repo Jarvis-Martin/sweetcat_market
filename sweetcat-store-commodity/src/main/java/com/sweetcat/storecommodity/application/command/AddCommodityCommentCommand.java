@@ -19,6 +19,10 @@ import java.util.List;
 @NoArgsConstructor
 public class AddCommodityCommentCommand {
     /**
+     * 评论id
+     */
+    private Long commentId;
+    /**
      * 发布评论的用户id
      */
     private Long userId;

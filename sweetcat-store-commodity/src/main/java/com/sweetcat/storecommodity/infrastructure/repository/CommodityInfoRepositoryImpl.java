@@ -1,6 +1,6 @@
 package com.sweetcat.storecommodity.infrastructure.repository;
 
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.CommodityInfo;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfoRepository;
 import com.sweetcat.storecommodity.infrastructure.dao.CommodityInfoMapper;
 import com.sweetcat.storecommodity.infrastructure.factory.CommodityInfoFactory;
@@ -33,7 +33,7 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     }
 
     @Override
-    public CommodityInfo findByCommodityId(Long commodityId) {
+    public Commodity findByCommodityId(Long commodityId) {
         CommodityInfoPO commodityInfoPO = commodityInfoMapper.findByCommodityId(commodityId);
         if (commodityInfoPO == null) {
             return null;
@@ -42,34 +42,34 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     }
 
     @Override
-    public List<CommodityInfo> findPageByStoreId(Long storeId, Integer page, Integer limit) {
+    public List<Commodity> findPageByStoreId(Long storeId, Integer page, Integer limit) {
         List<CommodityInfoPO> commodityInfoPOPage = commodityInfoMapper.findPageByStoreId(storeId, page, limit);
         if (commodityInfoPOPage == null) {
             return null;
         }
         return commodityInfoPOPage.stream().collect(
-                ArrayList<CommodityInfo>::new,
+                ArrayList<Commodity>::new,
                 (con, commodityInfoPO) -> con.add(commodityInfoFactory.create(commodityInfoPO)),
                 ArrayList::addAll
         );
     }
 
     @Override
-    public List<CommodityInfo> findPageNewCommodities(Integer page, Integer limit) {
+    public List<Commodity> findPageNewCommodities(Integer page, Integer limit) {
         List<CommodityInfoPO> newCommodityInfoPOPage = commodityInfoMapper.findPageNewCommodities(page, limit);
         if (newCommodityInfoPOPage == null) {
             return null;
         }
         return newCommodityInfoPOPage.stream().collect(
-                ArrayList<CommodityInfo>::new,
+                ArrayList<Commodity>::new,
                 (con, commodityInfoPO) -> con.add(commodityInfoFactory.create(commodityInfoPO)),
                 ArrayList::addAll
         );
     }
 
     @Override
-    public void addOne(CommodityInfo commodityInfo) {
-        commodityInfoMapper.addOne(commodityInfo);
+    public void addOne(Commodity commodity) {
+        commodityInfoMapper.addOne(commodity);
     }
 
 
@@ -80,15 +80,25 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
      * @return
      */
     @Override
-    public List<CommodityInfo> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
+    public List<Commodity> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
         List<CommodityInfoPO> commodityPageCreditCanOffsetAPart = commodityInfoMapper.findPageCreditCanOffsetAPart(page, limit);
         if (commodityPageCreditCanOffsetAPart == null) {
             return null;
         }
         return commodityPageCreditCanOffsetAPart.stream().collect(
-                ArrayList<CommodityInfo>::new,
+                ArrayList<Commodity>::new,
                 (con, commodityInfoPO) -> con.add(commodityInfoFactory.create(commodityInfoPO)),
                 ArrayList::addAll
         );
+    }
+
+
+    /**
+     * 保存 commodity 的修改
+     * @param commodity
+     */
+    @Override
+    public void save(Commodity commodity) {
+        commodityInfoMapper.updateOne(commodity);
     }
 }

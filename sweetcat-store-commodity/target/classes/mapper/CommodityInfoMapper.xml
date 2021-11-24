@@ -41,7 +41,7 @@
     subjoin_charge_per_good, is_credit_can_offset, coin_counteract_rate
     </sql>
     <insert id="addOne">
-        insert into t_store_commodity_info (<include refid="Base_Column_List" />) values (
+        insert into t_store_commodity_info (<include refid="Base_Column_List"/>) values (
         #{commodityId}, #{storeId}, #{commodityName}, #{brand},#{picSmall},
         #{picBig, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler},
         #{firstCategory}, #{secondCategory}, #{thirdCategory}, #{useTimes}, #{productionArea}, #{oldPrice},
@@ -50,6 +50,39 @@
         #{createTime}, #{updateTime}, #{status}, #{specification}, #{commentNumber}, #{defaultPostCharge},
         #{subjoinChargePerGood}, #{creditCanOffset}, #{coinCounteractRate})
     </insert>
+    <update id="updateOne">
+        update t_store_commodity_info
+        set commodity_name          = #{commodityName},
+            brand                   = #{brand},
+            pic_small               = #{picSmall},
+            pic_big                 = #{picBig,
+                                        javaType=List,
+                                        jdbcType=VARCHAR,
+                                        typeHandler=com.sweetcat.storecommodity.infrastructure.dao.typehandler.ListCharTypeHandler},
+            first_category          = #{firstCategory},
+            second_category         = #{secondCategory},
+            third_category          = #{thirdCategory},
+            use_times               = #{useTimes},
+            production_area         = #{productionArea},
+            old_price               = #{oldPrice},
+            current_price           = #{currentPrice},
+            description             = #{description},
+            stock                   = #{stock},
+            monthly_sales           = #{monthlySales},
+            add_to_car_number       = #{addToCarNumber},
+            collect_number          = #{collectNumber},
+            guarantee               = #{guarantee},
+            create_time             = #{createTime},
+            update_time             = #{updateTime},
+            `status`                = #{status},
+            specification           = #{specification},
+            comment_number          = #{commentNumber},
+            default_post_charge     = #{defaultPostCharge},
+            subjoin_charge_per_good = #{subjoinChargePerGood},
+            is_credit_can_offset    = #{creditCanOffset},
+            coin_counteract_rate    = #{coinCounteractRate}
+        where commodity_id = #{commodityId}
+    </update>
     <select id="findByCommodityId" resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO">
         select
         <include refid="Base_Column_List"/>

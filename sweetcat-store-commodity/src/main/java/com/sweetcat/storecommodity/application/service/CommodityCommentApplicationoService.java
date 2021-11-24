@@ -8,6 +8,7 @@ import com.sweetcat.storecommodity.application.command.AddCommodityCommentComman
 import com.sweetcat.storecommodity.application.rpc.UserInfoRpc;
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
 import com.sweetcat.storecommodity.domain.commoditycomment.repository.CommodityCommentRepository;
+import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfoRepository;
 import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
@@ -100,12 +101,14 @@ public class CommodityCommentApplicationoService {
      * @param command command
      */
     public void addOne(AddCommodityCommentCommand command) {
+        Long commentId = command.getCommentId();
         long userId = command.getUserId();
         long commodityId = command.getCommodityId();
         // 检查id格式
-        verifyIdFormatService.verifyId(userId, commodityId);
+        verifyIdFormatService.verifyId(commentId, userId, commodityId);
+        Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
         // 商品不存在
-        if (commodityInfoRepository.findByCommodityId(commodityId) == null) {
+        if (commodity == null) {
             throw new CommodityNotExistedException(
                     ResponseStatusEnum.COMMENTNOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
@@ -118,8 +121,6 @@ public class CommodityCommentApplicationoService {
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
             );
         }
-        // 生成评论id
-        long commentId = snowFlakeService.snowflakeId();
         // 新建评论
         CommodityComment comment = new CommodityComment(commentId, userId, commodityId);
         comment.setContent(command.getContent());
@@ -128,6 +129,10 @@ public class CommodityCommentApplicationoService {
         comment.setCreateTime(command.getCreateTime());
         // 加入db
         commentRepository.addOne(comment);
+        // 增加评论书
+        commodity.increaseCommentNumber();
+        // 入库
+        commodityInfoRepository.save(commodity);
     }
 
     /**
