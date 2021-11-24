@@ -49,12 +49,17 @@ public class Feedback {
      */
     private String responseContent;
 
+    /**
+     * 响应给用户的标题
+     */
+    private String responseTitle;
+
     public Feedback(Long recordId, Long feedbackId) {
         this.setRecordId(recordId);
         this.setFeedbackId(feedbackId);
     }
 
-    public Feedback(Long recordId, Long feedbackId, Long createTime, Long updateTime, Long processTime, Integer status, Informer informer, Receiver receiver, String responseContent) {
+    public Feedback(Long recordId, Long feedbackId, Long createTime, Long updateTime, Long processTime, Integer status, Informer informer, Receiver receiver, String responseContent, String responseTitle) {
         this.setRecordId(recordId);
         this.setFeedbackId(feedbackId);
         this.setCreateTime(createTime);
@@ -64,6 +69,17 @@ public class Feedback {
         this.setInformer(informer);
         this.setRecordId(recordId);
         this.setResponseContent(responseContent);
+        this.setResponseTitle(this.responseTitle);
+    }
+
+    public void setResponseTitle(String responseTitle) {
+        if (responseTitle == null || responseTitle.length() <= 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.responseTitle = responseTitle;
     }
 
     public void setStatus(Integer status) {

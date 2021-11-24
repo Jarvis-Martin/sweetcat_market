@@ -52,5 +52,10 @@ public class FeedbackPO implements Serializable {
      */
     private String responseContent;
 
+    /**
+     * 响应给用户的标题
+     */
+    private String responseTitle;
+
     private static final long serialVersionUID = 1L;
 }

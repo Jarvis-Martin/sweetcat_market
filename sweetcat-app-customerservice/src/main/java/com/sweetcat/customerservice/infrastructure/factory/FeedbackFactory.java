@@ -25,6 +25,7 @@ public class FeedbackFactory {
         feedback.setInformer(informer);
         feedback.setReceiver(receiver);
         feedback.setResponseContent(feedbackPO.getResponseContent());
+        feedback.setResponseTitle(feedbackPO.getResponseTitle());
         return feedback;
     }
 }

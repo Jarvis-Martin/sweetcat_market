@@ -11,16 +11,18 @@
         <result column="receiver_id" jdbcType="BIGINT" property="receiverId"/>
         <result column="customer_staff_id" jdbcType="BIGINT" property="staffId"/>
         <result column="response_content" jdbcType="VARCHAR" property="responseContent"/>
+        <result column="response_title" jdbcType="VARCHAR" property="responseTitle"/>
     </resultMap>
     <sql id="Base_Column_List">
         record_id
         , feedback_id, create_time, update_time, process_time, `status`, receiver_id, customer_staff_id,
-    response_content
+    response_content, response_title
     </sql>
     <insert id="addOne">
         insert into t_app_customerservice_feedback_from_user (<include refid="Base_Column_List"/>) values (#{recordId},
-        #{feedbackId}, #{createTime}, #{updateTime}, #{processTime}, #{status}, #{receiver.receiverId}, #{informer.staffId},
-        #{responseContent})
+        #{feedbackId}, #{createTime}, #{updateTime}, #{processTime}, #{status}, #{receiver.receiverId},
+        #{informer.staffId},
+        #{responseContent}, #{responseTitle})
     </insert>
     <update id="save">
         update t_app_customerservice_feedback_from_user
@@ -31,10 +33,12 @@
             `status`          = #{status},
             receiver_id       = #{receiver.receiverId},
             customer_staff_id = #{informer.staffId},
-            response_content  = #{responseContent}
+            response_content  = #{responseContent},
+            response_title    = #{responseTitle}
         where record_id = #{recordId}
     </update>
-    <select id="findOneByRecordId" resultType="com.sweetcat.customerservice.infrastructure.po.FeedbackPO" resultMap="BaseResultMap">
+    <select id="findOneByRecordId" resultType="com.sweetcat.customerservice.infrastructure.po.FeedbackPO"
+            resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_app_customerservice_feedback_from_user where record_id = #{recordId}

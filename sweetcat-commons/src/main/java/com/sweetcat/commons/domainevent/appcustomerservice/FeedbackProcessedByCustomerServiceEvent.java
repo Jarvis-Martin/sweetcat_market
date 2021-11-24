@@ -35,6 +35,11 @@ public class FeedbackProcessedByCustomerServiceEvent {
     private String responseContent;
 
     /**
+     * 处理后返回给用户的响应标题
+     */
+    private String responseTitle;
+
+    /**
      * 事件发生时间
      */
     private Long occurOn;

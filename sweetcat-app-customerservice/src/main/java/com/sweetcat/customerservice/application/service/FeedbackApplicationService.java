@@ -133,6 +133,8 @@ public class FeedbackApplicationService {
         long processTime = command.getProcessTime();
         // 客服回复的内容
         String responseContent = command.getResponseContent();
+        // 客服响应的标题
+        String responseTitle = command.getResponseTitle();
         // 检查id
         verifyIdFormatService.verifyIds(processorId, recordId);
         // 处理人（客服）是否存在
@@ -159,6 +161,7 @@ public class FeedbackApplicationService {
         feedback.setUpdateTime(processTime);
         feedback.setProcessTime(processTime);
         feedback.setResponseContent(responseContent);
+        feedback.setResponseTitle(responseTitle);
         // 保存修改
         feedbackRepository.save(feedback);
         // 创建事件 FeedbackProcessedByCustomerServiceEvent
@@ -166,6 +169,7 @@ public class FeedbackApplicationService {
         // 填充领域事件
         feedbackProcessedByCustomerServiceEvent.setProcessTime(processTime);
         feedbackProcessedByCustomerServiceEvent.setResponseContent(responseContent);
+        feedbackProcessedByCustomerServiceEvent.setResponseTitle(responseTitle);
         // 发布领域时事件 FeedbackProcessedByCustomerServiceEvent
         eventPublisher.syncSend("customer_service_topic", feedbackProcessedByCustomerServiceEvent);
     }

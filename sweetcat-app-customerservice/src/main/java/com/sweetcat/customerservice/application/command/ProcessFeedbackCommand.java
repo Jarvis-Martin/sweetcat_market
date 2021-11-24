@@ -33,4 +33,9 @@ public class ProcessFeedbackCommand {
      * 处理后返回给用户的响应内容
      */
     private String responseContent;
+
+    /**
+     * 响应给用户的标题
+     */
+    private String responseTitle;
 }
