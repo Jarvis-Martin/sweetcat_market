@@ -41,6 +41,10 @@ public enum ResponseStatusEnum {
      */
     USERNOTEXISTED("A0201", "用户账户不存在"),
     /**
+     * 评论不存在
+     */
+    COMMENTNOTEXISTED("A0201", "评论不存在"),
+    /**
      * 优惠券不存在
      */
     CouponNotExisted("A0201", "优惠券不存在"),
@@ -84,10 +88,6 @@ public enum ResponseStatusEnum {
      * 该店铺不存在
      */
     STORENOTEXISTED("A0201", "该店铺不存在"),
-    /**
-     * 评论不存在
-     */
-    COMMENTNOTEXISTED("A0201", "评论不存在"),
     /**
      * 商品不存在
      */

@@ -1,10 +1,10 @@
 package com.sweetcat.commons.exception;
 
 /**
- * @author: Coder_Jarvis
- * @description:
- * @date: 2021-11-2021/11/9-19:14
- * @version: 1.0
+ * @Author: Coder_Jarvis
+ * @Description:
+ * @Date: 2021-10-2021/10/26-23:03
+ * @Version: 1.0
  */
 public class CommentNotExistedException extends BaseException{
     public CommentNotExistedException(String code, String message) {

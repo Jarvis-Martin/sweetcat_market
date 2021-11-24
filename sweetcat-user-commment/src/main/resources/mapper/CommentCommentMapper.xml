@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.usercomment.infrastructure.dao.CommentCommentMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.usercomment.infrastructure.po.CommentCommentPO">
+        <id column="comment_id" jdbcType="BIGINT" property="commentId"/>
+        <result column="parent_comment_id" jdbcType="BIGINT" property="parentCommentId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        comment_id
+        , parent_comment_id
+    </sql>
+    <insert id="addOne">
+        insert into t_user_comment_comment (<include refid="Base_Column_List"/>) values (#{commentId},
+        #{parentCommentId})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_user_comment_comment
+        where comment_id = #{commentId}
+    </delete>
+    <select id="findOneByCommentId" resultType="com.sweetcat.usercomment.infrastructure.po.CommentCommentPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_comment_comment where comment_id = #{commentId}
+    </select>
+
+</mapper>
