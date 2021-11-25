@@ -29,7 +29,7 @@ public class FeedbackController {
     @PostMapping("/add")
     public ResponseDTO addOne(AddFeedbackCommand command) {
         feedbackFacade.addOne(command);
-        return response("处理成功", "{}");
+        return response("添加成功", "{}");
     }
 
     @PostMapping("/process/{record_id}")

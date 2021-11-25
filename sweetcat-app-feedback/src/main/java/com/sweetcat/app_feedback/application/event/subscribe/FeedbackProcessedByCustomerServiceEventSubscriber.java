@@ -39,6 +39,7 @@ public class FeedbackProcessedByCustomerServiceEventSubscriber implements Rocket
         processFeedbackCommand.setProcessorId(feedbackProcessedByCustomerServiceEvent.getProcessorId());
         processFeedbackCommand.setProcessTime(feedbackProcessedByCustomerServiceEvent.getProcessTime());
         processFeedbackCommand.setResponseContent(feedbackProcessedByCustomerServiceEvent.getResponseContent());
+        processFeedbackCommand.setResponseTitle(feedbackProcessedByCustomerServiceEvent.getResponseTitle());
         feedbackApplicationService.processFeedback(processFeedbackCommand);
     }
 }
