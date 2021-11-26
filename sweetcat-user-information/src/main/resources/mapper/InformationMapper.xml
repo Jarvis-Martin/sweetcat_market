@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userinformation.infrastructure.dao.InformationMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userinformation.infrastructure.po.InformationPO">
+        <id column="information_id" jdbcType="BIGINT" property="informationId"/>
+        <result column="publisher_id" jdbcType="BIGINT" property="publisherId"/>
+        <result column="publisher_name" jdbcType="VARCHAR" property="publisherName"/>
+        <result column="publisher_avatar" jdbcType="VARCHAR" property="publisherAvatar"/>
+        <result column="receiver_id" jdbcType="BIGINT" property="receiverId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="content_pics" jdbcType="VARCHAR" property="contentPics"
+                typeHandler="com.sweetcat.userinformation.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        information_id
+        , publisher_id, publisher_name, publisher_avatar, receiver_id, content,
+    content_pics, create_time, `type`, `status`
+    </sql>
+    <insert id="addOne">
+        insert into t_user_information (<include refid="Base_Column_List"/>) values (#{informationId}
+        , #{publisher.publisherId}, #{publisher.publisherName}, #{publisher.publisherAvatar}, #{receiver.receiverId},
+        #{content},
+        #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.userinformation.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{createTime}, #{type}, #{status})
+    </insert>
+    <update id="updateOne">
+        update t_user_information
+        set publisher_name   = #{publisher.publisherName},
+            publisher_avatar = #{publisher.publisherAvatar},
+            content          = #{content},
+            content_pics     = #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.userinformation.infrastructure.dao.typehandler.ListCharTypeHandler},
+            create_time      = #{createTime},
+            `status`         = #{status},
+            `type`           = #{type}
+        where information_id = #{informationId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_user_information
+        where information_id = #{informationId}
+    </delete>
+    <select id="findPageByReceiverId" resultType="com.sweetcat.userinformation.infrastructure.po.InformationPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_information where receiver_id = #{receiver.receiverId} limit #{page}, #{limit}
+    </select>
+    <select id="findOneByInformationId"
+            resultType="com.sweetcat.userinformation.infrastructure.po.InformationPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_information where information_id = #{informationId}
+    </select>
+
+</mapper>

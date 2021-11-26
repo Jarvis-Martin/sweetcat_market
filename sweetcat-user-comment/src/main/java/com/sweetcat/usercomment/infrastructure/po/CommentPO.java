@@ -40,6 +40,7 @@ public class CommentPO implements Serializable {
      * 评论配图
      */
     private List<String> contentPics;
+    private Long commodityId;
 
     private static final long serialVersionUID = 1L;
 }

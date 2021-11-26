@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userinformation.infrastructure.dao.CommentReplyMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userinformation.infrastructure.po.CommentReplyPO">
+        <id column="information_id" jdbcType="BIGINT" property="informationId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="target_url" jdbcType="VARCHAR" property="targetUrl"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        information_id
+        , commodity_id, commodity_name, commodity_pic_small, store_id, store_name, target_url
+    </sql>
+    <insert id="addOne">
+        insert into t_user_comment_reply (<include refid="Base_Column_List"/>) values (#{informationId}
+        , #{commodity.commodityId}, #{commodity.commodityName}, #{commodity.picSmall}, #{store.storeId},
+        #{store.storeName}, #{targetUrl})
+    </insert>
+    <update id="updateOne">
+        update t_user_comment_reply
+        set commodity_name      = #{commodityName},
+            commodity_pic_small = #{commodityPicSmall},
+            store_name          = #{storeName},
+            target_url          = #{targetUrl}
+        where information_id = #{informationId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_user_comment_reply
+        where information_id = #{informationId}
+    </delete>
+    <select id="findOneByInformationId"
+            resultType="com.sweetcat.userinformation.infrastructure.po.CommentReplyPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_comment_reply where information_id = #{informationId}
+    </select>
+
+</mapper>

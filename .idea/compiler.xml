@@ -29,6 +29,7 @@
         <module name="sweetcat-user-info" />
         <module name="sweetcat-store-commodity" />
         <module name="sweetcat-app-geography" />
+        <module name="sweetcat-user-information" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -62,6 +63,7 @@
       <module name="sweetcat-user-favorite" options="-parameters" />
       <module name="sweetcat-user-footprint" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
+      <module name="sweetcat-user-information" options="-parameters" />
       <module name="sweetcat-user-recommend" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />
       <module name="sweetcat_market" options="-parameters" />

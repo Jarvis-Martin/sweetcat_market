@@ -23,6 +23,11 @@ public class CustomerServiceStaff {
     private String staffNickname;
 
     /**
+     * 客服人员头像
+     */
+    private String staffAvatar;
+
+    /**
      * 账号创建时间
      */
     private Long createTime;
@@ -81,5 +86,15 @@ public class CustomerServiceStaff {
             );
         }
         this.updateTime = updateTime;
+    }
+
+    public void setStaffAvatar(String staffAvatar) {
+        if (staffAvatar == null || staffAvatar.length() < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.staffAvatar = staffAvatar;
     }
 }

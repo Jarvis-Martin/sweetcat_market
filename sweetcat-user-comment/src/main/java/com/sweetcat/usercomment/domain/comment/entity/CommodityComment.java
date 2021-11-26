@@ -43,6 +43,7 @@ public class CommodityComment extends Comment {
         this.commentId = commentId;
     }
 
+    @Override
     public void setCommodityId(Long commodityId) {
         if (commodityId == null || commodityId < 0) {
             throw new ParameterFormatIllegalityException(

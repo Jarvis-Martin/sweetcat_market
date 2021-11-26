@@ -10,15 +10,16 @@
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="processor_id" jdbcType="TINYINT" property="processorId"/>
         <result column="response_content" jdbcType="BIGINT" property="responseContent"/>
+        <result column="response_title" jdbcType="BIGINT" property="responseTitle"/>
         <result column="process_time" jdbcType="BIGINT" property="processTime"/>
     </resultMap>
     <sql id="Base_Column_List">
         feedback_id
-        , user_id, content, feedback_pics, `status`, create_time, processor_id, response_content, process_time
+        , user_id, content, feedback_pics, `status`, create_time, processor_id, response_content, response_title, process_time
     </sql>
     <insert id="insertOne">
         insert into t_app_feedback(<include refid="Base_Column_List"/>) values (#{feedbackId}, #{userId},
-        #{content}, #{feedbackPics}, #{status}, #{createTime}, #{processorId}, #{responseContent}, #{processTime})
+        #{content}, #{feedbackPics}, #{status}, #{createTime}, #{processorId}, #{responseContent}, #{responseTitle}, #{processTime})
     </insert>
     <update id="update">
         update t_app_feedback
@@ -28,6 +29,7 @@
             create_time      = #{createTime},
             processor_id     = #{processorId},
             response_content = #{responseContent},
+            response_title = #{responseTitle},
             process_time     = #{processTime}
         where feedback_id = #{feedbackId}
     </update>

@@ -40,6 +40,7 @@ public class CommentFactory {
         commentComment.setContentPics(commentPO.getContentPics());
         commentComment.setCreateTime(commentPO.getCreateTime());
         commentComment.setCommentType(commentPO.getCommentType());
+        commentComment.setCommodityId(commentPO.getCommodityId());
         return commentComment;
     }
 

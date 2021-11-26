@@ -15,6 +15,11 @@ import java.time.Instant;
 @NoArgsConstructor
 public class FeedbackProcessedByCustomerServiceEvent {
     /**
+     * 返回发起人的id(接收客服处理结果通知的接收人id)
+     */
+    private Long receiverId;
+
+    /**
      * 被处理的反馈的id
      */
     private Long feedbackId;

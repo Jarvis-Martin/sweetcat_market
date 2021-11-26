@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userinformation.infrastructure.dao.SystemInformationMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userinformation.infrastructure.po.SystemInformationPO">
+        <id column="information_id" jdbcType="BIGINT" property="informationId"/>
+        <result column="process_time" jdbcType="BIGINT" property="processTime"/>
+        <result column="response_title" jdbcType="VARCHAR" property="responseTitle"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        information_id
+        , process_time, response_title
+    </sql>
+    <insert id="addOne">
+        insert into t_user_system_information (<include refid="Base_Column_List"/>) values (#{informationId}
+        , #{processTime}, #{responseTitle})
+    </insert>
+    <update id="updateOne">
+        update t_user_system_information
+        set process_time   = #{processTime},
+            response_title = #{responseTitle}
+        where information_id = #{informationId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_user_system_information
+        where information_id = #{informationId}
+    </delete>
+    <select id="findOneByInformationId"
+            resultType="com.sweetcat.userinformation.infrastructure.po.SystemInformationPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_system_information where information_id = #{informationId}
+    </select>
+
+</mapper>

@@ -7,17 +7,19 @@
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
         <result column="comment_type" jdbcType="TINYINT" property="commentType"/>
-        <result column="content_pics"  jdbcType="VARCHAR" property="contentPics"
+        <result column="content_pics" jdbcType="VARCHAR" property="contentPics"
                 typeHandler="com.sweetcat.usercomment.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="commodity_id" jdbcType="TINYINT" property="commentId"/>
     </resultMap>
     <sql id="Base_Column_List">
         comment_id
-        , publisher_id, create_time, content, comment_type, content_pics
+        , publisher_id, create_time, content, comment_type, content_pics, commodity_id
     </sql>
     <insert id="addOne">
         insert into t_user_comment (<include refid="Base_Column_List"/>) values (#{commentId}, #{publisher.publisherId},
         #{createTime}, #{content}, #{commentType},
-        #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.usercomment.infrastructure.dao.typehandler.ListCharTypeHandler})
+        #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.usercomment.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{commodityId})
     </insert>
     <delete id="deleteOne">
         delete

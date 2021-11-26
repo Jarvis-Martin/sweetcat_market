@@ -37,4 +37,6 @@ public class AddCommentCommentCommand {
      * 被评论的那条评论的id
      */
     private Long parentCommentId;
+
+    private Long commodityId;
 }

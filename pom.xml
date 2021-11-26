@@ -30,7 +30,8 @@
         <module>sweetcat-app-credit</module>
         <module>sweetcat-app-couponcenter</module>
         <module>sweetcat-user-coupon</module>
-        <module>sweetcat-user-commment</module>
+        <module>sweetcat-user-comment</module>
+        <module>sweetcat-user-information</module>
     </modules>
 
     <properties>

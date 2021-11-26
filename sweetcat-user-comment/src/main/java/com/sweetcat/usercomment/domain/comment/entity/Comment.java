@@ -47,9 +47,24 @@ public class Comment {
      * 评论的类型：0商品评价，1用户评论
      */
     private Integer commentType;
+    /**
+     * 被评论商品的id
+     */
+    private Long commodityId;
+
 
     public Comment(Long commentId) {
         this.commentId = commentId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+        if (commodityId == null || commodityId < 0) {
+            throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        this.commodityId = commodityId;
     }
 
     public void setCommentId(Long commentId) {
@@ -111,4 +126,5 @@ public class Comment {
         }
         this.commentType = commentType;
     }
+
 }

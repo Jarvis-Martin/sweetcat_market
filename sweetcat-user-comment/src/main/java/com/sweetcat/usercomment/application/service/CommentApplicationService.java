@@ -4,6 +4,7 @@ import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.domainevent.usercomment.UserDeletedCommodityCommentEvent;
+import com.sweetcat.commons.domainevent.usercomment.UserPublishedCommentCommentEvent;
 import com.sweetcat.commons.domainevent.usercomment.UserPublishedCommodityCommentEvent;
 import com.sweetcat.commons.exception.CommentNotExistedException;
 import com.sweetcat.commons.exception.UserNotExistedException;
@@ -105,7 +106,7 @@ public class CommentApplicationService {
         //    填充领域事件
         inflateUserPublishedCommodityCommentEvent(command, commentId, publisherId, commodityId, userPublishedCommodityCommentEvent);
         //    log
-        System.out.println("sweetcat-app-credit: 触发领域事件 UserPublishedCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
+        System.out.println("sweetcat-user-information: 触发领域事件 UserPublishedCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
         //    发布领域事件
         domainEventPublisher.syncSend("sweetcat_user_comment:add_comment_commodity", userPublishedCommodityCommentEvent);
     }
@@ -139,9 +140,9 @@ public class CommentApplicationService {
         // 检查 用户
         checkUser(userInfo);
         // 查找 comment
-        Comment comment = commentRepository.findOneByCommentId(parentCommentId);
+        Comment parentComment = commentRepository.findOneByCommentId(parentCommentId);
         // 检查 评论
-        checkComment(comment);
+        checkComment(parentComment);
         // 生成 commentId
         long commentId = snowFlakeService.snowflakeId();
         CommentComment commentComment = new CommentComment(commentId);
@@ -150,6 +151,32 @@ public class CommentApplicationService {
         inflateCommentComment(command, parentCommentId, commentComment, publisher);
         // 入库
         commentRepository.addOne(commentComment);
+        // 触发领域事件
+        long domainEventId = snowFlakeService.snowflakeId();
+        //    创建 UserPublishedCommentCommentEvent
+        UserPublishedCommentCommentEvent userPublishedCommentCommentEvent = new UserPublishedCommentCommentEvent(domainEventId);
+        // 获得评论对应的商品，以便根据 商品id获得对应店铺id
+        Long commodityId = commentComment.getCommodityId();
+        CommodityInfoRpcDTO commodityInfoRpcDTO = commodityInfoRpc.findByCommodityId(commodityId);
+        //    填充 UserPublishedCommentCommentEvent
+        inflateUserPublisherCommentCommentEvent(command, publisherId, parentComment, commentId, commentComment, userPublishedCommentCommentEvent, commodityId, commodityInfoRpcDTO);
+        //    log
+        System.out.println("sweetcat-user-information: 触发领域事件 UserPublishedCommentCommentEvent 时间为：" + Instant.now().toEpochMilli());
+        //    发布领域事件
+        domainEventPublisher.syncSend("sweetcat_user_comment:add_comment_commoent", userPublishedCommentCommentEvent);
+    }
+
+    private void inflateUserPublisherCommentCommentEvent(AddCommentCommentCommand command, Long publisherId, Comment parentComment, long commentId, CommentComment commentComment, UserPublishedCommentCommentEvent userPublishedCommentCommentEvent, Long commodityId, CommodityInfoRpcDTO commodityInfoRpcDTO) {
+        userPublishedCommentCommentEvent.setOccurOne(Instant.now().toEpochMilli());
+        userPublishedCommentCommentEvent.setCommentId(commentId);
+        userPublishedCommentCommentEvent.setPublisherId(publisherId);
+        userPublishedCommentCommentEvent.setContent(command.getContent());
+        userPublishedCommentCommentEvent.setContentPics(command.getContentPics());
+        userPublishedCommentCommentEvent.setCreateTime(commentComment.getCreateTime());
+        userPublishedCommentCommentEvent.setParentCommentId(command.getParentCommentId());
+        userPublishedCommentCommentEvent.setCommodityId(commodityId);
+        userPublishedCommentCommentEvent.setStoreId(Long.valueOf(commodityInfoRpcDTO.getStoreId()));
+        userPublishedCommentCommentEvent.setReceiverId(parentComment.getPublisher().getPublisherId());
     }
 
     /**
@@ -161,6 +188,7 @@ public class CommentApplicationService {
      */
     private void inflateCommentComment(AddCommentCommentCommand command, Long parentCommentId, CommentComment commentComment, Publisher publisher) {
         commentComment.setParentCommentId(parentCommentId);
+        commentComment.setCommodityId(command.getCommodityId());
         commentComment.setPublisher(publisher);
         commentComment.setContent(command.getContent());
         commentComment.setContentPics(command.getContentPics());

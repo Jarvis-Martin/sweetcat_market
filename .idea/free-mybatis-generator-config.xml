@@ -655,6 +655,30 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_user_comment_reply">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="CommentReplyMapper" />
+              <option name="daoPackage" value="com.sweetcat.userinformation.infrastructure.dao" />
+              <option name="daoPostfix" value="Mapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="CommentReply" />
+              <option name="modelPackage" value="com.sweetcat.userinformation.infrastructure.po" />
+              <option name="name" value="t_user_comment_reply" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="information_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-information" />
+              <option name="tableName" value="t_user_comment_reply" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_user_commodity_recommend">
           <value>
             <Config>
@@ -840,6 +864,54 @@
               <option name="primaryKey" value="user_id" />
               <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-info" />
               <option name="tableName" value="t_user_info" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
+        <entry key="t_user_information">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="InformationTUserInformationMapper" />
+              <option name="daoPackage" value="com.sweetcat.userinformation.infrastructure.dao" />
+              <option name="daoPostfix" value="InformationTUserInformationMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="InformationPO" />
+              <option name="modelPackage" value="com.sweetcat.userinformation.infrastructure.po" />
+              <option name="name" value="t_user_information" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="information_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-information" />
+              <option name="tableName" value="t_user_information" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
+        <entry key="t_user_system_information">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="SystemInformationMapper" />
+              <option name="daoPackage" value="com.sweetcat.userinformation.infrastructure.dao" />
+              <option name="daoPostfix" value="SystemInformationMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="SystemInformationPO" />
+              <option name="modelPackage" value="com.sweetcat.userinformation.infrastructure.po" />
+              <option name="name" value="t_user_system_information" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="information_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-user-information" />
+              <option name="tableName" value="t_user_system_information" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
               <option name="xmlMvnPath" value="src/main/resources" />

@@ -4,15 +4,16 @@
   <resultMap id="BaseResultMap" type="com.sweetcat.customerservice.infrastructure.po.CustomerserviceStaffInfoPO">
     <id column="staff_id" jdbcType="BIGINT" property="staffId" />
     <result column="staff_nickname" jdbcType="VARCHAR" property="staffNickname" />
+    <result column="staff_avatar" jdbcType="VARCHAR" property="staffAvatar" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    staff_id, staff_nickname, create_time, update_time
+    staff_id, staff_nickname, staff_avatar, create_time, update_time
   </sql>
   <insert id="addOne">
     insert into t_app_customerservice_staff_info (<include refid="Base_Column_List" />) values (#{staffId},
-    #{staffNickname}, #{createTime}, #{updateTime})
+    #{staffNickname}, #{staffAvatar}, #{createTime}, #{updateTime})
   </insert>
   <select id="findByStaffId"
           resultType="com.sweetcat.customerservice.infrastructure.po.CustomerserviceStaffInfoPO">

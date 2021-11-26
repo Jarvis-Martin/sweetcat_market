@@ -23,6 +23,8 @@ import com.sweetcat.customerservice.infrastructure.service.timestamp_format_verf
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 /**
  * @author: Coder_Jarvis
  * @description:
@@ -89,15 +91,6 @@ public class FeedbackApplicationService {
         long receiverId = command.getReceiverId();
         // 检查id
         verifyIdFormatService.verifyIds(receiverId, feedbackId);
-//        // rpc 查询 feedback 是否存在
-//        AppFeedbackRpcDTO feedbackRpcDTO = feedbackRpc.findByFeedbackId(feedbackId);
-//        // 反馈记录不存在
-//        if (feedbackRpcDTO == null) {
-//            throw new AppFeedbackNotExistedException(
-//                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorMessage(),
-//                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorMessage()
-//            );
-//        }
         // 检查反馈人信息
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(receiverId);
         // 用户不存在
@@ -114,6 +107,12 @@ public class FeedbackApplicationService {
         // 创建接收人
         Receiver receiver = new Receiver(receiverId);
         // 填充 feedback
+        inflateFeedback(command, feedback, receiver);
+        // 加入db
+        feedbackRepository.addOne(feedback);
+    }
+
+    private void inflateFeedback(AddFeedbackCommand command, Feedback feedback, Receiver receiver) {
         feedback.setCreateTime(command.getCreateTime());
         feedback.setUpdateTime(command.getCreateTime());
         feedback.setProcessTime(null);
@@ -122,8 +121,6 @@ public class FeedbackApplicationService {
         feedback.setInformer(null);
         feedback.setReceiver(receiver);
         feedback.setResponseContent("");
-        // 加入db
-        feedbackRepository.addOne(feedback);
     }
 
     public void processFeedback(ProcessFeedbackCommand command) {
@@ -167,10 +164,16 @@ public class FeedbackApplicationService {
         // 创建事件 FeedbackProcessedByCustomerServiceEvent
         FeedbackProcessedByCustomerServiceEvent feedbackProcessedByCustomerServiceEvent = new FeedbackProcessedByCustomerServiceEvent(feedback.getFeedbackId(), staffId);
         // 填充领域事件
+        inflateFeedbackProcessedByCustomerServiceEvent(processTime, responseContent, responseTitle, feedback, feedbackProcessedByCustomerServiceEvent);
+        // 发布领域时事件 FeedbackProcessedByCustomerServiceEvent
+        eventPublisher.syncSend("customer_service_topic", feedbackProcessedByCustomerServiceEvent);
+    }
+
+    private void inflateFeedbackProcessedByCustomerServiceEvent(long processTime, String responseContent, String responseTitle, Feedback feedback, FeedbackProcessedByCustomerServiceEvent feedbackProcessedByCustomerServiceEvent) {
+        feedbackProcessedByCustomerServiceEvent.setReceiverId(feedback.getReceiver().getReceiverId());
         feedbackProcessedByCustomerServiceEvent.setProcessTime(processTime);
         feedbackProcessedByCustomerServiceEvent.setResponseContent(responseContent);
         feedbackProcessedByCustomerServiceEvent.setResponseTitle(responseTitle);
-        // 发布领域时事件 FeedbackProcessedByCustomerServiceEvent
-        eventPublisher.syncSend("customer_service_topic", feedbackProcessedByCustomerServiceEvent);
+        feedbackProcessedByCustomerServiceEvent.setOccurOn(Instant.now().toEpochMilli());
     }
 }

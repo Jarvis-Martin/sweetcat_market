@@ -15,6 +15,7 @@ public class CustomerServiceStaffFactory {
     public CustomerServiceStaff create(CustomerserviceStaffInfoPO staffInfoPO) {
         CustomerServiceStaff customerServiceStaff = new CustomerServiceStaff(staffInfoPO.getStaffId());
         customerServiceStaff.setStaffNickname(staffInfoPO.getStaffNickname());
+        customerServiceStaff.setStaffAvatar(staffInfoPO.getStaffAvatar());
         customerServiceStaff.setCreateTime(staffInfoPO.getCreateTime());
         customerServiceStaff.setUpdateTime(staffInfoPO.getUpdateTime());
         return customerServiceStaff;

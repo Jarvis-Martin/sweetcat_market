@@ -25,6 +25,11 @@ public class CustomerserviceStaffInfoPO implements Serializable {
     private String staffNickname;
 
     /**
+     * 客服头像
+     */
+    private String staffAvatar;
+
+    /**
      * 账号创建时间
      */
     private Long createTime;
