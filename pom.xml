@@ -33,6 +33,7 @@
         <module>sweetcat-user-comment</module>
         <module>sweetcat-user-information</module>
         <module>sweetcat-store-secondkill</module>
+        <module>sweetcat-user-trolley</module>
     </modules>
 
     <properties>

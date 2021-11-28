@@ -7,29 +7,30 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sweetcat-user-footprint" />
         <module name="sweetcat-store-info" />
-        <module name="sweetcat-app-carousel" />
         <module name="sweetcat-scaffold" />
         <module name="sweetcat-user-favorite" />
+        <module name="sweetcat-user-trolley" />
         <module name="sweetcat-user-relationship" />
         <module name="sweetcat-user-recommend" />
         <module name="sweetcat-takeaway-man-info" />
         <module name="sweetcat-app-fileupload" />
         <module name="sweetcat-gateway" />
-        <module name="sweetcat-app-couponcenter" />
         <module name="sweetcat-user-coupon" />
         <module name="sweetcat-app-activity" />
         <module name="sweetcat-api" />
-        <module name="sweetcat-app-credit" />
         <module name="sweetcat-app-customerservice" />
         <module name="sweetcat-app-feedback" />
-        <module name="sweetcat-commons" />
-        <module name="sweetcat-user-comment" />
-        <module name="sweetcat-store-secondkill" />
         <module name="sweetcat-user-info" />
         <module name="sweetcat-store-commodity" />
         <module name="sweetcat-app-geography" />
+        <module name="sweetcat-user-footprint" />
+        <module name="sweetcat-app-carousel" />
+        <module name="sweetcat-app-couponcenter" />
+        <module name="sweetcat-app-credit" />
+        <module name="sweetcat-commons" />
+        <module name="sweetcat-user-comment" />
+        <module name="sweetcat-store-secondkill" />
         <module name="sweetcat-user-information" />
       </profile>
     </annotationProcessing>
@@ -68,6 +69,7 @@
       <module name="sweetcat-user-information" options="-parameters" />
       <module name="sweetcat-user-recommend" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />
+      <module name="sweetcat-user-trolley" options="-parameters" />
       <module name="sweetcat_market" options="-parameters" />
     </option>
   </component>
