@@ -26,6 +26,7 @@
         <module name="sweetcat-app-feedback" />
         <module name="sweetcat-commons" />
         <module name="sweetcat-user-comment" />
+        <module name="sweetcat-store-secondkill" />
         <module name="sweetcat-user-info" />
         <module name="sweetcat-store-commodity" />
         <module name="sweetcat-app-geography" />
@@ -57,6 +58,7 @@
       <module name="sweetcat-store" options="-parameters" />
       <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
+      <module name="sweetcat-store-secondkill" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
       <module name="sweetcat-user-comment" options="-parameters" />
       <module name="sweetcat-user-coupon" options="-parameters" />

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.secondkill.infrastructure.dao.SKCommodityCommentMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.secondkill.infrastructure.po.SKCommodityCommentPO">
+        <id column="comment_id" jdbcType="BIGINT" property="commentId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="content_pics" jdbcType="VARCHAR" property="contentPics"
+                typeHandler="com.sweetcat.secondkill.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="stars" jdbcType="TINYINT" property="stars"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        comment_id
+        , user_id, commodity_id, content, content_pics, stars, create_time
+    </sql>
+    <insert id="insertOne">
+        insert into t_secondkill_commodity_comment (<include refid="Base_Column_List"/>) value (#{commentId},
+        #{publisher.publisherId}, #{commodityId}, #{content},
+        #{contentPics, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.secondkill.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{stars}, #{createTime})
+    </insert>
+    <delete id="deleteOne">
+        delete
+        from t_secondkill_commodity_comment
+        where comment_id = #{commentId}
+    </delete>
+    <select id="findByCommentId" resultType="com.sweetcat.secondkill.infrastructure.po.SKCommodityCommentPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_secondkill_commodity_comment where comment_id = #{commentId}
+    </select>
+    <select id="findPageByCommodityId"
+            resultType="com.sweetcat.secondkill.infrastructure.po.SKCommodityCommentPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_secondkill_commodity_comment where commodity_id = #{commodityId} limit #{page}, #{limit}
+    </select>
+
+</mapper>

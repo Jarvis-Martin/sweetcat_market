@@ -161,4 +161,5 @@ public class CommodityInfoRpcDTO {
      * 购后反馈金币数
      */
     private Long feedbackCoinNumber;
+
 }

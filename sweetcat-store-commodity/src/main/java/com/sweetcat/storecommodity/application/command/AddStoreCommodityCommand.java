@@ -104,7 +104,6 @@ public class AddStoreCommodityCommand {
      */
     private String specification;
 
-
     /**
      * 默认运费
      */
@@ -119,5 +118,15 @@ public class AddStoreCommodityCommand {
      * 金币抵扣率,取值范围：0% ~ 99%
      */
     private BigDecimal coinCounteractRate;
+
+    /**
+     * 当前商品秒杀开始时间
+     */
+    private Long startTime;
+
+    /**
+     * 当前商品剩余库存，该值始终小于等于 total_stock
+     */
+    private Long remainStock;
 
 }

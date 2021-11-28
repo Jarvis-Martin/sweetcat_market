@@ -51,6 +51,7 @@ spring:
           key-generator:
             column: commodity_id
             type: SNOWFLAKE
+
         t_store_commodity_comment:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_comment$->{0..1}
           logical-table: t_store_commodity_comment
@@ -65,6 +66,7 @@ spring:
           key-generator:
             column: comment_id
             type: SNOWFLAKE
+
         t_store_commodity_post_charge:
           actual-data-nodes: ds$->{0..1}.t_store_commodity_post_charge$->{0..1}
           logical-table: t_store_commodity_post_charge
@@ -84,7 +86,7 @@ spring:
 rocketmq:
   name-server: 127.0.0.1:9876
   producer:
-    group: sweetcat-store-commodity
+    group: sweetcat-store-secondkill
     # 发送异步消息失败时的重试次数：默认2
     retry-times-when-send-async-failed: 2
     # 发送同步消息失败时的重试次数：默认2
@@ -101,4 +103,4 @@ management:
       enabled: false
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-handlers-package: com.sweetcat.storecommodity.infrastructure.dao.typehandler
+  type-handlers-package: com.sweetcat.secondkill.infrastructure.dao.typehandler

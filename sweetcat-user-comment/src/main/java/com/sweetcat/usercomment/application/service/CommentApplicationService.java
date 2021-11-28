@@ -1,17 +1,21 @@
 package com.sweetcat.usercomment.application.service;
 
 import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
+import com.sweetcat.api.rpcdto.secondkill.SKCommodityInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.domainevent.usercomment.UserDeletedCommodityCommentEvent;
 import com.sweetcat.commons.domainevent.usercomment.UserPublishedCommentCommentEvent;
 import com.sweetcat.commons.domainevent.usercomment.UserPublishedCommodityCommentEvent;
+import com.sweetcat.commons.domainevent.usercomment.UserPublishedSKCommodityCommentEvent;
 import com.sweetcat.commons.exception.CommentNotExistedException;
+import com.sweetcat.commons.exception.CommodityNotExistedException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.usercomment.application.command.AddCommentCommentCommand;
 import com.sweetcat.usercomment.application.command.AddCommodityCommentCommand;
 import com.sweetcat.usercomment.application.event.publish.DomainEventPublisher;
 import com.sweetcat.usercomment.application.rpc.CommodityInfoRpc;
+import com.sweetcat.usercomment.application.rpc.SKCommodityInfoRpc;
 import com.sweetcat.usercomment.application.rpc.UserInfoRpc;
 import com.sweetcat.usercomment.domain.comment.entity.Comment;
 import com.sweetcat.usercomment.domain.comment.entity.CommentComment;
@@ -39,7 +43,13 @@ public class CommentApplicationService {
     private DomainEventPublisher domainEventPublisher;
     private UserInfoRpc userInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
+    private SKCommodityInfoRpc skCommodityInfoRpc;
     private SnowFlakeService snowFlakeService;
+
+    @Autowired
+    public void setSkCommodityInfoRpc(SKCommodityInfoRpc skCommodityInfoRpc) {
+        this.skCommodityInfoRpc = skCommodityInfoRpc;
+    }
 
     @Autowired
     public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
@@ -76,6 +86,7 @@ public class CommentApplicationService {
      * @param command
      */
     public void addOneCommodityComment(AddCommodityCommentCommand command) {
+        boolean isSecondKillCommodity = false;
         Long publisherId = command.getPublisherId();
         Long commodityId = command.getCommodityId();
         // 检查 id
@@ -86,8 +97,17 @@ public class CommentApplicationService {
         checkUser(userInfo);
         // 查找 commodity 信息
         CommodityInfoRpcDTO commodityInfo = commodityInfoRpc.findByCommodityId(commodityId);
-        // 检查 商品
-        checkCommodity(commodityInfo);
+        SKCommodityInfoRpcDTO skCommodityInfoRpcDTO = skCommodityInfoRpc.findByCommodityId(commodityId);
+        if (skCommodityInfoRpcDTO != null) {
+            isSecondKillCommodity = true;
+        }
+        // 普通商品查不到，秒杀商品页查不到
+        if (commodityInfo == null && skCommodityInfoRpcDTO == null) {
+            throw new CommodityNotExistedException(
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.COMMENTNOTEXISTED.getErrorMessage()
+            );
+        }
         // 生成 commentId
         long commentId = snowFlakeService.snowflakeId();
         // 构建 CommodityComment.publisher
@@ -101,14 +121,44 @@ public class CommentApplicationService {
         // -- 创建领域事件
         //    领域事件唯一标识
         long domainEventId = snowFlakeService.snowflakeId();
-        //    创建领域事件对象
-        UserPublishedCommodityCommentEvent userPublishedCommodityCommentEvent = new UserPublishedCommodityCommentEvent(domainEventId);
-        //    填充领域事件
-        inflateUserPublishedCommodityCommentEvent(command, commentId, publisherId, commodityId, userPublishedCommodityCommentEvent);
-        //    log
-        System.out.println("sweetcat-user-information: 触发领域事件 UserPublishedCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
-        //    发布领域事件
-        domainEventPublisher.syncSend("sweetcat_user_comment:add_comment_commodity", userPublishedCommodityCommentEvent);
+        if (isSecondKillCommodity) {
+            //    创建领域事件对象
+            UserPublishedSKCommodityCommentEvent userPublishedSKCommodityCommentEvent = new UserPublishedSKCommodityCommentEvent(domainEventId);
+            //    填充领域事件
+            inflateUserPublishedSKCommodityCommentEvent(command, commentId, publisherId, commodityId, userPublishedSKCommodityCommentEvent);
+            //    log
+            System.out.println("sweetcat-user-information: 触发领域事件 UserPublishedSKCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
+            //    发布领域事件
+            domainEventPublisher.syncSend("sweetcat_user_comment:add_comment_skCommodity", userPublishedSKCommodityCommentEvent);
+        } else {
+            //    创建领域事件对象
+            UserPublishedCommodityCommentEvent userPublishedCommodityCommentEvent = new UserPublishedCommodityCommentEvent(domainEventId);
+            //    填充领域事件
+            inflateUserPublishedCommodityCommentEvent(command, commentId, publisherId, commodityId, userPublishedCommodityCommentEvent);
+            //    log
+            System.out.println("sweetcat-user-information: 触发领域事件 UserPublishedCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
+            //    发布领域事件
+            domainEventPublisher.syncSend("sweetcat_user_comment:add_comment_commodity", userPublishedCommodityCommentEvent);
+        }
+    }
+
+    /**
+     * 填充领域事件
+     * @param command
+     * @param commentId
+     * @param publisherId
+     * @param commodityId
+     * @param userPublishedCommodityCommentEvent
+     */
+    private void inflateUserPublishedSKCommodityCommentEvent(AddCommodityCommentCommand command, Long commentId, Long publisherId, Long commodityId, UserPublishedSKCommodityCommentEvent userPublishedCommodityCommentEvent) {
+        userPublishedCommodityCommentEvent.setOccurOn(Instant.now().toEpochMilli());
+        userPublishedCommodityCommentEvent.setCommentId(commentId);
+        userPublishedCommodityCommentEvent.setPublisherId(publisherId);
+        userPublishedCommodityCommentEvent.setCommodityId(commodityId);
+        userPublishedCommodityCommentEvent.setContent(command.getContent());
+        userPublishedCommodityCommentEvent.setContentPics(command.getContentPics());
+        userPublishedCommodityCommentEvent.setStars(command.getStars());
+        userPublishedCommodityCommentEvent.setCreateTime(command.getCreateTime());
     }
 
     /**

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.secondkill.infrastructure.dao.SKCommodityMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.secondkill.infrastructure.po.SKCommodityPO">
+        <id column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="pic_small" jdbcType="VARCHAR" property="picSmall"/>
+        <result column="pic_big" jdbcType="VARCHAR" property="picBig"
+                typeHandler="com.sweetcat.secondkill.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="first_category" jdbcType="VARCHAR" property="firstCategory"/>
+        <result column="second_category" jdbcType="VARCHAR" property="secondCategory"/>
+        <result column="third_category" jdbcType="VARCHAR" property="thirdCategory"/>
+        <result column="use_times" jdbcType="TINYINT" property="useTimes"/>
+        <result column="production_area" jdbcType="VARCHAR" property="productionArea"/>
+        <result column="old_price" jdbcType="DECIMAL" property="oldPrice"/>
+        <result column="current_price" jdbcType="DECIMAL" property="currentPrice"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="total_stock" jdbcType="INTEGER" property="totalStock"/>
+        <result column="monthly_sales" jdbcType="INTEGER" property="monthlySales"/>
+        <result column="add_to_car_number" jdbcType="INTEGER" property="addToCarNumber"/>
+        <result column="collect_number" jdbcType="INTEGER" property="collectNumber"/>
+        <result column="guarantee" jdbcType="VARCHAR" property="guarantee"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="status" jdbcType="BIGINT" property="status"/>
+        <result column="specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="comment_number" jdbcType="BIGINT" property="commentNumber"/>
+        <result column="default_post_charge" jdbcType="DECIMAL" property="defaultPostCharge"/>
+        <result column="subjoin_charge_per_good" jdbcType="DECIMAL" property="subjoinChargePerGood"/>
+        <result column="start_time" jdbcType="BIGINT" property="startTime"/>
+        <result column="remain_stock" jdbcType="INTEGER" property="remainStock"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        commodity_id
+        , store_id, commodity_name, brand, pic_small, pic_big, first_category,
+    second_category, third_category, use_times, production_area, old_price, current_price, 
+    description, total_stock, monthly_sales, add_to_car_number, collect_number, guarantee, 
+    create_time, update_time, `status`, specification, comment_number, default_post_charge, 
+    subjoin_charge_per_good, start_time, remain_stock
+    </sql>
+    <insert id="addOne">
+        insert into t_secondkill_commodity (<include refid="Base_Column_List"/>) values (#{commodityId}, #{store.storeId},
+        #{commodityName}, #{brand}, #{picSmall},
+        #{picBig, javaType=List,jdbcType=VARCHAR,typeHandler=com.sweetcat.secondkill.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{firstCategory}, #{secondCategory}, #{thirdCategory}, #{useTimes}, #{productionArea}, #{oldPrice},
+        #{currentPrice},
+        #{description}, #{totalStock}, #{monthlySales}, #{addToCarNumber}, #{collectNumber}, #{guarantee},
+        #{createTime}, #{updateTime}, #{status}, #{specification}, #{commentNumber}, #{defaultPostCharge},
+        #{subjoinChargePerGood}, #{startTime}, #{remainStock})
+    </insert>
+    <update id="updateOne">
+        update t_secondkill_commodity
+        set commodity_name          = #{commodityName},
+            brand                   = #{brand},
+            pic_small               = #{picSmall},
+            pic_big                 = #{picBig,
+                                        javaType=List,
+                                        jdbcType=VARCHAR,
+                                        typeHandler=com.sweetcat.secondkill.infrastructure.dao.typehandler.ListCharTypeHandler},
+            first_category          = #{firstCategory},
+            second_category         = #{secondCategory},
+            third_category          = #{thirdCategory},
+            use_times               = #{useTimes},
+            production_area         = #{productionArea},
+            old_price               = #{oldPrice},
+            current_price           = #{currentPrice},
+            description             = #{description},
+            total_stock             = #{totalStock},
+            monthly_sales           = #{monthlySales},
+            add_to_car_number       = #{addToCarNumber},
+            collect_number          = #{collectNumber},
+            guarantee               = #{guarantee},
+            create_time             = #{createTime},
+            update_time             = #{updateTime},
+            status                  = #{status},
+            specification           = #{specification},
+            comment_number          = #{commentNumber},
+            default_post_charge     = #{defaultPostCharge},
+            subjoin_charge_per_good = #{subjoinChargePerGood},
+            start_time              = #{startTime},
+            remain_stock            = #{remainStock}
+        where commodity_id = #{commodityId}
+    </update>
+    <delete id="removeOne">
+        delete
+        from t_secondkill_commodity
+        where commodity_id = #{commodityId}
+    </delete>
+    <select id="findPageByTime" resultType="com.sweetcat.secondkill.infrastructure.po.SKCommodityPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_secondkill_commodity where start_time &gt;= #{startTime} and start_time &lt;= #{endTime} limit #{page}, #{limit}
+    </select>
+    <select id="findOneByCommodityId" resultType="com.sweetcat.secondkill.infrastructure.po.SKCommodityPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_secondkill_commodity
+        where commodity_id = #{commodityId}
+    </select>
+
+</mapper>

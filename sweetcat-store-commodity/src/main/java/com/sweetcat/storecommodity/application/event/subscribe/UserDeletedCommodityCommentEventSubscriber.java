@@ -2,6 +2,7 @@ package com.sweetcat.storecommodity.application.event.subscribe;
 
 import com.sweetcat.commons.domainevent.usercomment.UserDeletedCommodityCommentEvent;
 import com.sweetcat.storecommodity.application.service.CommodityCommentApplicationoService;
+import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
 import org.apache.rocketmq.spring.annotation.ConsumeMode;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.annotation.SelectorType;
@@ -35,7 +36,12 @@ public class UserDeletedCommodityCommentEventSubscriber implements RocketMQListe
 
     @Override
     public void onMessage(UserDeletedCommodityCommentEvent event) {
-        System.out.println("sweetcat-store-commodity 接收触发领域事件 CaptchaRequestedEvent 时间为：" + Instant.now().toEpochMilli());
-        commentApplicationoService.removeOne(event.getCommentId());
+        System.out.println("sweetcat-store-commodity 接收触发领域事件 UserDeletedCommodityCommentEvent 时间为：" + Instant.now().toEpochMilli());
+        Long commentId = event.getCommentId();
+        CommodityComment commodityComment = commentApplicationoService.findByCommentId(commentId);
+        // 待删除的商品评论存在时，commentApplicationoService.removeOne进行删除
+        if (commodityComment != null) {
+            commentApplicationoService.removeOne(commentId);
+        }
     }
 }
