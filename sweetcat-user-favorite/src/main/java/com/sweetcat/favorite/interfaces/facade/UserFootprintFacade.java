@@ -38,7 +38,7 @@ public class UserFootprintFacade {
      * @param favoriteId favoriteId
      */
     public void deleteOne(Long favoriteId) {
-        favoriteApplicationService.remove(favoriteId);
+        favoriteApplicationService.removeOne(favoriteId);
     }
 
     /**

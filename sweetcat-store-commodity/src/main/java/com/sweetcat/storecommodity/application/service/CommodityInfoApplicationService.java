@@ -135,13 +135,25 @@ public class CommodityInfoApplicationService {
     public void increAddCommodityToCartNumber(Long commodityId, Integer increment) {
         verifyIdFormatService.verifyId(commodityId);
         Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
+        checkCommodity(commodity);
+        commodity.increAddToCartNumber(increment);
+        commodityInfoRepository.save(commodity);
+    }
+
+    public void increCommodityCollectNumber(Long commodityId, Integer increment) {
+        verifyIdFormatService.verifyId(commodityId);
+        Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
+        checkCommodity(commodity);
+        commodity.increCollectNumber(increment);
+        commodityInfoRepository.save(commodity);
+    }
+
+    private void checkCommodity(Commodity commodity) {
         if (commodity == null) {
             throw new CommodityNotExistedException(
                     ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
             );
         }
-        commodity.increAddToCartNumber(increment);
-        commodityInfoRepository.save(commodity);
     }
 }

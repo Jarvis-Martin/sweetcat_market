@@ -3,9 +3,12 @@ package com.sweetcat.favorite.application.service;
 import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.userfavorite.AddedCommodityToFavoriteEvent;
+import com.sweetcat.commons.domainevent.userfavorite.RemovedCommodityFromFavoriteEvent;
 import com.sweetcat.commons.exception.CommodityNotExistedException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.favorite.application.command.AddUserFavoriteCommand;
+import com.sweetcat.favorite.application.event.publish.DomainEventPublisher;
 import com.sweetcat.favorite.application.rpc.CommodityInfoRpc;
 import com.sweetcat.favorite.application.rpc.UserInfoRpc;
 import com.sweetcat.favorite.domain.favorite.entity.UserFavorate;
@@ -15,6 +18,7 @@ import com.sweetcat.favorite.infrastructure.service.snowflake_service.SnowFlakeS
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -30,6 +34,12 @@ public class UserFavoriteApplicationService {
     private SnowFlakeService snowFlakeService;
     private UserInfoRpc userInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
+    private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
+        this.domainEventPublisher = domainEventPublisher;
+    }
 
     @Autowired
     public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
@@ -67,23 +77,11 @@ public class UserFavoriteApplicationService {
         // 检查用户信息
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUserInfo(userInfo);
         // 检查商品信息
         CommodityInfoRpcDTO commodityInfo = commodityInfoRpc.findByCommodityId(commodityId);
         // 商品不存在
-        if (commodityInfo == null) {
-            if (userInfo == null) {
-                throw new CommodityNotExistedException(
-                        ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
-                        ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
-                );
-            }
-        }
+        checkCommodityInfo(userInfo, commodityInfo);
         // 生成 id
         long favoriteId = snowFlakeService.snowflakeId();
         // 创建 favorite
@@ -94,6 +92,42 @@ public class UserFavoriteApplicationService {
         userFavorate.setCreateTime(command.getCreateTime());
         // 加入db
         favoriteRepository.addOne(userFavorate);
+        // 触发领域事件 AddedCommodityToFavoriteEvent
+        long domainEventId = snowFlakeService.snowflakeId();
+        //      -- 构建 AddedCommodityToFavoriteEvent 对象
+        AddedCommodityToFavoriteEvent addedCommodityToFavoriteEvent = new AddedCommodityToFavoriteEvent(domainEventId);
+        //      -- 填充 领域事件
+        inflateAddedCommodityToFavoriteEvent(userId, commodityId, addedCommodityToFavoriteEvent);
+        //      -- log
+        System.out.println("sweetcat-user-favorite 触发领域事件 AddedCommodityToFavoriteEvent 时间为：" + Instant.now().toEpochMilli());
+        //      -- 发布
+        domainEventPublisher.syncSend("sweetcat_user_favorite:add_commodity_to_favorite",addedCommodityToFavoriteEvent);
+    }
+
+    private void inflateAddedCommodityToFavoriteEvent(long userId, long commodityId, AddedCommodityToFavoriteEvent addedCommodityToFavoriteEvent) {
+        addedCommodityToFavoriteEvent.setOccurOn(Instant.now().toEpochMilli());
+        addedCommodityToFavoriteEvent.setUserId(userId);
+        addedCommodityToFavoriteEvent.setCommodityId(commodityId);
+    }
+
+    private void checkCommodityInfo(UserInfoRpcDTO userInfo, CommodityInfoRpcDTO commodityInfo) {
+        if (commodityInfo == null) {
+            if (userInfo == null) {
+                throw new CommodityNotExistedException(
+                        ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
+                        ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
+                );
+            }
+        }
+    }
+
+    private void checkUserInfo(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
     }
 
     /**
@@ -101,11 +135,27 @@ public class UserFavoriteApplicationService {
      *
      * @param favoriteId favoriteId
      */
-    public void remove(Long favoriteId) {
+    public void removeOne(Long favoriteId) {
         // 获取 favorite id
         UserFavorate userFavorate = favoriteRepository.findByFavoriteId(favoriteId);
         // 移除
         favoriteRepository.remove(userFavorate);
+        // 触发领域事件 RemovedCommodityFromFavoriteEvent
+        long domainEventId = snowFlakeService.snowflakeId();
+        //      -- 构建 RemovedCommodityFromFavoriteEvent 对象
+        RemovedCommodityFromFavoriteEvent removedCommodityFromFavoriteEvent = new RemovedCommodityFromFavoriteEvent(domainEventId);
+        //      -- 填充 领域事件
+        inflateRemovedCommodityFromFavoriteEvent(userFavorate, removedCommodityFromFavoriteEvent);
+        //      -- log
+        System.out.println("sweetcat-user-favorite 触发领域事件 RemovedCommodityFromFavoriteEvent 时间为：" + Instant.now().toEpochMilli());
+        //      -- 发布
+        domainEventPublisher.syncSend("sweetcat_user_favorite:remove_commodity_from_favorite", removedCommodityFromFavoriteEvent);
+    }
+
+    private void inflateRemovedCommodityFromFavoriteEvent(UserFavorate userFavorate, RemovedCommodityFromFavoriteEvent removedCommodityFromFavoriteEvent) {
+        removedCommodityFromFavoriteEvent.setOccurOn(Instant.now().toEpochMilli());
+        removedCommodityFromFavoriteEvent.setUserId(userFavorate.getUserId());
+        removedCommodityFromFavoriteEvent.setCommodityId(userFavorate.getCommodityId());
     }
 
     /**
@@ -122,12 +172,7 @@ public class UserFavoriteApplicationService {
         // 活得信息
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userid);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUserInfo(userInfo);
         limit = limit == null || limit < 0 ? 0 : limit;
         page = page == null || page < 0 ? 0 : page * limit;
         // 查找

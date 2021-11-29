@@ -480,4 +480,8 @@ public class Commodity {
     public void increAddToCartNumber(Integer increment) {
         this.setAddToCarNumber(this.getAddToCarNumber() + increment);
     }
+
+    public void increCollectNumber(Integer increment) {
+        this.setCollectNumber(this.getCollectNumber() + increment);
+    }
 }
