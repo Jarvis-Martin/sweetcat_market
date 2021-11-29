@@ -29,7 +29,7 @@
         <result column="comment_number" jdbcType="BIGINT" property="commentNumber"/>
         <result column="default_post_charge" jdbcType="DECIMAL" property="defaultPostCharge"/>
         <result column="subjoin_charge_per_good" jdbcType="DECIMAL" property="subjoinChargePerGood"/>
-        <result column="is_credit_can_offset" jdbcType="DECIMAL" property="creditCanOffset"/>
+        <result column="is_credit_can_offset" jdbcType="INTEGER" property="creditCanOffset"/>
         <result column="coin_counteract_rate" jdbcType="DECIMAL" property="coinCounteractRate"/>
     </resultMap>
     <sql id="Base_Column_List">
@@ -83,7 +83,7 @@
             coin_counteract_rate    = #{coinCounteractRate}
         where commodity_id = #{commodityId}
     </update>
-    <select id="findByCommodityId" resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO">
+    <select id="findByCommodityId" resultType="com.sweetcat.storecommodity.infrastructure.po.CommodityInfoPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_store_commodity_info where commodity_id = #{commodityId}

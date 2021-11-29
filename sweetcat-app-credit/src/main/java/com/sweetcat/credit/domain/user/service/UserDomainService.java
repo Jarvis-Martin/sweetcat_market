@@ -4,6 +4,7 @@ import com.sweetcat.credit.domain.user.entity.User;
 import com.sweetcat.credit.infrastructure.cache.RedisService;
 import com.sweetcat.credit.infrastructure.service.redis_key_build_service.RedisKeyBuildService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,8 +20,11 @@ import java.util.List;
  */
 @Service
 public class UserDomainService {
+    @Value("${redis-key-delimiter}")
+    private String redisKeyDelimiter;
     private RedisService redisService;
     private RedisKeyBuildService keyBuildService;
+
 
     @Autowired
     public void setRedisKeyBuildService(RedisKeyBuildService keyBuildService) {
@@ -42,7 +46,7 @@ public class UserDomainService {
         // 签到日期对应的年份
         String currentMonth = pattern.format(checkInDateTime);
         // 签到对应的redis bitmap key格式位：user:credit_checkin:{user_id}:{date}, 如 user:credit_checkin:521:202111表示2021年11月
-        String redisKey = keyBuildService.buildKey(":", "user", "credit_checkin", user.getUserId().toString(), currentMonth);
+        String redisKey = keyBuildService.buildKey(redisKeyDelimiter, "user", "credit_checkin", user.getUserId().toString(), currentMonth);
         // 签到
         return redisService.setBit(redisKey, checkInDateTime.getDayOfMonth(), true);
     }
@@ -59,7 +63,7 @@ public class UserDomainService {
         // 签到日期对应的年份
         String currentMonth = pattern.format(checkInDateTime);
         // 签到对应的redis bitmap key格式位：user:credit_checkin:{user_id}:{date}, 如 user:credit_checkin:521:202111表示2021年11月
-        String redisKey = keyBuildService.buildKey(":", "user", "credit_checkin", user.getUserId().toString(), currentMonth);
+        String redisKey = keyBuildService.buildKey(redisKeyDelimiter, "user", "credit_checkin", user.getUserId().toString(), currentMonth);
         return redisService.getBit(redisKey, checkInDateTime.getDayOfMonth());
     }
     /**
@@ -74,7 +78,7 @@ public class UserDomainService {
         // 签到日期对应的年月，用于 rediskey
         String currentMonth = pattern.format(now);
         // 签到对应的redis bitmap key格式位：user:credit_checkin:{user_id}:{date}, 如 user:credit_checkin:521:202111表示2021年11月
-        String redisKey = keyBuildService.buildKey(":", "user", "credit_checkin", user.getUserId().toString(), currentMonth);
+        String redisKey = keyBuildService.buildKey(redisKeyDelimiter, "user", "credit_checkin", user.getUserId().toString(), currentMonth);
         // 连签天数
         int checkInDays = 0;
         // 获取从 今天到bitmap偏移量位0的区间内，bitmap 状态
@@ -112,7 +116,7 @@ public class UserDomainService {
         // 签到日期对应的年份
         String currentMonth = pattern.format(LocalDate.now());
         // 签到对应的redis bitmap key格式位：user:credit_checkin:{user_id}:{date}, 如 user:credit_checkin:521:202111表示2021年11月
-        String redisKey = keyBuildService.buildKey(":", "user", "credit_checkin", user.getUserId().toString(), currentMonth);
+        String redisKey = keyBuildService.buildKey(redisKeyDelimiter, "user", "credit_checkin", user.getUserId().toString(), currentMonth);
         // 插入本月签到次数
         return redisService.bitCount(redisKey);
     }

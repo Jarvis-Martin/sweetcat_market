@@ -130,7 +130,7 @@ public class CommodityCommentApplicationoService {
         // 加入db
         commentRepository.addOne(comment);
         // 增加评论书
-        commodity.increaseCommentNumber();
+        commodity.increCommentNumber(1);
         // 入库
         commodityInfoRepository.save(commodity);
     }
@@ -145,7 +145,16 @@ public class CommodityCommentApplicationoService {
         verifyIdFormatService.verifyId(commentId);
         // 检查评论是否存在
         CommodityComment comment = commentRepository.findByCommentId(commentId);
+        if (comment != null) {
         // 删除 comment
-        commentRepository.removeOne(comment);
+            commentRepository.removeOne(comment);
+        }
+        // 找到对应商品
+        Commodity commodity = commodityInfoRepository.findByCommodityId(comment.getCommodityId());
+        // 修改评论数
+        commodity.increCommentNumber(-1);
+        // 保存修改
+        commodityInfoRepository.save(commodity);
     }
+
 }

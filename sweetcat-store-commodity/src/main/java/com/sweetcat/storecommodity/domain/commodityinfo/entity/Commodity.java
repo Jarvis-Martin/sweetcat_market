@@ -473,7 +473,11 @@ public class Commodity {
         this.coinCounteractRate = coinCounteractRate;
     }
 
-    public void increaseCommentNumber() {
-        this.setCommentNumber(this.commentNumber + 1);
+    public void increCommentNumber(Integer increment) {
+        this.setCommentNumber(this.commentNumber + increment);
+    }
+
+    public void increAddToCartNumber(Integer increment) {
+        this.setAddToCarNumber(this.getAddToCarNumber() + increment);
     }
 }

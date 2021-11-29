@@ -133,7 +133,7 @@ public class SKCommodityCommentApplicationoService {
     }
 
     private void checkUser(UserInfoRpcDTO userInfo) {
-        if ( userInfo == null) {
+        if (userInfo == null) {
             throw new UserNotExistedException(
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage(),
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
@@ -160,7 +160,9 @@ public class SKCommodityCommentApplicationoService {
         verifyIdFormatService.verifyIds(commentId);
         // 检查评论是否存在
         SKCommodityComment comment = commentRepository.findByCommentId(commentId);
-        // 删除 comment
-        commentRepository.removeOne(comment);
+        if (comment != null) {
+            // 删除 comment
+            commentRepository.removeOne(comment);
+        }
     }
 }

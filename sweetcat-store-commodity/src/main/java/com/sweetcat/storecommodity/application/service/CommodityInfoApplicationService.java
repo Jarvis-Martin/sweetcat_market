@@ -2,6 +2,7 @@ package com.sweetcat.storecommodity.application.service;
 
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.exception.CommodityNotExistedException;
 import com.sweetcat.commons.exception.StoreNotExistedException;
 import com.sweetcat.storecommodity.application.command.AddStoreCommodityCommand;
 import com.sweetcat.storecommodity.application.rpc.StoreInfoRpc;
@@ -131,4 +132,16 @@ public class CommodityInfoApplicationService {
         commodityInfoRepository.addOne(commodity);
     }
 
+    public void increAddCommodityToCartNumber(Long commodityId, Integer increment) {
+        verifyIdFormatService.verifyId(commodityId);
+        Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
+        if (commodity == null) {
+            throw new CommodityNotExistedException(
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
+            );
+        }
+        commodity.increAddToCartNumber(increment);
+        commodityInfoRepository.save(commodity);
+    }
 }

@@ -103,4 +103,4 @@ management:
       enabled: false
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-handlers-package: com.sweetcat.secondkill.infrastructure.dao.typehandler
+  type-handlers-package: com.sweetcat.storecommodity.infrastructure.dao.typehandler
