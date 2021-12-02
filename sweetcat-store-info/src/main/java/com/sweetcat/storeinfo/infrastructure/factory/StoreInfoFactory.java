@@ -15,6 +15,7 @@ public class StoreInfoFactory {
     public StoreInfo create(StoreInfoPO storeInfoPO) {
         StoreInfo storeInfo = new StoreInfo(storeInfoPO.getStoreId());
         storeInfo.setStoreName(storeInfoPO.getStoreName());
+        storeInfo.setStoreLogo(storeInfoPO.getStoreLogo());
         storeInfo.setPrincipalName(storeInfoPO.getPrincipalName());
         storeInfo.setPrincipalPhone(storeInfoPO.getPrincipalPhone());
         storeInfo.setMainBusiness(storeInfoPO.getMainBusiness());

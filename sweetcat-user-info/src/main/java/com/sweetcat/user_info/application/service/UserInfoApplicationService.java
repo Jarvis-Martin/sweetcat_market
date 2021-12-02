@@ -1,11 +1,11 @@
 package com.sweetcat.user_info.application.service;
 
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.userinfo.CaptchaRequestedEvent;
 import com.sweetcat.commons.domainevent.userinfo.UserRegisteredEvent;
 import com.sweetcat.commons.exception.*;
 import com.sweetcat.user_info.application.event.publish.DomainEventPublisher;
 import com.sweetcat.user_info.domain.user.entity.User;
-import com.sweetcat.commons.domainevent.userinfo.CaptchaRequestedEvent;
 import com.sweetcat.user_info.domain.user.repository.UserRepository;
 import com.sweetcat.user_info.domain.user.service.authen_service.AuthenService;
 import com.sweetcat.user_info.domain.user.vo.UserDescriptor;
@@ -373,12 +373,7 @@ public class UserInfoApplicationService {
         // 根据 phone 查找用户
         User user = userRepository.find(phone);
         // 用户已注册，通知用户前往登录
-        if (user != null) {
-            throw new UserExistedException(
-                    ResponseStatusEnum.USEREXISTED.getErrorCode(),
-                    ResponseStatusEnum.USEREXISTED.getErrorMessage()
-            );
-        }
+        checkUser(user);
         // 向 phone 发送验证码
         sendCaptcha(phone);
     }
@@ -467,12 +462,7 @@ public class UserInfoApplicationService {
         // 根据 phone 查找用户信息
         User user = userRepository.find(phone);
         // 该手机号已注册
-        if (user != null) {
-            throw new UserExistedException(
-                    ResponseStatusEnum.USEREXISTED.getErrorCode(),
-                    ResponseStatusEnum.USEREXISTED.getErrorMessage()
-            );
-        }
+        checkUser(user);
         // 生成 userid
         long userId = snowFlakeService.snowflakeId();
         // 加密明文密码
@@ -545,5 +535,12 @@ public class UserInfoApplicationService {
         }
     }
 
-
+    private void checkUser(User user) {
+        if (user != null) {
+            throw new UserExistedException(
+                    ResponseStatusEnum.USEREXISTED.getErrorCode(),
+                    ResponseStatusEnum.USEREXISTED.getErrorMessage()
+            );
+        }
+    }
 }

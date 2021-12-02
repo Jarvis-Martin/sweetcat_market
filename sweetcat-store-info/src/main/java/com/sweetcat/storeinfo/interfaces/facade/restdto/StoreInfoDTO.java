@@ -1,8 +1,7 @@
 package com.sweetcat.storeinfo.interfaces.facade.restdto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @Author: Coder_Jarvis
@@ -10,6 +9,8 @@ import lombok.NoArgsConstructor;
  * @Date: 2021-11-2021/11/7-17:33
  * @Version: 1.0
  */
+@Getter
+@Setter
 public class StoreInfoDTO {
     /**
      * 商家编号
@@ -20,6 +21,11 @@ public class StoreInfoDTO {
      * 商家名
      */
     private String storeName;
+
+    /**
+     * 商家logo
+     */
+    private String storeLogo;
 
     /**
      * 负责人姓名
@@ -57,62 +63,6 @@ public class StoreInfoDTO {
         this.principalPhone = principalPhone;
         this.mainBusiness = mainBusiness;
         this.type = type;
-        this.createTime = createTime;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public String getPrincipalName() {
-        return principalName;
-    }
-
-    public void setPrincipalName(String principalName) {
-        this.principalName = principalName;
-    }
-
-    public String getPrincipalPhone() {
-        return principalPhone;
-    }
-
-    public void setPrincipalPhone(String principalPhone) {
-        this.principalPhone = principalPhone;
-    }
-
-    public String getMainBusiness() {
-        return mainBusiness;
-    }
-
-    public void setMainBusiness(String mainBusiness) {
-        this.mainBusiness = mainBusiness;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

@@ -1,16 +1,11 @@
 package com.sweetcat.user_info.interfaces.facade;
 
-import com.sweetcat.user_info.application.command.address.AddAddressCommand;
-import com.sweetcat.user_info.application.command.address.EditAddressCommand;
 import com.sweetcat.user_info.application.service.UserAddressApplicationService;
 import com.sweetcat.user_info.application.service.UserInfoApplicationService;
 import com.sweetcat.user_info.domain.address.entity.UserAddress;
 import com.sweetcat.user_info.domain.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * @Author: Coder_Jarvis
@@ -195,5 +190,9 @@ public class UserInfoFacade {
      */
     public void changePassword(Long userId, String password) {
         userInfoApplicationService.changePassword(userId, password);
+    }
+
+    public UserAddress findOneAddressByUserIdAndAddressId(Long userId, Long addressId) {
+        return userAddressApplicationService.findAddressById(addressId);
     }
 }

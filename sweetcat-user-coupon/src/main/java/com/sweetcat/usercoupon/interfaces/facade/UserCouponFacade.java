@@ -1,6 +1,7 @@
 package com.sweetcat.usercoupon.interfaces.facade;
 
 import com.sweetcat.usercoupon.application.service.UserCouponApplicationService;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.Coupon;
 import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,5 +40,9 @@ public class UserCouponFacade {
      */
     public void remove(Long userId, Long couponId) {
         userCouponApplicationService.remove(userId, couponId);
+    }
+
+    public UserCoupon findOneByCouponId(Long userId, Long couponId) {
+        return userCouponApplicationService.findfindOneByCouponId(userId, couponId);
     }
 }

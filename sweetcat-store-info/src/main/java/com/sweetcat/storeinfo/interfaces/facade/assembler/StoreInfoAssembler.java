@@ -15,6 +15,7 @@ public class StoreInfoAssembler {
     public StoreInfoDTO converterToStoreInfoDTO(StoreInfo storeInfo) {
         StoreInfoDTO storeInfoDTO = new StoreInfoDTO(storeInfo.getStoreId());
         storeInfoDTO.setStoreName(storeInfo.getStoreName());
+        storeInfoDTO.setStoreLogo(storeInfo.getStoreLogo());
         storeInfoDTO.setPrincipalName(storeInfo.getPrincipalName());
         storeInfoDTO.setPrincipalPhone(storeInfo.getPrincipalPhone());
         storeInfoDTO.setMainBusiness(storeInfo.getMainBusiness());

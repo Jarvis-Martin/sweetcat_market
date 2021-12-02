@@ -10,13 +10,9 @@ import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.usercoupon.application.command.AddCommodityCouponCommand;
 import com.sweetcat.usercoupon.application.command.AddUniversalCouponCommand;
 import com.sweetcat.usercoupon.application.rpc.CommodityInfoRpc;
-import com.sweetcat.usercoupon.application.rpc.CouponRpc;
 import com.sweetcat.usercoupon.application.rpc.StoreInfoRpc;
 import com.sweetcat.usercoupon.application.rpc.UserInfoRpc;
-import com.sweetcat.usercoupon.domain.usercoupon.entity.CommodityCoupon;
-import com.sweetcat.usercoupon.domain.usercoupon.entity.UniversalCoupon;
-import com.sweetcat.usercoupon.domain.usercoupon.entity.User;
-import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.*;
 import com.sweetcat.usercoupon.domain.usercoupon.repository.CouponInfoRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.repository.UserCouponRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.vo.Commodity;
@@ -39,7 +35,6 @@ public class UserCouponApplicationService {
     private UserInfoRpc userInfoRpc;
     private StoreInfoRpc storeInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
-    private CouponRpc couponRpc;
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
     private UserCouponRepository userCouponRepository;
@@ -48,11 +43,6 @@ public class UserCouponApplicationService {
     @Autowired
     public void setCouponRepository(CouponInfoRepository couponInfoRepository) {
         this.couponInfoRepository = couponInfoRepository;
-    }
-
-    @Autowired
-    public void setCouponRpc(CouponRpc couponRpc) {
-        this.couponRpc = couponRpc;
     }
 
     @Autowired
@@ -277,4 +267,8 @@ public class UserCouponApplicationService {
         }
     }
 
+    public UserCoupon findfindOneByCouponId(Long userId, Long couponId) {
+        verifyIdFormatService.verifyIds(couponId);
+        return userCouponRepository.findOneByUserIdAndCouponId(userId, couponId);
+    }
 }

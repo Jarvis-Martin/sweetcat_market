@@ -26,6 +26,7 @@
         <module name="sweetcat-app-geography" />
         <module name="sweetcat-user-footprint" />
         <module name="sweetcat-app-carousel" />
+        <module name="sweetcat-user-order" />
         <module name="sweetcat-app-couponcenter" />
         <module name="sweetcat-app-credit" />
         <module name="sweetcat-commons" />
@@ -67,6 +68,7 @@
       <module name="sweetcat-user-footprint" options="-parameters" />
       <module name="sweetcat-user-info" options="-parameters" />
       <module name="sweetcat-user-information" options="-parameters" />
+      <module name="sweetcat-user-order" options="-parameters" />
       <module name="sweetcat-user-recommend" options="-parameters" />
       <module name="sweetcat-user-relationship" options="-parameters" />
       <module name="sweetcat-user-trolley" options="-parameters" />

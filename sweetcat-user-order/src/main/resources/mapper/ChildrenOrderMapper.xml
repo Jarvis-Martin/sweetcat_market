@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userorder.infrastructure.dao.ChildrenOrderMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userorder.infrastructure.po.ChildrenOrderPO">
+        <id column="parent_order_id" jdbcType="BIGINT" property="parentOrderId"/>
+        <result column="children_order_id" jdbcType="BIGINT" property="childrenOrderId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        parent_order_id
+        , children_order_id, user_id
+    </sql>
+    <insert id="addOne">
+        insert into t_children_order (<include refid="Base_Column_List"/>) values (#{parentOrderId}, #{childrenOrderId},
+        #{userId})
+    </insert>
+    <update id="updateOne">
+        update t_children_order
+        set parent_order_id   = #{parentOrderId},
+            children_order_id = #{childrenOrderId},
+            user_id           = #{userId}
+        where parent_order_id = #{parentOrderId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_children_order
+        where parent_order_id = #{parentOrderId}
+    </delete>
+    <select id="findOneByUserIdAndOrderId" resultType="com.sweetcat.userorder.infrastructure.po.ChildrenOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_children_order where parent_order_id = #{parentOrderId} and user_id = #{userId}
+    </select>
+    <select id="findPageByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.ChildrenOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_children_order where parent_order_id = #{parentOrderId} limit #{page}, #{limit}
+    </select>
+    <select id="findPageByUserId" resultType="com.sweetcat.userorder.infrastructure.po.ChildrenOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_children_order where user_id = #{userId} limit #{page}, #{limit}
+    </select>
+
+</mapper>

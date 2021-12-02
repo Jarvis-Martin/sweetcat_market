@@ -1,7 +1,8 @@
 package com.sweetcat.storeinfo.infrastructure.po;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * t_store_info
@@ -17,6 +18,11 @@ public class StoreInfoPO implements Serializable {
      * 商家名
      */
     private String storeName;
+
+    /**
+     * 商家logo
+     */
+    private String storeLogo;
 
     /**
      * 负责人姓名

@@ -2,7 +2,7 @@ package com.sweetcat.storeinfo.domain.storeinfo.entity;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
-import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  *
  * @author
  */
+@Getter
 public class StoreInfo implements Serializable {
     /**
      * 商家编号
@@ -22,6 +23,11 @@ public class StoreInfo implements Serializable {
      * 商家名
      */
     private String storeName;
+
+    /**
+     * 商家logo
+     */
+    private String storeLogo;
 
     /**
      * 负责人姓名
@@ -84,6 +90,10 @@ public class StoreInfo implements Serializable {
 
     public String getStoreName() {
         return storeName;
+    }
+
+    public void setStoreLogo(String storeLogo) {
+        this.storeLogo = storeLogo;
     }
 
     public void setStoreName(String storeName) {

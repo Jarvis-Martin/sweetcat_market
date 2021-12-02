@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userorder.infrastructure.dao.CommodityInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userorder.infrastructure.po.CommodityInfoPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
+        <result column="commodity_pic_small" jdbcType="DECIMAL" property="commodityPicSmall"/>
+        <result column="price_when_make_order" jdbcType="BIGINT" property="priceWhenMakeOrder"/>
+        <result column="specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , commodity_id, commodity_name, commodity_pic_small, price_when_make_order,
+    specification, `count`
+    </sql>
+    <insert id="addOne">
+        insert into t_commodity_of_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{commodityId},
+        #{commodityName},
+        #{commodityPicSmall}, #{priceWhenMakeOrder}, #{specification}, #{count})
+    </insert>
+    <update id="updateOne">
+        update t_commodity_of_order
+        set commodity_name        = #{commodityName},
+            commodity_pic_small   = #{commodityPicSmall},
+            price_when_make_order = #{priceWhenMakeOrder},
+            specification         = #{specification},
+            count                 = #{cCount}
+        where order_id = #{orderId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_commodity_of_order
+        where order_id = #{orderId}
+    </delete>
+    <select id="findPageByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.CommodityInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_commodity_of_order where order_id = #{orderId}
+    </select>
+
+</mapper>

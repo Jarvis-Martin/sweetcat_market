@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.userorder.infrastructure.dao.TimeInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.userorder.infrastructure.po.TimeInfoPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="place_order_time" jdbcType="BIGINT" property="placeOrderTime"/>
+        <result column="pay_order_time" jdbcType="BIGINT" property="payOrderTime"/>
+        <result column="time_out_time" jdbcType="BIGINT" property="timeOutTime"/>
+        <result column="cancel_order_time" jdbcType="BIGINT" property="cancelOrderTime"/>
+        <result column="finish_order_time" jdbcType="BIGINT" property="finishOrderTime"/>
+        <result column="deliver_commodity_time" jdbcType="BIGINT" property="deliverCommodityTime"/>
+        <result column="received_commodity_time" jdbcType="BIGINT" property="receivedCommodityTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , place_order_time, pay_order_time, time_out_time, cancel_order_time, finish_order_time,
+    deliver_commodity_time, received_commodity_time
+    </sql>
+    <insert id="addOne">
+        insert into t_time_info_of_order (<include refid="Base_Column_List"/>) values (#{orderId}
+        , #{placeOrderTime}, #{payOrderTime}, #{timeOutTime}, #{cancelOrderTime}, #{finishOrderTime},
+        #{deliverCommodityTime}, #{receivedCommodityTime})
+    </insert>
+    <update id="updateOne">
+        update t_time_info_of_order
+        set place_order_time        = #{placeOrderTime},
+            pay_order_time          = #{payOrderTime},
+            time_out_time           = #{timeOutTime},
+            cancel_order_time       = #{cancelOrderTime},
+            finish_order_time       = #{finishOrderTime},
+            deliver_commodity_time  = #{deliverCommodityTime},
+            received_commodity_time = #{receivedCommodityTime}
+        where order_id = #{orderId}
+    </update>
+    <delete id="deleteOne">
+        delete
+        from t_time_info_of_order
+        where order_id = #{orderId}
+    </delete>
+    <select id="findOneByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.TimeInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_time_info_of_order where order_id = #{orderId}
+    </select>
+
+</mapper>

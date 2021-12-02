@@ -1,0 +1,95 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: sweetcat-store-userorder
+        group: SWEETCAT_GROUP
+        namespace: dev
+        file-extension: yml
+        shared-configs:
+          - dataId: sweetcat-commons.yml
+            namespace: dev
+            group: SWEETCAT_GROUP
+            refresh: True
+
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_store_secondkill0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_store_secondkill1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    # 分库配置 ， 根据good_id分库
+    sharding:
+      # 分表配置，根据member_id分表
+      tables:
+        t_secondkill_commodity:
+          actual-data-nodes: ds$->{0..1}.t_secondkill_commodity$->{0..1}
+          logical-table: t_secondkill_commodity
+          database-strategy:
+            inline:
+              sharding-column: commodity_id
+              algorithm-expression: ds$->{commodity_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: commodity_id
+              algorithm-expression: t_secondkill_commodity$->{commodity_id % 2}
+          key-generator:
+            column: commodity_id
+            type: SNOWFLAKE
+
+        t_secondkill_commodity_post_charge:
+          actual-data-nodes: ds$->{0..1}.t_secondkill_commodity_post_charge$->{0..1}
+          logical-table: t_secondkill_commodity_post_charge
+          database-strategy:
+            inline:
+              sharding-column: charge_id
+              algorithm-expression: ds$->{charge_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: charge_id
+              algorithm-expression: t_secondkill_commodity_post_charge$->{charge_id % 2}
+          key-generator:
+            column: charge_id
+            type: SNOWFLAKE
+
+        t_secondkill_commodity_comment:
+          actual-data-nodes: ds$->{0..1}.t_secondkill_commodity_comment$->{0..1}
+          logical-table: t_secondkill_commodity_comment
+          database-strategy:
+            inline:
+              sharding-column: comment_id
+              algorithm-expression: ds$->{comment_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: comment_id
+              algorithm-expression: t_secondkill_commodity_comment$->{comment_id % 2}
+          key-generator:
+            column: comment_id
+            type: SNOWFLAKE
+
+
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-handlers-package: com.sweetcat.userorder.infrastructure.dao.typehandler
