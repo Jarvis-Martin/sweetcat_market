@@ -37,11 +37,19 @@ public class OrderFacade {
      *
      * @param orderId
      */
-    public void removeOne(Long orderId) {
-        orderApplicationService.removeOne(orderId);
+    public void removeOne(Long userId, Long orderId) {
+        orderApplicationService.removeOne(userId, orderId);
     }
 
     public List<ChildrenOrder> findPageByUserId(Long userId, Integer page, Integer limit) {
         return orderApplicationService.findPageByUserId(userId, page, limit);
+    }
+
+    public void cancelOrder(Long userId, Long orderId, Long cancelTime) {
+        orderApplicationService.cancelOrder(userId, orderId, cancelTime);
+    }
+
+    public void changeAddress(Long userId, Long orderId, Long addressId) {
+        orderApplicationService.changeAddress(userId, orderId, addressId);
     }
 }

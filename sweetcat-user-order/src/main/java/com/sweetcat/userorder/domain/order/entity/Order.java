@@ -1,5 +1,7 @@
 package com.sweetcat.userorder.domain.order.entity;
 
+import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
 import lombok.Getter;
 
 import java.util.List;
@@ -20,7 +22,18 @@ public class Order {
      * 已拆分订单
      */
     public static final Integer TYPE_SPLITED = 1;
+    /**
+     * 未支付
+     */
     public static final Integer STATUS_UNPAY = 0;
+    /**
+     * 已支付
+     */
+    public static final Integer STATUS_PAIED = 1;
+    /**
+     * 已支付
+     */
+    public static final Integer STATUS_CANCELED = 2;
 
     /**
      * 订单id
@@ -83,5 +96,20 @@ public class Order {
 
     public void setAmountInfo(AmountInfo amountInfo) {
         this.amountInfo = amountInfo;
+    }
+
+    public void changeAddress(AddressInfo addressInfo) {
+        UserInfo userInfoCloned = null;
+        try {
+            userInfoCloned = this.getUserInfo().clone();
+
+        } catch (CloneNotSupportedException e) {
+             throw new ParameterFormatIllegalityException(
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
+            );
+        }
+        userInfoCloned.setAddressInfo(addressInfo);
+        this.setUserInfo(userInfoCloned);
     }
 }

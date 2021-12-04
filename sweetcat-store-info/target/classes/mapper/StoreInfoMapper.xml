@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.sweetcat.storeinfo.infrastructure.po.StoreInfoPO">
         <id column="store_id" jdbcType="BIGINT" property="storeId"/>
         <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="store_logo" jdbcType="VARCHAR" property="storeLogo"/>
         <result column="principal_name" jdbcType="VARCHAR" property="principalName"/>
         <result column="principal_phone" jdbcType="CHAR" property="principalPhone"/>
         <result column="main_business" jdbcType="VARCHAR" property="mainBusiness"/>

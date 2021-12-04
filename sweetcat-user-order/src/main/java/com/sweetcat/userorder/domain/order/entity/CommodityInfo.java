@@ -12,7 +12,8 @@ import java.util.Objects;
  * @version: 1.0
  */
 @Getter
-public class CommodityInfo {
+public class CommodityInfo implements Cloneable{
+    private Long orderId;
     /**
      * 商品编号
      */
@@ -48,8 +49,13 @@ public class CommodityInfo {
      */
     private AmountInfoOfCommodity amountInfo;
 
-    public CommodityInfo(Long commodityId) {
+    public CommodityInfo(Long orderId, Long commodityId) {
+        this.setOrderId(orderId);
         this.commodityId = commodityId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public void setCommodityId(Long commodityId) {
@@ -99,5 +105,10 @@ public class CommodityInfo {
     @Override
     public int hashCode() {
         return Objects.hash(commodityId, commodityName, commodityPicSmall, priceWhenMakeOrder, specification, count, storeInfo, amountInfo);
+    }
+
+    @Override
+    public CommodityInfo clone() throws CloneNotSupportedException {
+        return ((CommodityInfo) super.clone());
     }
 }

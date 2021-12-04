@@ -1,15 +1,18 @@
 package com.sweetcat.userorder.infrastructure.dao;
 
+import com.sweetcat.userorder.domain.order.entity.AmountInfoOfCommodity;
 import com.sweetcat.userorder.infrastructure.po.AmountOfCommodityPO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface AmountOfCommodityMapper {
-    void addOne(AmountOfCommodityPO timeInfo);
+    void addOne(AmountInfoOfCommodity timeInfo);
 
-    void updateOne(AmountOfCommodityPO timeInfo);
+    void updateOne(AmountInfoOfCommodity timeInfo);
 
-    void deleteOne(AmountOfCommodityPO timeInfo);
+    void deleteOne(AmountInfoOfCommodity timeInfo);
 
-    AmountOfCommodityPO findOneByOrderId(Long orderId);
+    List<AmountOfCommodityPO> findAllByOrderId(Long orderId);
 }

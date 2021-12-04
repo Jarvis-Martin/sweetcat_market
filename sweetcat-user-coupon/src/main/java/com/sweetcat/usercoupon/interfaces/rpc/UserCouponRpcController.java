@@ -30,8 +30,11 @@ public class UserCouponRpcController {
     }
 
     @GetMapping("{coupon_id}")
-    public CouponInfoRpcDTO findOneByCouponId(Long userId, @PathVariable("coupon_id") Long couponId) {
+    public CouponInfoRpcDTO findOneByCouponId(@RequestParam("userId") Long userId, @PathVariable("coupon_id") Long couponId) {
         UserCoupon userCoupon = userCouponFacade.findOneByCouponId(userId, couponId);
+        if (userCoupon == null) {
+            return null;
+        }
         return couponRpcAssembler.converterToCouponRpcDTO(userCoupon);
     }
 }

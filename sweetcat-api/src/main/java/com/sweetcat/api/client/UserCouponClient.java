@@ -4,6 +4,7 @@ import com.sweetcat.api.rpcdto.usercoupon.CouponInfoRpcDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author: Coder_Jarvis
@@ -14,5 +15,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient("sweetcat-user-coupon")
 public interface UserCouponClient {
     @GetMapping("/rpc/user_coupon/{coupon_id}")
-    CouponInfoRpcDTO findOneByCouponId(Long userId, @PathVariable("coupon_id") Long couponId);
+    CouponInfoRpcDTO findOneByCouponId(@RequestParam("userId") Long userId, @PathVariable("coupon_id") Long couponId);
 }

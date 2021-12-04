@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Data
 public class AmountInfo {
+    private Long orderId;
     /**
      * 实际支付金额,订单拆分前操作前，(父)订单的总应付金额
      */
@@ -30,4 +31,28 @@ public class AmountInfo {
      * 对订单拆分前整个订单使用的各种优惠券的记录
      */
     private List<Coupon> coupons;
+
+    public AmountInfo(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setPriceOfPayment(BigDecimal priceOfPayment) {
+        this.priceOfPayment = priceOfPayment;
+    }
+
+    public void setPriceOfCommodity(BigDecimal priceOfCommodity) {
+        this.priceOfCommodity = priceOfCommodity;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    public void setCoupons(List<Coupon> coupons) {
+        this.coupons = coupons;
+    }
 }

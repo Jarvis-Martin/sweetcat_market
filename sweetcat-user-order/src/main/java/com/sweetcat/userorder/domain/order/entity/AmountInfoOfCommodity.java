@@ -11,7 +11,9 @@ import java.math.BigDecimal;
  * @version: 1.0
  */
 @Getter
-public class AmountInfoOfCommodity {
+public class AmountInfoOfCommodity implements Cloneable{
+    private Long orderId;
+    private Long commodityId;
     /**
      * 实际支付金额
      */
@@ -25,6 +27,10 @@ public class AmountInfoOfCommodity {
      */
     private DiscountPriceInfo discountPriceInfo;
 
+    public AmountInfoOfCommodity(Long orderId) {
+        this.orderId = orderId;
+    }
+
     public void setPriceOfPayment(BigDecimal priceOfPayment) {
         this.priceOfPayment = priceOfPayment;
     }
@@ -35,5 +41,18 @@ public class AmountInfoOfCommodity {
 
     public void setDiscountPriceInfo(DiscountPriceInfo discountPriceInfo) {
         this.discountPriceInfo = discountPriceInfo;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setCommodityId(Long commodityId) {
+        this.commodityId = commodityId;
+    }
+
+    @Override
+    public AmountInfoOfCommodity clone() throws CloneNotSupportedException {
+        return ((AmountInfoOfCommodity) super.clone());
     }
 }

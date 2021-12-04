@@ -36,5 +36,5 @@ public interface OrderRepository {
 
     List<ChildrenOrder> findPageByUserId(@Param("userId") Long userId, @Param("page") Integer page, @Param("limit") Integer limit);
 
-    ChildrenOrder findOneByOrderId(Long userId, Long childrenOrderId);
+    ChildrenOrder findOneByUserIdAndOrderId(Long userId, Long childrenOrderId);
 }

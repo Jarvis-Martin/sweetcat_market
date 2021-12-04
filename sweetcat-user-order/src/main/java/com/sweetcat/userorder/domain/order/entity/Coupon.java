@@ -11,7 +11,8 @@ import java.math.BigDecimal;
  * @version: 1.0
  */
 @Getter
-public class Coupon {
+public class Coupon implements Cloneable{
+    private Long orderId;
     /**
      * 优惠券id
      */
@@ -27,8 +28,13 @@ public class Coupon {
      */
     private BigDecimal counteractPrice;
 
-    public Coupon(Long couponId) {
+    public Coupon(Long orderId, Long couponId) {
+        this.setOrderId(orderId);
         this.couponId = couponId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public void setCouponId(Long couponId) {
@@ -41,5 +47,10 @@ public class Coupon {
 
     public void setCounteractPrice(BigDecimal counteractPrice) {
         this.counteractPrice = counteractPrice;
+    }
+
+    @Override
+    public Coupon clone() throws CloneNotSupportedException {
+        return ((Coupon) super.clone());
     }
 }

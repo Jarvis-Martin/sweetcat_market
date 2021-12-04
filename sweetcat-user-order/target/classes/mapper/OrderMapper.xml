@@ -3,7 +3,7 @@
 <mapper namespace="com.sweetcat.userorder.infrastructure.dao.OrderMapper">
     <resultMap id="BaseResultMap" type="com.sweetcat.userorder.infrastructure.po.OrderPO">
         <id column="order_id" jdbcType="BIGINT" property="orderId"/>
-        <result column="order_staus" jdbcType="TINYINT" property="orderStaus"/>
+        <result column="order_staus" jdbcType="TINYINT" property="orderStatus"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
     </resultMap>
@@ -12,11 +12,11 @@
         , order_staus, user_id, `type`
     </sql>
     <insert id="addOne">
-        insert into t_user_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderStaus}, #{userId}, #{type})
+        insert into t_user_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderInfo.orderStatus}, #{userInfo.userId}, #{type})
     </insert>
     <update id="updateOne">
         update t_user_order
-        set order_staus = #{orderStaus},
+        set order_staus = #{orderInfo.orderStaus},
             type = #{type}
         where order_id = #{orderId}
     </update>

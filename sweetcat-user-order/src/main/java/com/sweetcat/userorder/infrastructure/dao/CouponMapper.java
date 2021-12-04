@@ -1,5 +1,6 @@
 package com.sweetcat.userorder.infrastructure.dao;
 
+import com.sweetcat.userorder.domain.order.entity.Coupon;
 import com.sweetcat.userorder.infrastructure.po.CouponPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,11 +12,11 @@ import java.util.List;
  */
 @Mapper
 public interface CouponMapper {
-    void addOne(CouponPO timeInfo);
+    void addOne(Coupon timeInfo);
 
-    void updateOne(CouponPO timeInfo);
+    void updateOne(Coupon timeInfo);
 
-    void deleteOne(CouponPO timeInfo);
+    void deleteOne(Coupon timeInfo);
 
     List<CouponPO> findPageByOrderId(@Param("orderId") Long orderId, @Param("page") Integer page, @Param("limit") Integer limit);
 

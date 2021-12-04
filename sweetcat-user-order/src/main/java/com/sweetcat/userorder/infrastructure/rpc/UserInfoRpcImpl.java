@@ -1,6 +1,7 @@
 package com.sweetcat.userorder.infrastructure.rpc;
 
 import com.sweetcat.api.client.UserInfoClient;
+import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.userorder.application.rpc.UserInfoRpc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,10 @@ public class UserInfoRpcImpl implements UserInfoRpc {
     @Override
     public UserInfoRpcDTO getUserInfo(Long userId) {
         return userInfoClient.getUserInfo(userId);
+    }
+
+    @Override
+    public UserAddressRpcDTO findOneAddressByUserIdAndAddressId(long userId, long addressId) {
+        return userInfoClient.findOneAddressByUserIdAndAddressId(userId, addressId);
     }
 }

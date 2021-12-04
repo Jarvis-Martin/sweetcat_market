@@ -1,5 +1,6 @@
 package com.sweetcat.userorder.application.rpc;
 
+import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 
 /**
@@ -17,4 +18,6 @@ public interface UserInfoRpc {
      * @return 用户详情
      */
     UserInfoRpcDTO getUserInfo(Long userId);
+
+    UserAddressRpcDTO findOneAddressByUserIdAndAddressId(long userId, long addressId);
 }

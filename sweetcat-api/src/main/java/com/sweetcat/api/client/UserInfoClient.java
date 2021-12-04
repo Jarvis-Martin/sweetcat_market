@@ -1,10 +1,12 @@
 package com.sweetcat.api.client;
 
+import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Author: Coder_Jarvis
@@ -24,4 +26,7 @@ public interface UserInfoClient {
      */
     @GetMapping("/rpc/user/{user_id}")
     UserInfoRpcDTO getUserInfo(@PathVariable("user_id") Long userId);
+
+    @GetMapping("/rpc/user/address")
+    UserAddressRpcDTO findOneAddressByUserIdAndAddressId(@RequestParam("userId") Long userId, @RequestParam("addressId") Long addressId);
 }

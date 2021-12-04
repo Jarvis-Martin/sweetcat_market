@@ -26,7 +26,7 @@
             commodity_pic_small   = #{commodityPicSmall},
             price_when_make_order = #{priceWhenMakeOrder},
             specification         = #{specification},
-            count                 = #{cCount}
+            `count`               = #{count}
         where order_id = #{orderId}
     </update>
     <delete id="deleteOne">

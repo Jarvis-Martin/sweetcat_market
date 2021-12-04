@@ -9,7 +9,9 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class AddressInfo {
+public class AddressInfo implements Cloneable{
+    private Long orderId;
+    private Long userId;
     /**
      * 收货地址 id
      */
@@ -50,8 +52,13 @@ public class AddressInfo {
      */
     private String detailAddress;
 
-    public AddressInfo(Long addressId) {
+    public AddressInfo(Long orderId, Long addressId) {
+        this.setOrderId(orderId);
         this.addressId = addressId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setAddressId(Long addressId) {
@@ -84,5 +91,14 @@ public class AddressInfo {
 
     public void setDetailAddress(String detailAddress) {
         this.detailAddress = detailAddress;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    @Override
+    public AddressInfo clone() throws CloneNotSupportedException {
+        return ((AddressInfo) super.clone());
     }
 }

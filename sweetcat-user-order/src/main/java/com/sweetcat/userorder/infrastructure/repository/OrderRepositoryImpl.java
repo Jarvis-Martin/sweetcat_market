@@ -90,11 +90,28 @@ public class OrderRepositoryImpl implements OrderRepository {
      */
     @Override
     public <T extends Order> void addOne(T order) {
+        addressMapper.addOne(order.getUserInfo().getAddressInfo());
+        order.getCommodityInfoList().forEach(
+                commodityInfo -> {
+                    amountOfCommodityMapper.addOne(commodityInfo.getAmountInfo());
+                    commodityInfoMapper.addOne(commodityInfo);
+                }
+        );
+        order.getAmountInfo().getCoupons().forEach(
+                coupon -> couponMapper.addOne(coupon)
+        );
+        timeInfoMapper.addOne(order.getTimeInfo());
+        amountOfOrderMapper.addOne(order.getAmountInfo());
         if (Order.TYPE_UNSPLITED.equals(order.getType())) {
             orderMapper.addOne(order);
+            order.getCommodityInfoList().forEach(
+                    commodityInfo -> storeInfoOfCommodityMapper.addOne(commodityInfo.getStoreInfo())
+            );
         }
         if (Order.TYPE_SPLITED.equals(order.getType())) {
-            childrenOrderMapper.addOne(((ChildrenOrder) order));
+            ChildrenOrder childrenOrder = (ChildrenOrder) order;
+            childrenOrderMapper.addOne(childrenOrder);
+            storeInfoOfCommodityMapper.addOne(order.getCommodityInfoList().get(0).getStoreInfo());
         }
     }
 
@@ -106,11 +123,28 @@ public class OrderRepositoryImpl implements OrderRepository {
      */
     @Override
     public <T extends Order> void removeOne(T order) {
+        addressMapper.deleteOne(order.getUserInfo().getAddressInfo());
+        order.getCommodityInfoList().forEach(
+                commodityInfo -> {
+                    amountOfCommodityMapper.deleteOne(commodityInfo.getAmountInfo());
+                    commodityInfoMapper.deleteOne(commodityInfo);
+                }
+        );
+        order.getAmountInfo().getCoupons().forEach(
+                coupon -> couponMapper.deleteOne(coupon)
+        );
+        timeInfoMapper.deleteOne(order.getTimeInfo());
+        amountOfOrderMapper.deleteOne(order.getAmountInfo());
         if (Order.TYPE_UNSPLITED.equals(order.getType())) {
             orderMapper.deleteOne(order);
+            order.getCommodityInfoList().forEach(
+                    commodityInfo -> storeInfoOfCommodityMapper.deleteOne(commodityInfo.getStoreInfo())
+            );
         }
         if (Order.TYPE_SPLITED.equals(order.getType())) {
-            childrenOrderMapper.deleteOne(((ChildrenOrder) order));
+            ChildrenOrder childrenOrder = (ChildrenOrder) order;
+            childrenOrderMapper.deleteOne(childrenOrder);
+            storeInfoOfCommodityMapper.deleteOne(order.getCommodityInfoList().get(0).getStoreInfo());
         }
     }
 
@@ -122,11 +156,28 @@ public class OrderRepositoryImpl implements OrderRepository {
      */
     @Override
     public <T extends Order> void saveOne(T order) {
+        addressMapper.updateOne(order.getUserInfo().getAddressInfo());
+        order.getCommodityInfoList().forEach(
+                commodityInfo -> {
+                    amountOfCommodityMapper.updateOne(commodityInfo.getAmountInfo());
+                    commodityInfoMapper.updateOne(commodityInfo);
+                }
+        );
+        order.getAmountInfo().getCoupons().forEach(
+                coupon -> couponMapper.updateOne(coupon)
+        );
+        timeInfoMapper.updateOne(order.getTimeInfo());
+        amountOfOrderMapper.updateOne(order.getAmountInfo());
         if (Order.TYPE_UNSPLITED.equals(order.getType())) {
             orderMapper.updateOne(order);
+            order.getCommodityInfoList().forEach(
+                    commodityInfo -> storeInfoOfCommodityMapper.updateOne(commodityInfo.getStoreInfo())
+            );
         }
         if (Order.TYPE_SPLITED.equals(order.getType())) {
-            childrenOrderMapper.updateOne(((ChildrenOrder) order));
+            ChildrenOrder childrenOrder = (ChildrenOrder) order;
+            childrenOrderMapper.updateOne(childrenOrder);
+            storeInfoOfCommodityMapper.updateOne(order.getCommodityInfoList().get(0).getStoreInfo());
         }
     }
 
@@ -140,13 +191,13 @@ public class OrderRepositoryImpl implements OrderRepository {
                 ArrayList<ChildrenOrder>::new,
                 (con, childrenOrderPO) -> {
                     AddressPO addressPO = addressMapper.findOneByOrderId(childrenOrderPO.getChildrenOrderId());
-                    AmountOfCommodityPO amountOfCommodityPO = amountOfCommodityMapper.findOneByOrderId(childrenOrderPO.getChildrenOrderId());
+                    List<AmountOfCommodityPO> amountPageOfCommodityPO = amountOfCommodityMapper.findAllByOrderId(childrenOrderPO.getChildrenOrderId());
                     AmountOfOrderPO amountOfOrderPO = amountOfOrderMapper.findOneByOrderId(childrenOrderPO.getChildrenOrderId());
                     List<CommodityInfoPO> commodityInfoPOS = commodityInfoMapper.findAllByOrderId(childrenOrderPO.getChildrenOrderId());
                     List<CouponPO> couponPOS = couponMapper.findAllByOrderId(childrenOrderPO.getChildrenOrderId());
                     StoreInfoOfCommodityPO storeInfoOfCommodityPO = storeInfoOfCommodityMapper.findOneByOrderId(childrenOrderPO.getChildrenOrderId());
                     TimeInfoPO timeInfoPO = timeInfoMapper.findOneByOrderId(childrenOrderPO.getChildrenOrderId());
-                    ChildrenOrder childrenOrder = childrenOrderFactory.create(childrenOrderPO, addressPO, amountOfCommodityPO,
+                    ChildrenOrder childrenOrder = childrenOrderFactory.create(childrenOrderPO, addressPO, amountPageOfCommodityPO,
                             amountOfOrderPO, commodityInfoPOS, couponPOS, storeInfoOfCommodityPO, timeInfoPO);
                     con.add(childrenOrder);
                 },
@@ -155,10 +206,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public ChildrenOrder findOneByOrderId(Long userId, Long childrenOrderId) {
+    public ChildrenOrder findOneByUserIdAndOrderId(Long userId, Long childrenOrderId) {
         ChildrenOrderPO childrenOrderPO = childrenOrderMapper.findOneByUserIdAndOrderId(userId, childrenOrderId);
         AddressPO addressPO = addressMapper.findOneByOrderId(childrenOrderId);
-        AmountOfCommodityPO amountOfCommodityPO = amountOfCommodityMapper.findOneByOrderId(childrenOrderId);
+        List<AmountOfCommodityPO> amountOfCommodityPOPage = amountOfCommodityMapper.findAllByOrderId(childrenOrderId);
         AmountOfOrderPO amountOfOrderPO = amountOfOrderMapper.findOneByOrderId(childrenOrderId);
         List<CommodityInfoPO> commodityInfoPOS = commodityInfoMapper.findAllByOrderId(childrenOrderId);
         List<CouponPO> couponPOS = couponMapper.findAllByOrderId(childrenOrderId);
@@ -167,7 +218,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (childrenOrderPO == null) {
             return null;
         }
-        return childrenOrderFactory.create(childrenOrderPO, addressPO, amountOfCommodityPO,
+        return childrenOrderFactory.create(childrenOrderPO, addressPO, amountOfCommodityPOPage,
                 amountOfOrderPO, commodityInfoPOS, couponPOS, storeInfoOfCommodityPO, timeInfoPO);
     }
 }

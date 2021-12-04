@@ -6,8 +6,7 @@ import com.sweetcat.api.rpcdto.usercoupon.CouponInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.CouponNotExistedException;
-import com.sweetcat.commons.exception.UserNotExistedException;
+import com.sweetcat.commons.exception.*;
 import com.sweetcat.userorder.application.command.AddOrderCommand;
 import com.sweetcat.userorder.application.command.CommodityCouponMap;
 import com.sweetcat.userorder.application.rpc.*;
@@ -15,14 +14,13 @@ import com.sweetcat.userorder.domain.order.entity.*;
 import com.sweetcat.userorder.domain.order.repository.OrderRepository;
 import com.sweetcat.userorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.userorder.infrastructure.service.snowflake_service.SnowFlakeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +30,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Service
+@Slf4j
 public class OrderApplicationService {
     private OrderRepository orderRepository;
     private VerifyIdFormatService verifyIdFormatService;
@@ -40,16 +39,10 @@ public class OrderApplicationService {
     private StoreInfoRpc storeInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
     private UserCouponInfoRpc userCouponInfoRpc;
-    private UserAddressInfoRpc userAddressInfoRpc;
 
     @Autowired
     public void setUserCouponInfoRpc(UserCouponInfoRpc userCouponInfoRpc) {
         this.userCouponInfoRpc = userCouponInfoRpc;
-    }
-
-    @Autowired
-    public void setUserAddressInfoRpc(UserAddressInfoRpc userAddressInfoRpc) {
-        this.userAddressInfoRpc = userAddressInfoRpc;
     }
 
     @Autowired
@@ -92,6 +85,7 @@ public class OrderApplicationService {
      *
      * @param command
      */
+    @Transactional
     public void addOne(AddOrderCommand command) {
         // 下单用户id
         long userId = command.getUserId();
@@ -102,23 +96,12 @@ public class OrderApplicationService {
         List<CommodityCouponMap> commodities = command.getCommodities();
         // 检查ids
         verifyIdFormatService.verifyIds(userId, addressId);
-        verifyIdFormatService.verifyIds(((Long[]) couponIdsForOrder.toArray()));
-        // 商品-优惠券map
-        commodities.parallelStream().forEach(
-                comodity -> {
-                    Long commodityId = comodity.getCommodityId();
-                    Long storeId = comodity.getStoreId();
-                    List<Long> couponIds = comodity.getCouponIds();
-                    // 检查商品id、优惠券id、商家id
-                    verifyIdFormatService.verifyIds(commodityId, storeId);
-                    verifyIdFormatService.verifyIds(((Long[]) couponIds.toArray()));
-                }
-        );
         // 检查用户
         UserInfoRpcDTO userInfoRpcDTO = userInfoRpc.getUserInfo(userId);
         checkUser(userInfoRpcDTO);
         // 创建父订单
         long orderId = snowFlakeService.snowflakeId();
+        log.error("创建父订单：orderId = " + orderId);
         Order order = new Order(orderId);
         //  -- 构造、填充父订单
         {
@@ -126,16 +109,17 @@ public class OrderApplicationService {
 
             // 订单用户信息
             UserInfo userInfo = new UserInfo(userId);
-            AddressInfo addressInfo = new AddressInfo(addressId);
+            AddressInfo addressInfo = new AddressInfo(orderId, addressId);
             //      -- 订单用户信息：获得地址信息并检查
-            UserAddressRpcDTO userAddressRpcDTO = userAddressInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
+            UserAddressRpcDTO userAddressRpcDTO = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
             checkUserAddress(userAddressRpcDTO);
             //      -- 订单用户信息：填充订单地址信息
             inflateAddressInfoOfOrder(addressInfo, userAddressRpcDTO);
+            userInfo.setAddressInfo(addressInfo);
             order.setUserInfo(userInfo);
 
             // 订单时间信息
-            TimeInfo timeInfo = new TimeInfo();
+            TimeInfo timeInfo = new TimeInfo(orderId);
             //       -- 订单时间信息：创建订单时，只填充创建订单信息
             timeInfo.setPlaceOrderTime(command.getPlaceOrderTime());
             order.setTimeInfo(timeInfo);
@@ -158,7 +142,7 @@ public class OrderApplicationService {
                     (con, couponId) -> {
                         CouponInfoRpcDTO couponOfOrderRpcDTO = userCouponInfoRpc.findOneByCouponId(userId, couponId);
                         checkCoupon(couponOfOrderRpcDTO);
-                        Coupon coupon = new Coupon(couponId);
+                        Coupon coupon = new Coupon(orderId, couponId);
                         BigDecimal thresholdPrice = couponOfOrderRpcDTO.getThresholdPrice();
                         BigDecimal counteractPrice = couponOfOrderRpcDTO.getCounteractPrice();
                         inflateCoupon(coupon, counteractPrice, thresholdPrice);
@@ -172,18 +156,19 @@ public class OrderApplicationService {
                 // rpc 获得商品信息
                 CommodityInfoRpcDTO commodityInfoRpcDTO = commodityInfoRpc.findByCommodityId(commodityId);
                 // 订单的商品信息
-                CommodityInfo commodityInfo = new CommodityInfo(commodityId);
+                CommodityInfo commodityInfo = new CommodityInfo(orderId, commodityId);
                 // rpc获得店铺信息
                 Long storeId = commodity.getStoreId();
                 StoreInfoRpcDTO storeInfoRpcDTO = storeInfoRpc.findOneByStoreId(storeId);
-                StoreInfo storeInfo = new StoreInfo(storeId);
+                StoreInfo storeInfo = new StoreInfo(orderId, storeId);
                 // 填充 storeInfo
                 {
                     storeInfo.setStoreName(storeInfoRpcDTO.getStoreName());
                     storeInfo.setStoreLogo(storeInfoRpcDTO.getStoreLogo());
                 }
                 // 该商品金额信息
-                AmountInfoOfCommodity amountInfoOfCommodity = new AmountInfoOfCommodity();
+                AmountInfoOfCommodity amountInfoOfCommodity = new AmountInfoOfCommodity(orderId);
+                amountInfoOfCommodity.setCommodityId(commodityId);
                 // 商品总价 = 商品现价(单价) * 购买数量
                 BigDecimal priceOfCommodity = commodityInfoRpcDTO.getCurrentPrice().multiply(BigDecimal.valueOf(commodity.getCount()));
                 amountInfoOfCommodity.setPriceOfCommodity(priceOfCommodity);
@@ -200,7 +185,7 @@ public class OrderApplicationService {
                     // 用户没有该优惠券
                     checkCoupon(userCoupon);
                     // 创建商品所使用的优惠券信息
-                    Coupon coupon = new Coupon(couponId);
+                    Coupon coupon = new Coupon(orderId, couponId);
                     // -- 填充
                     BigDecimal counteractPrice = userCoupon.getCounteractPrice();
                     BigDecimal thresholdPrice = userCoupon.getThresholdPrice();
@@ -231,7 +216,7 @@ public class OrderApplicationService {
                 priceOfCommodityOfOrder = priceOfCommodityOfOrder.add(priceOfCommodity);
             }
             order.setCommodityInfoList(commodityInfos);
-            AmountInfo amountInfo = new AmountInfo();
+            AmountInfo amountInfo = new AmountInfo(orderId);
             inflateAmountInfo(priceOfPaymentOfOrder, priceOfCommodityOfOrder, creditOfOrder, couponListOfOrder, amountInfo);
             order.setAmountInfo(amountInfo);
         }
@@ -248,40 +233,117 @@ public class OrderApplicationService {
         Set<CommodityInfo> commoditySet = commodityInfoList.stream().filter(
                 commodityInfo -> commodityIdSet.contains(commodityInfo.getStoreInfo().getStoreId())
         ).collect(Collectors.toSet());
-        for (Long storeIdOfCommodity: commodityIdSet) {
+        for (Long storeIdOfCommodity : commodityIdSet) {
             ChildrenOrder childrenOrder = new ChildrenOrder(orderId);
             long childrenOrderId = snowFlakeService.snowflakeId();
+            log.error("创建子订单：childrenOrderId = " + childrenOrderId);
+            Integer orderStatus = order.getOrderInfo().getOrderStatus();
             childrenOrder.setChildrenOrderId(childrenOrderId);
+            childrenOrder.setOrderId(childrenOrderId);
+            childrenOrder.setOrderStatus(orderStatus);
+            childrenOrder.setUserId(userId);
             childrenOrder.setType(Order.TYPE_SPLITED);
+
             OrderInfo childrenOrderInfo = new OrderInfo(childrenOrderId);
-            childrenOrderInfo.setOrderStatus(order.getOrderInfo().getOrderStatus());
+            childrenOrderInfo.setOrderStatus(orderStatus);
             childrenOrder.setOrderInfo(childrenOrderInfo);
-            childrenOrder.setTimeInfo(order.getTimeInfo());
-            childrenOrder.setUserInfo(order.getUserInfo());
+            try {
+                TimeInfo timeInfoCloned = order.getTimeInfo().clone();
+                timeInfoCloned.setOrderId(childrenOrderId);
+                childrenOrder.setTimeInfo(timeInfoCloned);
+            } catch (CloneNotSupportedException e) {
+                throwParameterFormatIllegalException();
+            }
+
+            UserInfo userInfoOfChildrenOrder = new UserInfo(order.getUserInfo().getUserId());
+            try {
+                AddressInfo addressInfoClone = order.getUserInfo().getAddressInfo().clone();
+                addressInfoClone.setOrderId(childrenOrderId);
+                userInfoOfChildrenOrder.setAddressInfo(addressInfoClone);
+            } catch (CloneNotSupportedException e) {
+                throwParameterFormatIllegalException();
+                return;
+            }
+            childrenOrder.setUserInfo(userInfoOfChildrenOrder);
+
+            // 过滤除属于该商家的商品信息
             List<CommodityInfo> commodityInfoOfChildrenOfOneStore = commodityInfoList.stream().filter(
                     commodityInfoUnSplit -> storeIdOfCommodity.equals(commodityInfoUnSplit.getStoreInfo().getStoreId())
             ).collect(Collectors.toList());
-            childrenOrder.setCommodityInfoList(commodityInfoOfChildrenOfOneStore);
+            // 修改改商家商品的 commodityInfo ->修改其 orderId
+            ArrayList<CommodityInfo> commodityInfoOfChildrenOrderCloned = commodityInfoOfChildrenOfOneStore.stream().collect(
+                    ArrayList<CommodityInfo>::new,
+                    (con, commodityInfo) -> {
+                        try {
+                            // 修改 CommodityInfo 的 orderId
+                            CommodityInfo commodityInfoCloned = commodityInfo.clone();
+                            commodityInfoCloned.setOrderId(childrenOrderId);
+                            // 修改 amountInfoOfCommodity 的 orderId
+                            AmountInfoOfCommodity amountInfoOfCommodityCloned = commodityInfoCloned.getAmountInfo().clone();
+                            amountInfoOfCommodityCloned.setOrderId(childrenOrderId);
+                            commodityInfoCloned.setAmountInfo(amountInfoOfCommodityCloned);
+                            // 修改 storeInfo 的 orderId
+                            StoreInfo storeInfoCloned = commodityInfo.getStoreInfo().clone();
+                            storeInfoCloned.setOrderId(childrenOrderId);
+                            commodityInfoCloned.setStoreInfo(storeInfoCloned);
+                            con.add(commodityInfoCloned);
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    ArrayList<CommodityInfo>::addAll
+            );
+            childrenOrder.setCommodityInfoList(commodityInfoOfChildrenOrderCloned);
 
             BigDecimal childrenOrderPriceOfPayment = BigDecimal.ZERO;
             BigDecimal childrenOrderPriceOfCommodity = BigDecimal.ZERO;
             int childrenOrderCredits = 0;
             ArrayList<Coupon> childrenOrderCoupons = new ArrayList<>();
             // 提取拆分后子订单内商品信息，以构造 子订单的 金额信息AmountInfo
-            for (CommodityInfo childrenCommodityInfo : commodityInfoOfChildrenOfOneStore) {
+            for (CommodityInfo childrenCommodityInfo : commodityInfoOfChildrenOrderCloned) {
                 AmountInfoOfCommodity childrenCommodityAmountInfo = childrenCommodityInfo.getAmountInfo();
+                childrenCommodityAmountInfo.setCommodityId(childrenCommodityInfo.getCommodityId());
                 childrenOrderPriceOfPayment = childrenOrderPriceOfPayment.add(childrenCommodityAmountInfo.getPriceOfPayment());
                 childrenOrderPriceOfCommodity = childrenOrderPriceOfCommodity.add(childrenCommodityAmountInfo.getPriceOfCommodity());
                 childrenOrderCredits += childrenCommodityAmountInfo.getDiscountPriceInfo().getCredit();
-                childrenOrderCoupons.addAll(childrenCommodityAmountInfo.getDiscountPriceInfo().getCoupons());
+                List<Coupon> couponOfChildrenOrder = childrenCommodityAmountInfo.getDiscountPriceInfo().getCoupons().stream().map(
+                        coupon -> {
+                            Coupon couponCloned = coupon;
+                            try {
+                                couponCloned = coupon.clone();
+                                couponCloned.setOrderId(childrenOrderId);
+                            } catch (CloneNotSupportedException e) {
+                                throwParameterFormatIllegalException();
+                            }
+                            return couponCloned;
+                        }
+                ).collect(Collectors.toList());
+                childrenOrderCoupons.addAll(couponOfChildrenOrder);
             }
-            AmountInfo childrenOrderAmountInfo = new AmountInfo();
+            AmountInfo childrenOrderAmountInfo = new AmountInfo(childrenOrderId);
             inflateChildrenOrderAmountInfo(childrenOrderPriceOfPayment, childrenOrderPriceOfCommodity, childrenOrderCredits, childrenOrderCoupons, childrenOrderAmountInfo);
             childrenOrder.setAmountInfo(childrenOrderAmountInfo);
             // 每个子订单入库
             orderRepository.addOne(childrenOrder);
         }
 
+    }
+
+    private void throwParameterFormatIllegalException() {
+        throw new ParameterFormatIllegalityException(
+                ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                ResponseStatusEnum.PARAMETERERROR.getErrorMessage()
+        );
+    }
+
+    private void inflateAddressInfo(AddressInfo addressInfoOfChildrenOrder, String receiverName, String receiverPhone, String provinceName, String cityName, String areaName, String townName, String detailAddress) {
+        addressInfoOfChildrenOrder.setReceiverName(receiverName);
+        addressInfoOfChildrenOrder.setReceiverPhone(receiverPhone);
+        addressInfoOfChildrenOrder.setProvinceName(provinceName);
+        addressInfoOfChildrenOrder.setCityName(cityName);
+        addressInfoOfChildrenOrder.setAreaName(areaName);
+        addressInfoOfChildrenOrder.setTownName(townName);
+        addressInfoOfChildrenOrder.setDetailAddress(detailAddress);
     }
 
     private void inflateChildrenOrderAmountInfo(BigDecimal childrenOrderPriceOfPayment, BigDecimal childrenOrderPriceOfCommodity, int childrenOrderCredits, ArrayList<Coupon> childrenOrderCoupons, AmountInfo childrenOrderAmountInfo) {
@@ -323,21 +385,13 @@ public class OrderApplicationService {
     }
 
     private void inflateAddressInfoOfOrder(AddressInfo addressInfo, UserAddressRpcDTO userAddressRpcDTO) {
-        addressInfo.setReceiverName(userAddressRpcDTO.getReceiverName());
-        addressInfo.setReceiverPhone(userAddressRpcDTO.getReceiverPhone());
-        addressInfo.setProvinceName(userAddressRpcDTO.getProvinceName());
-        addressInfo.setCityName(userAddressRpcDTO.getCityName());
-        addressInfo.setAreaName(userAddressRpcDTO.getAreaName());
-        addressInfo.setTownName(userAddressRpcDTO.getTownName());
-        addressInfo.setDetailAddress(userAddressRpcDTO.getDetailAddress());
+        addressInfo.setUserId(userAddressRpcDTO.getUserId());
+        inflateAddressInfo(addressInfo, userAddressRpcDTO.getReceiverName(), userAddressRpcDTO.getReceiverPhone(), userAddressRpcDTO.getProvinceName(), userAddressRpcDTO.getCityName(), userAddressRpcDTO.getAreaName(), userAddressRpcDTO.getTownName(), userAddressRpcDTO.getDetailAddress());
     }
 
     private void checkUserAddress(UserAddressRpcDTO userAddressRpcDTO) {
         if (userAddressRpcDTO == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.ADDRESSNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.ADDRESSNOTEXISTED.getErrorMessage()
-            );
+            throwAddressNotExistException();
         }
     }
 
@@ -355,9 +409,10 @@ public class OrderApplicationService {
      *
      * @param orderId
      */
-    public void removeOne(Long orderId) {
-        verifyIdFormatService.verifyIds(orderId);
-        ChildrenOrder childrenOrder = orderRepository.findOneByOrderId(orderId);
+    @Transactional
+    public void removeOne(Long userId, Long orderId) {
+        verifyIdFormatService.verifyIds(userId, orderId);
+        ChildrenOrder childrenOrder = orderRepository.findOneByUserIdAndOrderId(userId, orderId);
         orderRepository.removeOne(childrenOrder);
     }
 
@@ -370,4 +425,55 @@ public class OrderApplicationService {
         return orderRepository.findPageByUserId(userId, page, limit);
     }
 
+    public void cancelOrder(Long userId, Long orderId, Long cancelTime) {
+        verifyIdFormatService.verifyIds(userId, orderId);
+        ChildrenOrder order = orderRepository.findOneByUserIdAndOrderId(userId, orderId);
+        checkOrder(order);
+        order.cancelOrder(cancelTime);
+        orderRepository.saveOne(order);
+    }
+
+    private void checkOrder(ChildrenOrder order) {
+        if (order == null) {
+            throwOrderNotExistedException();
+        }
+    }
+
+    private void throwOrderNotExistedException() {
+        throw new OrderNotExistException(
+                ResponseStatusEnum.ORDERNOTEXISTED.getErrorCode(),
+                ResponseStatusEnum.ORDERNOTEXISTED.getErrorMessage()
+        );
+    }
+
+
+    public void changeAddress(Long userId, Long orderId, Long addressId) {
+        //  检查id
+        verifyIdFormatService.verifyIds(userId, orderId, addressId);
+        // 查找订单
+        ChildrenOrder order = orderRepository.findOneByUserIdAndOrderId(userId, orderId);
+        checkOrder(order);
+        // 查找 userAddress
+        UserAddressRpcDTO userAddressInfo = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
+        checkUserAddress(userAddressInfo);
+        AddressInfo addressInfo = new AddressInfo(orderId, addressId);
+        addressInfo.setReceiverName(userAddressInfo.getReceiverName());
+        addressInfo.setReceiverPhone(userAddressInfo.getReceiverPhone());
+        addressInfo.setProvinceName(userAddressInfo.getProvinceName());
+        addressInfo.setCityName(userAddressInfo.getCityName());
+        addressInfo.setAreaName(userAddressInfo.getAreaName());
+        addressInfo.setTownName(userAddressInfo.getTownName());
+        addressInfo.setDetailAddress(userAddressInfo.getDetailAddress());
+        // 修改地址
+        order.changeAddress(addressInfo);
+        // 入库
+        orderRepository.saveOne(order);
+    }
+
+    private void throwAddressNotExistException() {
+        throw new AddressNotExistedException(
+                ResponseStatusEnum.ADDRESSNOTEXISTED.getErrorCode(),
+                ResponseStatusEnum.ADDRESSNOTEXISTED.getErrorMessage()
+        );
+    }
 }

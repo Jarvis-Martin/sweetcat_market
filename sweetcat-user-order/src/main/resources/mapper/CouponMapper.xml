@@ -29,13 +29,13 @@
     <select id="findPageByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.CouponPO">
         select
         <include refid="Base_Column_List"/>
-        from from t_coupon_of_order
+        from t_coupon_of_order
         where order_id = #{orderId} limit #{page}, #{limit}
     </select>
     <select id="findAllByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.CouponPO">
         select
         <include refid="Base_Column_List"/>
-        from from t_coupon_of_order
+        from t_coupon_of_order
         where order_id = #{orderId}
     </select>
 

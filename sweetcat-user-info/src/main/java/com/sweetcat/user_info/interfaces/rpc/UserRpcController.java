@@ -8,10 +8,7 @@ import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAddressRpcAssembler;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: Coder_Jarvis
@@ -61,8 +58,8 @@ public class UserRpcController {
         return new UserInfoRpcDTO(userId, user.getNickname(), user.getAvatarPath(), user.getPersonalizedSignature(), user.getCreateTime());
     }
 
-    @GetMapping("/address/{address_id}")
-    public UserAddressRpcDTO findOneAddressByUserIdAndAddressId(Long userId, @PathVariable("address_id") Long addressId) {
+    @GetMapping("/address")
+    public UserAddressRpcDTO findOneAddressByUserIdAndAddressId(@RequestParam("userId") Long userId, @RequestParam("addressId") Long addressId) {
         UserAddress userAddress = userInfoFacade.findOneAddressByUserIdAndAddressId(userId, addressId);
         return addressAssembler.converter2UserAddressRpcDTO(userAddress);
     }

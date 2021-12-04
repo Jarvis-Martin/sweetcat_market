@@ -18,6 +18,8 @@ public class ChildrenOrder extends Order{
      * 拆分后子订单的id
      */
     private Long childrenOrderId;
+    private Integer orderStatus;
+    private Long userId;
 
     public ChildrenOrder(Long orderId) {
         super(orderId);
@@ -30,5 +32,20 @@ public class ChildrenOrder extends Order{
 
     public void setChildrenOrderId(Long childrenOrderId) {
         this.childrenOrderId = childrenOrderId;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void cancelOrder(Long cancelTime) {
+        this.orderStatus = Order.STATUS_CANCELED;
+        // 记录订单取消时间
+        TimeInfo timeInfo = super.getTimeInfo();
+        timeInfo.setCancelOrderTime(cancelTime);
     }
 }

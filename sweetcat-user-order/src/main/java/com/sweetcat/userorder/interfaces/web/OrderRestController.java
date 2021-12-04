@@ -52,19 +52,19 @@ public class OrderRestController {
      *
      * @param orderId
      */
-    @DeleteMapping("{orderId}")
-    public ResponseDTO removeOne(Long orderId) {
-        orderFacade.removeOne(orderId);
+    @DeleteMapping(value = "/{order_id}", params = {"userId", "orderId"})
+    public ResponseDTO removeOne(Long userId, @PathVariable("order_id") Long orderId) {
+        orderFacade.removeOne(userId, orderId);
         return response("删除订单成功", "{}");
     }
 
     @GetMapping("/orders")
     public ResponseDTO findPageByUserId(Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<ChildrenOrder> childrenCrderPage = orderFacade.findPageByUserId(userId, page, limit);
-        if (childrenCrderPage == null) {
+        List<ChildrenOrder> childrenOrderPage = orderFacade.findPageByUserId(userId, page, limit);
+        if (childrenOrderPage == null) {
             return response("查询订单成功", "{}");
         }
-        ArrayList<OrderRestDTO> orders = childrenCrderPage.stream().collect(
+        ArrayList<OrderRestDTO> orders = childrenOrderPage.stream().collect(
                 ArrayList<OrderRestDTO>::new,
                 (con, childrenOrder) -> {
                     con.add(orderRestAssembler.converterToOrderRestDTO(childrenOrder));
@@ -76,6 +76,17 @@ public class OrderRestController {
         return response("查询成功", dataSection);
     }
 
+    @PostMapping(value = "/{order_id}", params = {"userId", "orderId", "cancelTime"})
+    public ResponseDTO cancelOrder(Long userId, @PathVariable("order_id") Long orderId, Long cancelTime) {
+        orderFacade.cancelOrder(userId, orderId, cancelTime);
+        return response("取消订单成功", "{}");
+    }
+
+    @PostMapping(value = "/{order_id}", params = {"userId", "orderId", "addressId"})
+    public ResponseDTO changeAddress(Long userId, @PathVariable("order_id") Long orderId, Long addressId) {
+        orderFacade.changeAddress(userId, orderId, addressId);
+        return response("修改订单收货地址成功", "{}");
+    }
     /**
      * 通用的放回 ResponseDTO
      *

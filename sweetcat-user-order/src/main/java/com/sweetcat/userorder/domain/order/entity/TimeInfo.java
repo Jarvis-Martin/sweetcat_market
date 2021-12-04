@@ -9,7 +9,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class TimeInfo {
+public class TimeInfo implements Cloneable{
+    private Long orderId;
     /**
      * 下单时间
      */
@@ -39,6 +40,14 @@ public class TimeInfo {
      */
     private Long receivedCommodityTime;
 
+    public TimeInfo(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
     public void setPlaceOrderTime(Long placeOrderTime) {
         this.placeOrderTime = placeOrderTime;
     }
@@ -65,5 +74,10 @@ public class TimeInfo {
 
     public void setReceivedCommodityTime(Long receivedCommodityTime) {
         this.receivedCommodityTime = receivedCommodityTime;
+    }
+
+    @Override
+    public TimeInfo clone() throws CloneNotSupportedException {
+        return ((TimeInfo) super.clone());
     }
 }

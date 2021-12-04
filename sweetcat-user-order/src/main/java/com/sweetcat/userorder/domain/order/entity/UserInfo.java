@@ -9,7 +9,7 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class UserInfo {
+public class UserInfo implements Cloneable{
     /**
      * 下单用户id
      */
@@ -29,5 +29,10 @@ public class UserInfo {
 
     public void setAddressInfo(AddressInfo addressInfo) {
         this.addressInfo = addressInfo;
+    }
+
+    @Override
+    public UserInfo clone() throws CloneNotSupportedException {
+        return ((UserInfo) super.clone());
     }
 }

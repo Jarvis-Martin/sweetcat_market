@@ -1,6 +1,7 @@
 package com.sweetcat.userorder.domain.order.entity;
 
 import lombok.Getter;
+import org.apache.catalina.Store;
 
 /**
  * @author: Coder_Jarvis
@@ -9,7 +10,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class StoreInfo {
+public class StoreInfo implements Cloneable{
+    private Long orderId;
     /**
      * 店铺id
      */
@@ -23,8 +25,13 @@ public class StoreInfo {
      */
     private String storeLogo;
 
-    public StoreInfo(Long storeId) {
+    public StoreInfo(Long orderId, Long storeId) {
+        this.setOrderId(orderId);
         this.storeId = storeId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public void setStoreId(Long storeId) {
@@ -37,5 +44,10 @@ public class StoreInfo {
 
     public void setStoreLogo(String storeLogo) {
         this.storeLogo = storeLogo;
+    }
+
+    @Override
+    public StoreInfo clone() throws CloneNotSupportedException {
+        return ((StoreInfo) super.clone());
     }
 }

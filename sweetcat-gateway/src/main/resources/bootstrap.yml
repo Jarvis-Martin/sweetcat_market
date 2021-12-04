@@ -97,6 +97,11 @@ spring:
           uri: lb://sweetcat-user-trolley
           predicates:
             - Path=/api/v1/trolley/**
+        # 买家域：用户购物车上下文
+        - id: sweetcat-user-order
+          uri: lb://sweetcat-user-order
+          predicates:
+            - Path=/api/v1/user_order/**
 
         #  卖家域：商家基本信息上下文
         - id: sweetcat-store-info
