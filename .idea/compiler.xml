@@ -13,6 +13,7 @@
         <module name="sweetcat-user-trolley" />
         <module name="sweetcat-user-relationship" />
         <module name="sweetcat-user-recommend" />
+        <module name="sweetcat-store-order" />
         <module name="sweetcat-takeaway-man-info" />
         <module name="sweetcat-app-fileupload" />
         <module name="sweetcat-gateway" />
@@ -60,6 +61,7 @@
       <module name="sweetcat-store" options="-parameters" />
       <module name="sweetcat-store-commodity" options="-parameters" />
       <module name="sweetcat-store-info" options="-parameters" />
+      <module name="sweetcat-store-order" options="-parameters" />
       <module name="sweetcat-store-secondkill" options="-parameters" />
       <module name="sweetcat-takeaway-man-info" options="-parameters" />
       <module name="sweetcat-user-comment" options="-parameters" />

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.storeorder.infrastructure.dao.AmountOfOrderMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.storeorder.infrastructure.po.AmountOfOrderPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="price_of_payment" jdbcType="DECIMAL" property="priceOfPayment"/>
+        <result column="price_of_commodity" jdbcType="DECIMAL" property="priceOfCommodity"/>
+        <result column="credit" jdbcType="INTEGER" property="credit"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , price_of_payment, price_of_commodity, credit
+    </sql>
+    <insert id="addOne">
+        insert into t_amount_of_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{priceOfPayment},
+        #{priceOfCommodity}, #{credit})
+    </insert>
+    <update id="updateOne">
+        update t_amount_of_order
+        set price_of_payment   = #{priceOfPayment},
+            price_of_commodity = #{priceOfCommodity},
+            credit             = #{credit}
+        where order_id = #{orderId}
+    </update>
+    <select id="findOneByOrderId" resultType="com.sweetcat.storeorder.infrastructure.po.AmountOfOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_amount_of_order where order_id = #{orderId}
+    </select>
+
+</mapper>

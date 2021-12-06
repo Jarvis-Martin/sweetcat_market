@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.storeorder.infrastructure.dao.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.storeorder.infrastructure.po.OrderPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , order_status, user_id
+    </sql>
+    <insert id="addOne">
+        insert into t_store_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderStatus},
+        #{userInfo.userId})
+    </insert>
+    <update id="updateOne">
+        update t_store_order
+        set order_status = #{orderStatus}
+        where order_id = #{orderId}
+    </update>
+    <select id="findOneByOrderId" resultType="com.sweetcat.storeorder.infrastructure.po.OrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_order where order_id = #{orderId}
+    </select>
+    <select id="findPageByCustomerId" resultType="com.sweetcat.storeorder.infrastructure.po.OrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_order where user_id = #{customerId} limit #{page}, #{limit}
+    </select>
+
+</mapper>

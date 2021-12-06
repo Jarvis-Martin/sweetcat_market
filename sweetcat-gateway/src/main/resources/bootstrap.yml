@@ -118,3 +118,8 @@ spring:
           uri: lb://sweetcat-store-secondkill
           predicates:
             - Path=/api/v1/secondkill/**
+        #  卖家域：卖家商品上下文
+        - id: sweetcat-store-order
+          uri: lb://sweetcat-store-order
+          predicates:
+            - Path=/api/v1/rpc/store_order/**

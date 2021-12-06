@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class TimeInfoPO implements Serializable {
     /**
-     * 拆分前订单编号
+     * 订单编号
      */
     private Long orderId;
 

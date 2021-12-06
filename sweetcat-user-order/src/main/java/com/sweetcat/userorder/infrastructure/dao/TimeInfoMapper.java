@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TimeInfoMapper {
-
     void addOne(TimeInfo timeInfo);
 
     void updateOne(TimeInfo timeInfo);

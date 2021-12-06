@@ -35,6 +35,7 @@
         <module>sweetcat-store-secondkill</module>
         <module>sweetcat-user-trolley</module>
         <module>sweetcat-user-order</module>
+        <module>sweetcat-store-order</module>
     </modules>
 
     <properties>

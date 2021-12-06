@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.storeorder.infrastructure.dao.CouponOfCommodityMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.storeorder.infrastructure.po.CouponOfCommodityPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+        <result column="threshold_price" jdbcType="DECIMAL" property="thresholdPrice"/>
+        <result column="counteract_price" jdbcType="DECIMAL" property="counteractPrice"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , commodity_id, coupon_id, threshold_price, counteract_price
+    </sql>
+    <insert id="addOne">
+        insert into t_coupon_of_commodity (<include refid="Base_Column_List"/>) values (#{orderId}, #{commodityId},
+        #{couponId}, #{thresholdPrice}, #{counteractPrice})
+    </insert>
+    <update id="updateOne">
+        update t_coupon_of_commodity
+        set threshold_price  = #{thresholdPrice},
+            counteract_price = #{counteractPrice}
+        where order_id = #{orderId}
+    </update>
+    <select id="findAllByOrderId" resultType="com.sweetcat.storeorder.infrastructure.po.CouponOfCommodityPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_coupon_of_commodity where order_id = #{orderId}
+    </select>
+    <select id="findOneByOrderId" resultType="com.sweetcat.storeorder.infrastructure.po.CouponOfCommodityPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_coupon_of_commodity where order_id = #{orderId}
+    </select>
+
+</mapper>
