@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.takewayorder.infrastructure.dao.UserAddressMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.takewayorder.infrastructure.po.UserAddressPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="address_id" jdbcType="BIGINT" property="addressId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="receiver_phone" jdbcType="CHAR" property="receiverPhone"/>
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
+        <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="town_name" jdbcType="VARCHAR" property="townName"/>
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , address_id, user_id, receiver_name, receiver_phone, province_name, city_name,
+    area_name, town_name, detail_address
+    </sql>
+    <insert id="addOne">
+        insert into t_user_address (<include refid="Base_Column_List"/>) values (#{orderId}, #{addressId}, #{userId},
+        #{receiverName}, #{receiverPhone}, #{provinceName}, #{cityName},
+        #{areaName}, #{townName}, #{detailAddress})
+    </insert>
+    <update id="updateOne">
+        update t_user_address
+        set receiver_name  = #{receiverName},
+            receiver_phone = #{receiverPhone},
+            province_name  = #{provinceName},
+            city_name      = #{cityName},
+            area_name      = #{areaName},
+            town_name      = #{townName},
+            detail_address = #{detailAddress}
+        where order_id = #{orderId}
+    </update>
+    <select id="findOneByOrderId" resultType="com.sweetcat.takewayorder.infrastructure.po.UserAddressPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_address where order_id = #{orderId}
+    </select>
+
+</mapper>

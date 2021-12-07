@@ -2,6 +2,7 @@ package com.sweetcat.storeinfo.domain.storeaddress.entity;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -10,11 +11,14 @@ import java.io.Serializable;
  *
  * @author
  */
+@Getter
 public class StoreAddress implements Serializable {
     /**
      * 商家编号
      */
     private Long storeId;
+
+    private Long addressId;
 
     /**
      * 省名
@@ -51,8 +55,13 @@ public class StoreAddress implements Serializable {
      */
     private Long updateTime;
 
-    public StoreAddress(Long storeId) {
+    public StoreAddress(Long storeId, Long addressId) {
         this.storeId = storeId;
+        this.addressId = addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 
     public StoreAddress(Long storeId, String provinceName, String cityName, String areaName, String townName, String detailAddress, Long createTime, Long updateTime) {

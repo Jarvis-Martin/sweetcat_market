@@ -1,5 +1,6 @@
 package com.sweetcat.api.client;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreAddressInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -21,4 +22,7 @@ public interface StoreInfoClient {
 
     @GetMapping("rpc/store/storeinfo/{store_id}")
     StoreInfoRpcDTO findOneByStoreId(@PathVariable("store_id") Long storeId);
+
+    @GetMapping("/store_address/{store_id}")
+    StoreAddressInfoRpcDTO findOneStoreAddressByStoreId(@PathVariable("store_id") Long storeId);
 }

@@ -9,16 +9,16 @@
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
               <option name="daoName" value="AmountOfCommodityAmountOfCommodityMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeorder.infrastructure.dao" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
               <option name="daoPostfix" value="AmountOfCommodityAmountOfCommodityMapper" />
               <option name="modelMvnPath" value="src/main/java" />
               <option name="modelName" value="AmountOfCommodityPO" />
-              <option name="modelPackage" value="com.sweetcat.storeorder.infrastructure.po" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_amount_of_commodity" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
               <option name="primaryKey" value="order_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-order" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_amount_of_commodity" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -33,16 +33,16 @@
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
               <option name="daoName" value="AmountOfOrderAmountOfOrderMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeorder.infrastructure.dao" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
               <option name="daoPostfix" value="AmountOfOrderAmountOfOrderMapper" />
               <option name="modelMvnPath" value="src/main/java" />
               <option name="modelName" value="AmountOfOrderPO" />
-              <option name="modelPackage" value="com.sweetcat.storeorder.infrastructure.po" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_amount_of_order" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
               <option name="primaryKey" value="order_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-order" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_amount_of_order" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -420,17 +420,17 @@
             <Config>
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
-              <option name="daoName" value="CommodityMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeorder.infrastructure.dao" />
-              <option name="daoPostfix" value="CommodityMapper" />
+              <option name="daoName" value="CommodityOfOrderMapper" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
+              <option name="daoPostfix" value="CommodityOfOrderMapper" />
               <option name="modelMvnPath" value="src/main/java" />
-              <option name="modelName" value="CommodityPO" />
-              <option name="modelPackage" value="com.sweetcat.storeorder.infrastructure.po" />
+              <option name="modelName" value="CommodityOfOrderPO" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_commodity_of_order" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
               <option name="primaryKey" value="order_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-order" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_commodity_of_order" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -613,16 +613,16 @@
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
               <option name="daoName" value="StoreAddressMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeinfo.infrastructure.dao" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
               <option name="daoPostfix" value="StoreAddressMapper" />
               <option name="modelMvnPath" value="src/main/java" />
               <option name="modelName" value="StoreAddressPO" />
-              <option name="modelPackage" value="com.sweetcat.storeinfo.infrastructure.po" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_store_address" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
-              <option name="primaryKey" value="store_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-info" />
+              <option name="primaryKey" value="order_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_store_address" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -733,16 +733,16 @@
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
               <option name="daoName" value="StoreInfoMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeinfo.infrastructure.dao" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
               <option name="daoPostfix" value="StoreInfoMapper" />
               <option name="modelMvnPath" value="src/main/java" />
               <option name="modelName" value="StoreInfoPO" />
-              <option name="modelPackage" value="com.sweetcat.storeinfo.infrastructure.po" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_store_info" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
-              <option name="primaryKey" value="store_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-info" />
+              <option name="primaryKey" value="" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_store_info" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -823,22 +823,46 @@
             </Config>
           </value>
         </entry>
+        <entry key="t_takeaway_order">
+          <value>
+            <Config>
+              <option name="comment" value="true" />
+              <option name="daoMvnPath" value="src/main/java" />
+              <option name="daoName" value="TakeawayOrderMapper" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
+              <option name="daoPostfix" value="TakeawayOrderMapper" />
+              <option name="modelMvnPath" value="src/main/java" />
+              <option name="modelName" value="TakeawayOrderPO" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
+              <option name="name" value="t_takeaway_order" />
+              <option name="overrideJava" value="true" />
+              <option name="overrideXML" value="true" />
+              <option name="primaryKey" value="order_id" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
+              <option name="tableName" value="t_takeaway_order" />
+              <option name="useLombokPlugin" value="true" />
+              <option name="useSchemaPrefix" value="true" />
+              <option name="xmlMvnPath" value="src/main/resources" />
+              <option name="xmlPackage" value="mapper" />
+            </Config>
+          </value>
+        </entry>
         <entry key="t_time_info_of_order">
           <value>
             <Config>
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
-              <option name="daoName" value="TimeInfoMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeorder.infrastructure.dao" />
-              <option name="daoPostfix" value="TimeInfoMapper" />
+              <option name="daoName" value="TimeInfoOfOrderTimeInfoMapper" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
+              <option name="daoPostfix" value="TimeInfoOfOrderTimeInfoMapper" />
               <option name="modelMvnPath" value="src/main/java" />
-              <option name="modelName" value="TimeInfoPO" />
-              <option name="modelPackage" value="com.sweetcat.storeorder.infrastructure.po" />
+              <option name="modelName" value="TimeInfoOfOrderPO" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_time_info_of_order" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
               <option name="primaryKey" value="order_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-order" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_time_info_of_order" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />
@@ -853,16 +877,16 @@
               <option name="comment" value="true" />
               <option name="daoMvnPath" value="src/main/java" />
               <option name="daoName" value="UserAddressMapper" />
-              <option name="daoPackage" value="com.sweetcat.storeorder.infrastructure.dao" />
+              <option name="daoPackage" value="com.sweetcat.takewayorder.infrastructure.dao" />
               <option name="daoPostfix" value="UserAddressMapper" />
               <option name="modelMvnPath" value="src/main/java" />
               <option name="modelName" value="UserAddressPO" />
-              <option name="modelPackage" value="com.sweetcat.storeorder.infrastructure.po" />
+              <option name="modelPackage" value="com.sweetcat.takewayorder.infrastructure.po" />
               <option name="name" value="t_user_address" />
               <option name="overrideJava" value="true" />
               <option name="overrideXML" value="true" />
               <option name="primaryKey" value="order_id" />
-              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-store-order" />
+              <option name="projectFolder" value="$PROJECT_DIR$/sweetcat-takeaway-order" />
               <option name="tableName" value="t_user_address" />
               <option name="useLombokPlugin" value="true" />
               <option name="useSchemaPrefix" value="true" />

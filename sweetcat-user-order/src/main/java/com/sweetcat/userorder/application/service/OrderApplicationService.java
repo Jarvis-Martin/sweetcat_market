@@ -425,6 +425,13 @@ public class OrderApplicationService {
         return orderRepository.findPageByUserId(userId, page, limit);
     }
 
+    public ChildrenOrder findOneByUserIdAndOrderId(Long userId, Long orderId) {
+        verifyIdFormatService.verifyIds(userId, orderId);
+        UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
+        checkUser(userInfo);
+        return orderRepository.findOneByUserIdAndOrderId(userId, orderId);
+    }
+
     public void cancelOrder(Long userId, Long orderId, Long cancelTime) {
         verifyIdFormatService.verifyIds(userId, orderId);
         ChildrenOrder order = orderRepository.findOneByUserIdAndOrderId(userId, orderId);
@@ -476,4 +483,5 @@ public class OrderApplicationService {
                 ResponseStatusEnum.ADDRESSNOTEXISTED.getErrorMessage()
         );
     }
+
 }

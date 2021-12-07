@@ -3,6 +3,7 @@
 <mapper namespace="com.sweetcat.storeinfo.infrastructure.dao.StoreAddressMapper">
     <resultMap id="BaseResultMap" type="com.sweetcat.storeinfo.infrastructure.po.StoreAddressPO">
         <id column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="address_id" jdbcType="VARCHAR" property="addressId"/>
         <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
         <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
         <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
@@ -12,10 +13,10 @@
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        store_id, province_name, city_name, area_name, town_name, detail_address, create_time, update_time
+        store_id, addressId, province_name, city_name, area_name, town_name, detail_address, create_time, update_time
     </sql>
     <insert id="insertOne">
-        insert into t_store_address(<include refid="Base_Column_List"/>) values (#{storeId}, #{provinceName},
+        insert into t_store_address(<include refid="Base_Column_List"/>) values (#{storeId}, #{addressId}, #{provinceName},
         #{cityName}, #{areaName}, #{townName}, #{detailAddress}, #{createTime}, #{updateTime})
     </insert>
     <select id="getById" resultType="com.sweetcat.storeinfo.infrastructure.po.StoreAddressPO">

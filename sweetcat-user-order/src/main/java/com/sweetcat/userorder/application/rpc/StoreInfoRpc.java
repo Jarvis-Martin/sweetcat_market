@@ -1,5 +1,6 @@
 package com.sweetcat.userorder.application.rpc;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreAddressInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 
@@ -26,4 +27,6 @@ public interface StoreInfoRpc {
      */
     StoreInfoRpcDTO findOneByStoreId(Long storeId);
 
+
+    StoreAddressInfoRpcDTO findOneStoreAddressByStoreId(Long storeId);
 }

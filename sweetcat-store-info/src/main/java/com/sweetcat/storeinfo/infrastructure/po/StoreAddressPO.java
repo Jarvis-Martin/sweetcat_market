@@ -1,7 +1,8 @@
 package com.sweetcat.storeinfo.infrastructure.po;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * t_store_address
@@ -13,6 +14,10 @@ public class StoreAddressPO implements Serializable {
      * 商家编号
      */
     private Long storeId;
+    /**
+     * 商家编号
+     */
+    private Long addressId;
 
     /**
      * 省名

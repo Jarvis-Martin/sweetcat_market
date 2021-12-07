@@ -45,6 +45,10 @@ public class OrderFacade {
         return orderApplicationService.findPageByUserId(userId, page, limit);
     }
 
+    public ChildrenOrder findOneByUserIdAndOrderId(Long userId, Long orderId) {
+        return orderApplicationService.findOneByUserIdAndOrderId(userId, orderId);
+    }
+
     public void cancelOrder(Long userId, Long orderId, Long cancelTime) {
         orderApplicationService.cancelOrder(userId, orderId, cancelTime);
     }

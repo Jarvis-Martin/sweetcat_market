@@ -1,5 +1,6 @@
 package com.sweetcat.storeinfo.interfaces.facade.assembler;
 
+import com.sweetcat.api.rpcdto.storeinfo.StoreAddressInfoRpcDTO;
 import com.sweetcat.storeinfo.domain.storeaddress.entity.StoreAddress;
 import com.sweetcat.storeinfo.interfaces.facade.restdto.StoreAddressDTO;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StoreAddressAssembler {
     public StoreAddressDTO converterToStoreAddressDTO(StoreAddress storeAddress) {
-        StoreAddressDTO storeAddressDTO = new StoreAddressDTO(storeAddress.getStoreId());
+        StoreAddressDTO storeAddressDTO = new StoreAddressDTO(storeAddress.getStoreId(), storeAddress.getAddressId());
         storeAddressDTO.setProvinceName(storeAddress.getProvinceName());
         storeAddressDTO.setCityName(storeAddress.getCityName());
         storeAddressDTO.setAreaName(storeAddress.getAreaName());
@@ -21,5 +22,17 @@ public class StoreAddressAssembler {
         storeAddressDTO.setDetailAddress(storeAddress.getDetailAddress());
         storeAddressDTO.setCreateTime(storeAddress.getCreateTime());
         return storeAddressDTO;
+    }
+
+    public StoreAddressInfoRpcDTO converterToStoreAddressRpcDTO(StoreAddress storeAddress) {
+        Long addressId = storeAddress.getAddressId();
+        StoreAddressInfoRpcDTO storeAddressInfoRpcDTO = new StoreAddressInfoRpcDTO(storeAddress.getStoreId());
+        storeAddressInfoRpcDTO.setAddressId(addressId);
+        storeAddressInfoRpcDTO.setProvinceName(storeAddress.getProvinceName());
+        storeAddressInfoRpcDTO.setCityName(storeAddress.getCityName());
+        storeAddressInfoRpcDTO.setAreaName(storeAddress.getAreaName());
+        storeAddressInfoRpcDTO.setTownName(storeAddress.getTownName());
+        storeAddressInfoRpcDTO.setDetailAddress(storeAddress.getDetailAddress());
+        return storeAddressInfoRpcDTO;
     }
 }

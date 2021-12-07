@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.takewayorder.infrastructure.dao.TakeawayOrderMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.takewayorder.infrastructure.po.TakeawayOrderPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_staus" jdbcType="TINYINT" property="orderStatus"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , order_status, user_id, store_id
+    </sql>
+    <insert id="addOne">
+        insert into t_takeaway_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderStaus}, #{userId},
+        #{storeId})
+    </insert>
+    <update id="updateOne">
+        update t_takeaway_order
+        set order_status = #{orderStatus}
+        where order_id = #{orderId}
+    </update>
+    <select id="findOne" resultType="com.sweetcat.takewayorder.infrastructure.po.TakeawayOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_takeaway_order where order_id = #{orderId}
+    </select>
+    <select id="findPage" resultType="com.sweetcat.takewayorder.infrastructure.po.TakeawayOrderPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_takeaway_order limit #{page}, #{limit}
+    </select>
+</mapper>

@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StoreAddressFactory {
     public StoreAddress create(StoreAddressPO storeAddressPO) {
-        StoreAddress storeAddress = new StoreAddress(storeAddressPO.getStoreId());
-        storeAddress.setProvinceName(storeAddressPO.getProvinceName());
+        StoreAddress storeAddress = new StoreAddress(storeAddressPO.getStoreId(), storeAddressPO.getAddressId());
         storeAddress.setCityName(storeAddressPO.getCityName());
         storeAddress.setAreaName(storeAddressPO.getAreaName());
         storeAddress.setTownName(storeAddressPO.getTownName());

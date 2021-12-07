@@ -1,16 +1,21 @@
 package com.sweetcat.storeinfo.interfaces.facade.restdto;
 
+import lombok.Data;
+
 /**
  * @Author: Coder_Jarvis
  * @Description:
  * @Date: 2021-11-2021/11/7-20:03
  * @Version: 1.0
  */
+@Data
 public class StoreAddressDTO {
     /**
      * 商家编号
      */
     private Long storeId;
+
+    private Long addressId;
 
     /**
      * 省名
@@ -52,63 +57,8 @@ public class StoreAddressDTO {
         this.createTime = createTime;
     }
 
-    public StoreAddressDTO(Long storeId) {
+    public StoreAddressDTO(Long storeId, Long addressId) {
         this.storeId = storeId;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getProvinceName() {
-        return provinceName;
-    }
-
-    public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
-
-    public String getTownName() {
-        return townName;
-    }
-
-    public void setTownName(String townName) {
-        this.townName = townName;
-    }
-
-    public String getDetailAddress() {
-        return detailAddress;
-    }
-
-    public void setDetailAddress(String detailAddress) {
-        this.detailAddress = detailAddress;
-    }
-
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
+        this.addressId = addressId;
     }
 }
