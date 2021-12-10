@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -8,7 +10,9 @@ import lombok.Data;
  * @date: 2021-12-2021/12/7-13:44
  * @version: 1.0
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class StoreAddressRpcDTO {
     private Long storeId;
 

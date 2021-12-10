@@ -3,15 +3,16 @@
 <mapper namespace="com.sweetcat.userorder.infrastructure.dao.StoreInfoOfCommodityMapper">
     <resultMap id="BaseResultMap" type="com.sweetcat.userorder.infrastructure.po.StoreInfoOfCommodityPO">
         <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
         <result column="store_name" jdbcType="BIGINT" property="storeName"/>
         <result column="store_logo" jdbcType="BIGINT" property="storeLogo"/>
     </resultMap>
     <sql id="Base_Column_List">
         order_id
-        , store_name, store_logo
+        , store_id, store_name, store_logo
     </sql>
     <insert id="addOne">
-        insert into t_store_info_of_commodity (<include refid="Base_Column_List"/>) values (#{orderId}, #{storeName},
+        insert into t_store_info_of_commodity (<include refid="Base_Column_List"/>) values (#{orderId}, #{storeId}, #{storeName},
         #{storeLogo})
     </insert>
     <update id="updateOne">

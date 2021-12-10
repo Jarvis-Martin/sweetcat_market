@@ -1,6 +1,7 @@
 package com.sweetcat.userorder.infrastructure.rpc;
 
 import com.sweetcat.api.client.StoreInfoClient;
+import com.sweetcat.api.rpcdto.storeinfo.StoreAddressInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreIsExistedRpcDTO;
 import com.sweetcat.userorder.application.rpc.StoreInfoRpc;
@@ -30,5 +31,10 @@ public class StoreInfoRpcImpl implements StoreInfoRpc {
     @Override
     public StoreInfoRpcDTO findOneByStoreId(Long storeId) {
         return storeInfoClient.findOneByStoreId(storeId);
+    }
+
+    @Override
+    public StoreAddressInfoRpcDTO findOneStoreAddressByStoreId(Long storeId) {
+        return storeInfoClient.findOneStoreAddressByStoreId(storeId);
     }
 }

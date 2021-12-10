@@ -3,6 +3,7 @@
 <mapper namespace="com.sweetcat.takewayorder.infrastructure.dao.StoreAddressMapper">
     <resultMap id="BaseResultMap" type="com.sweetcat.takewayorder.infrastructure.po.StoreAddressPO">
         <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
         <result column="address_id" jdbcType="BIGINT" property="addressId"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
@@ -12,11 +13,11 @@
         <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
     </resultMap>
     <sql id="Base_Column_List">
-        order_id
-        , address_id, user_id, province_name, city_name, area_name, town_name, detail_address
+        order_id,
+        store_id, address_id, province_name, city_name, area_name, town_name, detail_address
     </sql>
     <insert id="addOne">
-        insert into t_store_address (<include refid="Base_Column_List"/>) values (#{orderId}, #{addressId}, #{userId},
+        insert into t_store_address (<include refid="Base_Column_List"/>) values (#{orderId}, #{storeId}, #{addressId},
         #{provinceName}, #{cityName}, #{areaName}, #{townName}, #{detailAddress})
     </insert>
     <update id="updateOne">

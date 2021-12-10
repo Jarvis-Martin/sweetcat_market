@@ -36,7 +36,7 @@ public class OrderFactory {
         Long userId = orderPO.getUserId();
         Long addressId = storeAddressPO.getAddressId();
         Order order = new Order(orderId);
-        order.setOrderStatus(orderPO.getOrderStaus());
+        order.setOrderStatus(orderPO.getOrderStatus());
 
         TimeInfo timeInfo = new TimeInfo(orderId);
         inflateTimeInfo(timeInfoOfOrderPO, timeInfo);
@@ -53,7 +53,7 @@ public class OrderFactory {
         order.setUserInfo(userInfo);
 
         Long storeId = storeInfoPO.getStoreId();
-        StoreInfo storeInfo = new StoreInfo(storeId);
+        StoreInfo storeInfo = new StoreInfo(orderId, storeId);
         storeInfo.setStoreName(storeInfoPO.getStoreName());
         storeInfo.setStoreLogo(storeInfoPO.getStoreLogo());
         AddressInfoOfStore addressInfoOfStore = new AddressInfoOfStore(orderId, orderId, addressId);
@@ -78,6 +78,8 @@ public class OrderFactory {
                     AmountInfoOfCommodity amountInfoOfCommodity = new AmountInfoOfCommodity(orderId, commodityId);
                     inflateAmountInfoOfCommodity(amountOfCommodityPO, amountInfoOfCommodity);
                     commodityInfo.setAmountInfo(amountInfoOfCommodity);
+
+                    con.add(commodityInfo);
                 },
                 ArrayList<CommodityInfo>::addAll
         );

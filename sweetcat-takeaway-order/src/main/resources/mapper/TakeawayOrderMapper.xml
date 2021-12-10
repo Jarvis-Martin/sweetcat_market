@@ -12,8 +12,8 @@
         , order_status, user_id, store_id
     </sql>
     <insert id="addOne">
-        insert into t_takeaway_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderStaus}, #{userId},
-        #{storeId})
+        insert into t_takeaway_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{orderStatus}, #{userInfo.userId},
+        #{storeInfo.storeId})
     </insert>
     <update id="updateOne">
         update t_takeaway_order

@@ -1,7 +1,8 @@
 package com.sweetcat.takewayorder.infrastructure.po;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * t_takeaway_order
@@ -17,7 +18,7 @@ public class TakeawayOrderPO implements Serializable {
     /**
      * 订单状态.0：未支付；1：待发货；2：待收货；3：待评价（交易成功）；4：已取消
      */
-    private Integer orderStaus;
+    private Integer orderStatus;
 
     /**
      * 订单所属用户编号

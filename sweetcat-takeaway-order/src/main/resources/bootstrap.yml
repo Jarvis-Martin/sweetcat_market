@@ -37,9 +37,9 @@ spring:
     sharding:
       # 分表配置，根据member_id分表
       tables:
-        t_user_order:
-          actual-data-nodes: ds$->{0..1}.t_user_order$->{0..1}
-          logical-table: t_user_order
+        t_amount_of_commodity:
+          actual-data-nodes: ds$->{0..1}.t_amount_of_commodity$->{0..1}
+          logical-table: t_amount_of_commodity
           database-strategy:
             inline:
               sharding-column: order_id
@@ -47,14 +47,14 @@ spring:
           table-strategy:
             inline:
               sharding-column: order_id
-              algorithm-expression: t_user_order$->{order_id % 2}
+              algorithm-expression: t_amount_of_commodity$->{order_id % 2}
           key-generator:
             column: order_id
             type: SNOWFLAKE
 
-        t_user_address_of_order:
-          actual-data-nodes: ds$->{0..1}.t_user_address_of_order$->{0..1}
-          logical-table: t_user_address_of_order
+        t_amount_of_order:
+          actual-data-nodes: ds$->{0..1}.t_amount_of_order$->{0..1}
+          logical-table: t_amount_of_order
           database-strategy:
             inline:
               sharding-column: order_id
@@ -62,52 +62,7 @@ spring:
           table-strategy:
             inline:
               sharding-column: order_id
-              algorithm-expression: t_user_address_of_order$->{order_id % 2}
-          key-generator:
-            column: order_id
-            type: SNOWFLAKE
-
-        t_time_info_of_order:
-          actual-data-nodes: ds$->{0..1}.t_time_info_of_order$->{0..1}
-          logical-table: t_time_info_of_order
-          database-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: ds$->{order_id % 2}
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_time_info_of_order$->{order_id % 2}
-          key-generator:
-            column: order_id
-            type: SNOWFLAKE
-
-        t_store_info_of_commodity:
-          actual-data-nodes: ds$->{0..1}.t_store_info_of_commodity$->{0..1}
-          logical-table: t_store_info_of_commodity
-          database-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: ds$->{order_id % 2}
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_store_info_of_commodity$->{order_id % 2}
-          key-generator:
-            column: order_id
-            type: SNOWFLAKE
-
-        t_coupon_of_order:
-          actual-data-nodes: ds$->{0..1}.t_coupon_of_order$->{0..1}
-          logical-table: t_coupon_of_order
-          database-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: ds$->{order_id % 2}
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_coupon_of_order$->{order_id % 2}
+              algorithm-expression: t_amount_of_order$->{order_id % 2}
           key-generator:
             column: order_id
             type: SNOWFLAKE
@@ -127,24 +82,39 @@ spring:
             column: order_id
             type: SNOWFLAKE
 
-        t_children_order:
-          actual-data-nodes: ds$->{0..1}.t_children_order$->{0..1}
-          logical-table: t_children_order
+        t_store_address:
+          actual-data-nodes: ds$->{0..1}.t_store_address$->{0..1}
+          logical-table: t_store_address
           database-strategy:
             inline:
-              sharding-column: children_order_id
-              algorithm-expression: ds$->{children_order_id % 2}
+              sharding-column: store_id
+              algorithm-expression: ds$->{store_id % 2}
           table-strategy:
             inline:
-              sharding-column: children_order_id
-              algorithm-expression: t_children_order$->{children_order_id % 2}
+              sharding-column: store_id
+              algorithm-expression: t_store_address$->{store_id % 2}
           key-generator:
-            column: children_order_id
+            column: store_id
             type: SNOWFLAKE
 
-        t_amount_of_order:
-          actual-data-nodes: ds$->{0..1}.t_amount_of_order$->{0..1}
-          logical-table: t_amount_of_order
+        t_store_info:
+          actual-data-nodes: ds$->{0..1}.t_store_info$->{0..1}
+          logical-table: t_store_info
+          database-strategy:
+            inline:
+              sharding-column: store_id
+              algorithm-expression: ds$->{store_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: store_id
+              algorithm-expression: t_store_info$->{store_id % 2}
+          key-generator:
+            column: store_id
+            type: SNOWFLAKE
+
+        t_takeaway_order:
+          actual-data-nodes: ds$->{0..1}.t_takeaway_order$->{0..1}
+          logical-table: t_takeaway_order
           database-strategy:
             inline:
               sharding-column: order_id
@@ -152,14 +122,14 @@ spring:
           table-strategy:
             inline:
               sharding-column: order_id
-              algorithm-expression: t_amount_of_order$->{order_id % 2}
+              algorithm-expression: t_takeaway_order$->{order_id % 2}
           key-generator:
             column: order_id
             type: SNOWFLAKE
 
-        t_amount_of_commodity:
-          actual-data-nodes: ds$->{0..1}.t_amount_of_commodity$->{0..1}
-          logical-table: t_amount_of_commodity
+        t_time_info_of_order:
+          actual-data-nodes: ds$->{0..1}.t_time_info_of_order$->{0..1}
+          logical-table: t_time_info_of_order
           database-strategy:
             inline:
               sharding-column: order_id
@@ -167,11 +137,25 @@ spring:
           table-strategy:
             inline:
               sharding-column: order_id
-              algorithm-expression: t_amount_of_commodity$->{order_id % 2}
+              algorithm-expression: t_time_info_of_order$->{order_id % 2}
           key-generator:
             column: order_id
             type: SNOWFLAKE
 
+        t_user_address:
+          actual-data-nodes: ds$->{0..1}.t_user_address$->{0..1}
+          logical-table: t_user_address
+          database-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: ds$->{order_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_user_address$->{order_id % 2}
+          key-generator:
+            column: order_id
+            type: SNOWFLAKE
 # 由于 spring acuator 健康检查会导致服务启动报错：
 # org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
 # 但不影响服务注册注册

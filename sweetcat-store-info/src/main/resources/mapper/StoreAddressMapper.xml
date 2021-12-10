@@ -13,7 +13,7 @@
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        store_id, addressId, province_name, city_name, area_name, town_name, detail_address, create_time, update_time
+        store_id, address_id, province_name, city_name, area_name, town_name, detail_address, create_time, update_time
     </sql>
     <insert id="insertOne">
         insert into t_store_address(<include refid="Base_Column_List"/>) values (#{storeId}, #{addressId}, #{provinceName},

@@ -123,3 +123,14 @@ spring:
           uri: lb://sweetcat-store-order
           predicates:
             - Path=/api/v1/rpc/store_order/**
+
+        #  外卖骑手域：外卖骑手基本信息上下文
+        - id: sweetcat-takeaway-main-info
+          uri: lb://sweetcat-takeaway-main-info
+          predicates:
+            - Path=/api/v1/takeaway/**
+        #  外卖骑手域：外卖骑手基本信息上下文
+        - id: sweetcat-takeaway-order
+          uri: lb://sweetcat-takeaway-order
+          predicates:
+            - Path=/api/v1/takeaway_order/**

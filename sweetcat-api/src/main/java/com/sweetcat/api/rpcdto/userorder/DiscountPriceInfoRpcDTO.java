@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class DiscountPriceInfoRpcDTO {
     /**
      * 本订单使用的积分数
@@ -21,11 +25,4 @@ public class DiscountPriceInfoRpcDTO {
      */
     private List<CouponRpcDTO> couponRpcDTOS;
 
-    public void setCredit(Integer credit) {
-        this.credit = credit;
-    }
-
-    public void setCouponRpcDTOS(List<CouponRpcDTO> couponRpcDTOS) {
-        this.couponRpcDTOS = couponRpcDTOS;
-    }
 }

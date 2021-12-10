@@ -5,8 +5,8 @@
         <id column="order_id" jdbcType="BIGINT" property="orderId"/>
         <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
         <result column="commodity_name" jdbcType="VARCHAR" property="commodityName"/>
-        <result column="commodity_pic_small" jdbcType="DECIMAL" property="commodityPicSmall"/>
-        <result column="price_when_make_order" jdbcType="BIGINT" property="priceWhenMakeOrder"/>
+        <result column="commodity_pic_small" jdbcType="VARCHAR" property="commodityPicSmall"/>
+        <result column="price_when_make_order" jdbcType="DECIMAL" property="priceWhenMakeOrder"/>
         <result column="count" jdbcType="INTEGER" property="count"/>
     </resultMap>
     <sql id="Base_Column_List">

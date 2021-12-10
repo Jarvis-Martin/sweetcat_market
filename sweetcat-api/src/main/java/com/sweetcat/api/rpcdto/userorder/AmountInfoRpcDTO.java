@@ -1,6 +1,7 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * {@link CommodityInfoRpcDTO} 中的 {@link AmountInfoOfCommodityRpcDTO} 包含对应单类商品涉及的金额信息
  */
 @Data
+@NoArgsConstructor
 public class AmountInfoRpcDTO {
     private Long orderId;
     /**
@@ -36,23 +38,4 @@ public class AmountInfoRpcDTO {
         this.orderId = orderId;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setPriceOfPayment(BigDecimal priceOfPayment) {
-        this.priceOfPayment = priceOfPayment;
-    }
-
-    public void setPriceOfCommodity(BigDecimal priceOfCommodity) {
-        this.priceOfCommodity = priceOfCommodity;
-    }
-
-    public void setCredit(Integer credit) {
-        this.credit = credit;
-    }
-
-    public void setCouponRpcDTOS(List<CouponRpcDTO> couponRpcDTOS) {
-        this.couponRpcDTOS = couponRpcDTOS;
-    }
 }

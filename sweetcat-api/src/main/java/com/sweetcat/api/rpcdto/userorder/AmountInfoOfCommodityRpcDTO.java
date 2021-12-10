@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class AmountInfoOfCommodityRpcDTO implements Cloneable{
     private Long orderId;
     private Long commodityId;
@@ -29,26 +33,6 @@ public class AmountInfoOfCommodityRpcDTO implements Cloneable{
 
     public AmountInfoOfCommodityRpcDTO(Long orderId, Long commodityId) {
         this.orderId = orderId;
-        this.commodityId = commodityId;
-    }
-
-    public void setPriceOfPayment(BigDecimal priceOfPayment) {
-        this.priceOfPayment = priceOfPayment;
-    }
-
-    public void setPriceOfCommodity(BigDecimal priceOfCommodity) {
-        this.priceOfCommodity = priceOfCommodity;
-    }
-
-    public void setDiscountPriceInfo(DiscountPriceInfoRpcDTO discountPriceInfo) {
-        this.discountPriceInfo = discountPriceInfo;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setCommodityId(Long commodityId) {
         this.commodityId = commodityId;
     }
 

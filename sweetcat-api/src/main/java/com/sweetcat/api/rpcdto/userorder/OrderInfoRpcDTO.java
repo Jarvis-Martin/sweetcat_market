@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +11,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class OrderInfoRpcDTO {
     /**
      * 订单编号
@@ -18,16 +22,4 @@ public class OrderInfoRpcDTO {
      * 订单状态
      */
     private Integer orderStatus;
-
-    public OrderInfoRpcDTO(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
-    }
 }

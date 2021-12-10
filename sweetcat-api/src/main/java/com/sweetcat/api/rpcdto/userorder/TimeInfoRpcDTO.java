@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +11,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class TimeInfoRpcDTO implements Cloneable{
     private Long orderId;
     /**
@@ -42,38 +46,6 @@ public class TimeInfoRpcDTO implements Cloneable{
 
     public TimeInfoRpcDTO(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setPlaceOrderTime(Long placeOrderTime) {
-        this.placeOrderTime = placeOrderTime;
-    }
-
-    public void setPayOrderTime(Long payOrderTime) {
-        this.payOrderTime = payOrderTime;
-    }
-
-    public void setTimeOutTime(Long timeOutTime) {
-        this.timeOutTime = timeOutTime;
-    }
-
-    public void setCancelOrderTime(Long cancelOrderTime) {
-        this.cancelOrderTime = cancelOrderTime;
-    }
-
-    public void setFinishOrderTime(Long finishOrderTime) {
-        this.finishOrderTime = finishOrderTime;
-    }
-
-    public void setDeliverCommodityTime(Long deliverCommodityTime) {
-        this.deliverCommodityTime = deliverCommodityTime;
-    }
-
-    public void setReceivedCommodityTime(Long receivedCommodityTime) {
-        this.receivedCommodityTime = receivedCommodityTime;
     }
 
     @Override

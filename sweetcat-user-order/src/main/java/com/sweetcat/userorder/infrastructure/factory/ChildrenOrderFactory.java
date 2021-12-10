@@ -37,7 +37,7 @@ public class ChildrenOrderFactory {
                     commodityInfo.setSpecification(commodityInfoPO.getSpecification());
                     commodityInfo.setCount(commodityInfoPO.getCount());
                     // 拆分后，子订单所有商品同属一家店铺
-                    StoreInfo storeInfo = new StoreInfo(storePO.getOrderId(), storePO.getOrderId());
+                    StoreInfo storeInfo = new StoreInfo(storePO.getOrderId(), storePO.getStoreId());
                     storeInfo.setStoreName(storePO.getStoreName());
                     storeInfo.setStoreLogo(storePO.getStoreLogo());
                     commodityInfo.setStoreInfo(storeInfo);

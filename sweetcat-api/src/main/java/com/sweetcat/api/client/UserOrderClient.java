@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author: Coder_Jarvis
@@ -15,6 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Component
 @FeignClient("sweetcat-user-order")
 public interface UserOrderClient {
-    @GetMapping("/order/{order_id}")
-    UserOrderRpcDTO findOneByUserIdAndOrderId(Long userId, @PathVariable("order_id") Long orderId);
+    @GetMapping("/rpc/user_order/order/{order_id}")
+    UserOrderRpcDTO findOneByUserIdAndOrderId(@RequestParam("userId") Long userId, @PathVariable("order_id") Long orderId);
 }

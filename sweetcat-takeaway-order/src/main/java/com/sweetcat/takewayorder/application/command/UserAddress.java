@@ -1,6 +1,8 @@
 package com.sweetcat.takewayorder.application.command;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +11,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class UserAddress implements Cloneable{
     private Long orderId;
     private Long userId;
@@ -58,45 +62,6 @@ public class UserAddress implements Cloneable{
         this.addressId = addressId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
-
-    public void setReceiverPhone(String receiverPhone) {
-        this.receiverPhone = receiverPhone;
-    }
-
-    public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
-
-    public void setTownName(String townName) {
-        this.townName = townName;
-    }
-
-    public void setDetailAddress(String detailAddress) {
-        this.detailAddress = detailAddress;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
 
     @Override
     public UserAddress clone() throws CloneNotSupportedException {

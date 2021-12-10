@@ -43,7 +43,7 @@ public class OrderRestController {
     @PostMapping("/order")
     public ResponseDTO addOne(AddOrderCommand command) {
         orderFacade.addOne(command);
-        return null;
+        return response("插入订单成功", "{}");
     }
 
     /**
@@ -54,7 +54,9 @@ public class OrderRestController {
     @GetMapping("/{order_id}")
     public ResponseDTO findOneByOrderId(@PathVariable("order_id") Long orderId) {
         Order order = orderFacade.findOneByOrderId(orderId);
-
+        if (order == null) {
+            return response("查询订单成功", "{}");
+        }
         HashMap<String, Object> dataSection = new HashMap<>(2);
         OrderSummaryRestDTO orderSummaryRestDTO = orderRestAssembler.converterToOrderSummaryRestDTO(order);
         dataSection.put("order", orderSummaryRestDTO);
@@ -68,8 +70,11 @@ public class OrderRestController {
      * @return
      */
     @GetMapping("/orders")
-    public ResponseDTO findPage(Integer page, Integer limit) {
+    public ResponseDTO findPage(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Order> orders = orderFacade.findPage(page, limit);
+        if (orders == null || orders.size() <= 0) {
+            return response("查询订单成功", "{}");
+        }
 
         ArrayList<OrderSummaryRestDTO> orderSummaryRestDTOS = orders.stream().collect(
                 ArrayList<OrderSummaryRestDTO>::new,
@@ -81,7 +86,7 @@ public class OrderRestController {
         );
 
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("order", orderSummaryRestDTOS);
+        dataSection.put("orders", orderSummaryRestDTOS);
         return response("查询成功", dataSection);
     }
 

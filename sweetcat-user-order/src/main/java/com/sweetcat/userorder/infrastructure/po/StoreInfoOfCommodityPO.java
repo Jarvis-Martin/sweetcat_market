@@ -15,6 +15,8 @@ public class StoreInfoOfCommodityPO implements Serializable {
      */
     private Long orderId;
 
+    private Long storeId;
+
     /**
      * 店铺名称
      */

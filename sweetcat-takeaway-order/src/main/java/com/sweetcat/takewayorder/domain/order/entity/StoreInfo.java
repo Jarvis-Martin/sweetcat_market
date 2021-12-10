@@ -9,7 +9,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
-public class StoreInfo {
+public class StoreInfo implements Cloneable{
+    private Long orderId;
     /**
      * 商家id
      */
@@ -27,8 +28,13 @@ public class StoreInfo {
      */
     private AddressInfoOfStore addressInfo;
 
-    public StoreInfo(Long storeId) {
+    public StoreInfo(Long orderId, Long storeId) {
+        this.orderId = orderId;
         this.storeId = storeId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public void setStoreId(Long storeId) {
@@ -45,5 +51,10 @@ public class StoreInfo {
 
     public void setAddressInfo(AddressInfoOfStore addressInfo) {
         this.addressInfo = addressInfo;
+    }
+
+    @Override
+    public StoreInfo clone() throws CloneNotSupportedException {
+        return ((StoreInfo) super.clone());
     }
 }

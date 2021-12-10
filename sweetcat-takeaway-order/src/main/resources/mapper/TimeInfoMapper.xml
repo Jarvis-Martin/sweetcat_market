@@ -17,12 +17,12 @@
     deliver_commodity_time, received_commodity_time
     </sql>
     <insert id="addOne">
-        insert into t_time_info_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{placeOrderTime},
+        insert into t_time_info_of_order (<include refid="Base_Column_List"/>) values (#{orderId}, #{placeOrderTime},
         #{payOrderTime}, #{timeOutTime}, #{cancelOrderTime}, #{finishOrderTime}, #{deliverCommodityTime},
         #{receivedCommodityTime})
     </insert>
     <update id="updateOne">
-        update t_time_info_order
+        update t_time_info_of_order
         set place_order_time        = #{placeOrderTime},
             pay_order_time          = #{payOrderTime},
             time_out_time           = #{timeOutTime},
@@ -35,7 +35,7 @@
     <select id="findOneByOrderId" resultType="com.sweetcat.takewayorder.infrastructure.po.TimeInfoOfOrderPO">
         select
         <include refid="Base_Column_List"/>
-        from t_time_info_order where order_id = #{orderId}
+        from t_time_info_of_order where order_id = #{orderId}
     </select>
 
 </mapper>

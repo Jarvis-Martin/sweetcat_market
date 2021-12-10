@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,6 +14,8 @@ import java.util.Objects;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class CommodityInfoRpcDTO implements Cloneable{
     private Long orderId;
     /**
@@ -52,42 +56,6 @@ public class CommodityInfoRpcDTO implements Cloneable{
     public CommodityInfoRpcDTO(Long orderId, Long commodityId) {
         this.setOrderId(orderId);
         this.commodityId = commodityId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setCommodityId(Long commodityId) {
-        this.commodityId = commodityId;
-    }
-
-    public void setCommodityName(String commodityName) {
-        this.commodityName = commodityName;
-    }
-
-    public void setCommodityPicSmall(String commodityPicSmall) {
-        this.commodityPicSmall = commodityPicSmall;
-    }
-
-    public void setPriceWhenMakeOrder(BigDecimal priceWhenMakeOrder) {
-        this.priceWhenMakeOrder = priceWhenMakeOrder;
-    }
-
-    public void setSpecification(String specification) {
-        this.specification = specification;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public void setStoreRpcDTO(StoreRpcDTO storeRpcDTO) {
-        this.storeRpcDTO = storeRpcDTO;
-    }
-
-    public void setAmountInfo(AmountInfoOfCommodityRpcDTO amountInfo) {
-        this.amountInfo = amountInfo;
     }
 
     @Override

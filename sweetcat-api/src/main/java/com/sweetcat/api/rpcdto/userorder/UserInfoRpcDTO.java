@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +11,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class UserInfoRpcDTO implements Cloneable{
     /**
      * 下单用户id
@@ -22,15 +26,6 @@ public class UserInfoRpcDTO implements Cloneable{
     public UserInfoRpcDTO(Long userId) {
         this.userId = userId;
     }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setAddressInfoRpcDTO(AddressInfoRpcDTO addressInfoRpcDTO) {
-        this.addressInfoRpcDTO = addressInfoRpcDTO;
-    }
-
     @Override
     public UserInfoRpcDTO clone() throws CloneNotSupportedException {
         return ((UserInfoRpcDTO) super.clone());

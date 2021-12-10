@@ -1,7 +1,8 @@
 package com.sweetcat.takewayorder.infrastructure.po;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * t_store_info
@@ -12,7 +13,7 @@ public class StoreInfoPO implements Serializable {
     /**
      * 订单编号
      */
-    private Long commdityId;
+    private Long orderId;
 
     /**
      * 商家id

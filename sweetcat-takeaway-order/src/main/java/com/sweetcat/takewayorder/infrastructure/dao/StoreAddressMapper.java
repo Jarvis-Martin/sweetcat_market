@@ -5,10 +5,10 @@ import com.sweetcat.takewayorder.infrastructure.po.StoreAddressPO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface StoreAddressMapper {w
-    void addOne(AddressInfoOfStore amountInfoOfOrder);
+public interface StoreAddressMapper {
+    void addOne(AddressInfoOfStore addressInfoOfStore);
 
-    void updateOne(AddressInfoOfStore amountInfoOfOrder);
+    void updateOne(AddressInfoOfStore addressInfoOfStore);
 
     StoreAddressPO findOneByOrderId(Long orderId);
 }

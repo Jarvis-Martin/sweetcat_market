@@ -20,9 +20,9 @@ public interface StoreInfoClient {
     @GetMapping("/rpc/store/{store_id}")
     StoreIsExistedRpcDTO storeIsExisted(@PathVariable("store_id") Long storeId);
 
-    @GetMapping("rpc/store/storeinfo/{store_id}")
+    @GetMapping("/rpc/store/storeinfo/{store_id}")
     StoreInfoRpcDTO findOneByStoreId(@PathVariable("store_id") Long storeId);
 
-    @GetMapping("/store_address/{store_id}")
+    @GetMapping("/rpc/store/store_address/{store_id}")
     StoreAddressInfoRpcDTO findOneStoreAddressByStoreId(@PathVariable("store_id") Long storeId);
 }

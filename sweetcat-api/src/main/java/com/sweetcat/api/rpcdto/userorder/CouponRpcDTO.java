@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class CouponRpcDTO implements Cloneable{
     private Long orderId;
     /**
@@ -31,22 +35,6 @@ public class CouponRpcDTO implements Cloneable{
     public CouponRpcDTO(Long orderId, Long couponId) {
         this.setOrderId(orderId);
         this.couponId = couponId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
-    }
-
-    public void setThresholdPrice(BigDecimal thresholdPrice) {
-        this.thresholdPrice = thresholdPrice;
-    }
-
-    public void setCounteractPrice(BigDecimal counteractPrice) {
-        this.counteractPrice = counteractPrice;
     }
 
     @Override

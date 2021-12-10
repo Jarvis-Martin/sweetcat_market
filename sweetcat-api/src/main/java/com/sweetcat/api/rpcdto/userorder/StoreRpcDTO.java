@@ -1,6 +1,8 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +11,8 @@ import lombok.Getter;
  * @version: 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 public class StoreRpcDTO implements Cloneable{
     private Long orderId;
     /**
@@ -29,26 +33,6 @@ public class StoreRpcDTO implements Cloneable{
     public StoreRpcDTO(Long orderId, Long storeId) {
         this.setOrderId(orderId);
         this.storeId = storeId;
-    }
-
-    public void setAddress(StoreAddressRpcDTO address) {
-        this.address = address;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public void setStoreLogo(String storeLogo) {
-        this.storeLogo = storeLogo;
     }
 
     @Override

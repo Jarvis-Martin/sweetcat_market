@@ -1,6 +1,7 @@
 package com.sweetcat.api.rpcdto.userorder;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Data
+@NoArgsConstructor
 public class UserOrderRpcDTO {
     /**
      * 订单id

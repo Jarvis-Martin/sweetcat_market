@@ -48,6 +48,9 @@ public class StoreAddressRepositoryImpl implements StoreAddressRepository {
     @Override
     public StoreAddress find(Long storeId) {
         StoreAddressPO storeAddressPO = storeAddressMapper.getById(storeId);
+        if (storeAddressPO == null) {
+            return null;
+        }
         return storeAddressFactory.create(storeAddressPO);
     }
 }
