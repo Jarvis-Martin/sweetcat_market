@@ -159,4 +159,19 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderFactory.create(orderPO, commodityOfOrderPOS, amountOfCommodityPOS, timeInfoOfOrderPO, userAddressPO,
                 storeInfoPO, storeAddressPO, amountOfOrderPO);
     }
+
+    @Override
+    public List<Order> findAllByUserIdAndAddressId(Long userId) {
+        List<TakeawayOrderPO> orderPOs = orderMapper.findAllByUserIdAndAddressId(userId);
+        ArrayList<Order> orders = orderPOs.stream().collect(
+                ArrayList<Order>::new,
+                (con, orderPO) -> {
+                    Long orderId = orderPO.getOrderId();
+                    Order order = findNecessaryDataOfOrderAndCreateOrder(orderId, orderPO);
+                    con.add(order);
+                },
+                ArrayList<Order>::addAll
+        );
+        return orders;
+    }
 }

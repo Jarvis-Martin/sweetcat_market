@@ -50,7 +50,4 @@ public class OrderFacade {
         return orderApplicationService.findOneByOrderId(orderId);
     }
 
-    public void changeUserAddress(Long orderId, Long userId, Long addressId) {
-        orderApplicationService.changeUserAddress(orderId, userId, addressId);
-    }
 }

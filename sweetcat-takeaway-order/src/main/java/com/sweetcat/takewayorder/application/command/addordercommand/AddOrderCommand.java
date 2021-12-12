@@ -1,4 +1,4 @@
-package com.sweetcat.takewayorder.application.command;
+package com.sweetcat.takewayorder.application.command.addordercommand;
 
 import lombok.Data;
 

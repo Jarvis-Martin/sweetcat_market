@@ -16,4 +16,6 @@ public interface TakeawayOrderMapper {
     TakeawayOrderPO findOne(Long orderId);
 
     List<TakeawayOrderPO> findPage(@Param("page") Integer page, @Param("limit") Integer limit);
+
+    List<TakeawayOrderPO> findAllByUserIdAndAddressId(@Param("userId") Long userId);
 }

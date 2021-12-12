@@ -29,5 +29,14 @@
         <include refid="Base_Column_List"/>
         from t_store_order where user_id = #{customerId} limit #{page}, #{limit}
     </select>
+    <select id="findAllByUserId" resultType="com.sweetcat.storeorder.infrastructure.po.OrderPO">
+        select order.order_id
+             , order_status
+             , order.user_id
+        from t_store_order `order`,
+             t_user_address `address`
+        where address.user_id = #{userId}
+          and order.order_id = address.order_id
+    </select>
 
 </mapper>

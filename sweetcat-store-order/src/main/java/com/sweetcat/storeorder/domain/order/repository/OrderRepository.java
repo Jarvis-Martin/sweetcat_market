@@ -37,4 +37,6 @@ public interface OrderRepository {
      * @param order
      */
     void saveOne(Order order);
+
+    List<Order> findAllByUserIdAndAddressId(Long userId);
 }

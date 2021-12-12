@@ -17,4 +17,6 @@ public interface OrderMapper {
     List<OrderPO> findPageByCustomerId(@Param("customerId") Long customerId, @Param("page") Integer page, @Param("limit") Integer limit);
 
     void updateOne(Order amountOfCommodity);
+
+    List<OrderPO> findAllByUserId(@Param("userId") Long userId);
 }

@@ -6,10 +6,15 @@ import com.sweetcat.api.rpcdto.usercoupon.CouponInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
+import com.sweetcat.commons.domainevent.userinfo.UserChangedAddressEvent;
 import com.sweetcat.commons.exception.*;
 import com.sweetcat.userorder.application.command.AddOrderCommand;
 import com.sweetcat.userorder.application.command.CommodityCouponMap;
-import com.sweetcat.userorder.application.rpc.*;
+import com.sweetcat.userorder.application.event.publish.DomainEventPublisher;
+import com.sweetcat.userorder.application.rpc.CommodityInfoRpc;
+import com.sweetcat.userorder.application.rpc.StoreInfoRpc;
+import com.sweetcat.userorder.application.rpc.UserCouponInfoRpc;
+import com.sweetcat.userorder.application.rpc.UserInfoRpc;
 import com.sweetcat.userorder.domain.order.entity.*;
 import com.sweetcat.userorder.domain.order.repository.OrderRepository;
 import com.sweetcat.userorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
@@ -20,7 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +48,12 @@ public class OrderApplicationService {
     private StoreInfoRpc storeInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
     private UserCouponInfoRpc userCouponInfoRpc;
+    private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
+        this.domainEventPublisher = domainEventPublisher;
+    }
 
     @Autowired
     public void setUserCouponInfoRpc(UserCouponInfoRpc userCouponInfoRpc) {
@@ -464,18 +479,48 @@ public class OrderApplicationService {
         UserAddressRpcDTO userAddressInfo = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
         checkUserAddress(userAddressInfo);
         AddressInfo addressInfo = new AddressInfo(orderId, addressId);
-        addressInfo.setReceiverName(userAddressInfo.getReceiverName());
-        addressInfo.setReceiverPhone(userAddressInfo.getReceiverPhone());
-        addressInfo.setProvinceName(userAddressInfo.getProvinceName());
-        addressInfo.setCityName(userAddressInfo.getCityName());
-        addressInfo.setAreaName(userAddressInfo.getAreaName());
-        addressInfo.setTownName(userAddressInfo.getTownName());
-        addressInfo.setDetailAddress(userAddressInfo.getDetailAddress());
+        String receiverName = userAddressInfo.getReceiverName();
+        String receiverPhone = userAddressInfo.getReceiverPhone();
+        String provinceName = userAddressInfo.getProvinceName();
+        String cityName = userAddressInfo.getCityName();
+        String areaName = userAddressInfo.getAreaName();
+        String townName = userAddressInfo.getTownName();
+        String detailAddress = userAddressInfo.getDetailAddress();
+        addressInfo.setReceiverName(receiverName);
+        addressInfo.setReceiverPhone(receiverPhone);
+        addressInfo.setProvinceName(provinceName);
+        addressInfo.setCityName(cityName);
+        addressInfo.setAreaName(areaName);
+        addressInfo.setTownName(townName);
+        addressInfo.setDetailAddress(detailAddress);
         // 修改地址
         order.changeAddress(addressInfo);
         // 入库
         orderRepository.saveOne(order);
+        
+        // 触发领域事件通知其他订单微服务
+        //      -- 构建领域事件
+        long domainEventId = snowFlakeService.snowflakeId();
+        UserChangedAddressEvent userChangedAddressEvent = new UserChangedAddressEvent(domainEventId);
+        inflateUserChangedAddressEvent(userId, addressId, receiverName, receiverPhone, provinceName, cityName, townName, detailAddress, userChangedAddressEvent);
+        //      -- log
+        System.out.println("sweetcat-app-credit: 触发领域事件 ConsumedCouponEvent 时间为：" + Instant.now().toEpochMilli());
+        //      -- 发送
+        domainEventPublisher.syncSend("sweetcat-user-order:user_changed_address", userChangedAddressEvent);
     }
+
+    private void inflateUserChangedAddressEvent(Long userId, Long addressId, String receiverName, String receiverPhone, String provinceName, String cityName, String townName, String detailAddress, UserChangedAddressEvent userChangedAddressEvent) {
+        userChangedAddressEvent.setOccurOn(Instant.now().toEpochMilli());
+        userChangedAddressEvent.setUserId(userId);
+        userChangedAddressEvent.setAddressId(addressId);
+        userChangedAddressEvent.setReceiverName(receiverName);
+        userChangedAddressEvent.setReceiverPhone(receiverPhone);
+        userChangedAddressEvent.setProvinceName(provinceName);
+        userChangedAddressEvent.setCityName(cityName);
+        userChangedAddressEvent.setTownName(townName);
+        userChangedAddressEvent.setDetailAddress(detailAddress);
+    }
+
 
     private void throwAddressNotExistException() {
         throw new AddressNotExistedException(

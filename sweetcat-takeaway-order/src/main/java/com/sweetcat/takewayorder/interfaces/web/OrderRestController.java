@@ -2,7 +2,7 @@ package com.sweetcat.takewayorder.interfaces.web;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
-import com.sweetcat.takewayorder.application.command.AddOrderCommand;
+import com.sweetcat.takewayorder.application.command.addordercommand.AddOrderCommand;
 import com.sweetcat.takewayorder.domain.order.entity.Order;
 import com.sweetcat.takewayorder.interfaces.facade.OrderFacade;
 import com.sweetcat.takewayorder.interfaces.facade.assembler.OrderRestAssembler;

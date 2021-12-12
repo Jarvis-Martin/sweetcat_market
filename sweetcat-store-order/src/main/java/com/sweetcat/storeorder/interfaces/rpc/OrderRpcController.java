@@ -57,9 +57,4 @@ public class OrderRpcController {
         return orderFacade.findOneByOrderId(orderId);
     }
 
-    @PutMapping(value = "/order/{order_id}", params = {"orderId", "userId", "addressId"})
-    public void changeUserAddress(@PathVariable("order_id") Long orderId, Long userId, Long addressId) {
-        orderFacade.changeUserAddress(orderId, userId, addressId);
-    }
-
 }

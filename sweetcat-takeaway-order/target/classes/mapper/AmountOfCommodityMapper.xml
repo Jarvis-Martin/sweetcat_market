@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.takewayorder.infrastructure.dao.AmountOfCommodityMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.takewayorder.infrastructure.po.AmountOfCommodityPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="price_of_payment" jdbcType="DECIMAL" property="priceOfPayment"/>
+        <result column="price_of_commodity" jdbcType="DECIMAL" property="priceOfCommodity"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , commodity_id, price_of_payment, price_of_commodity
+    </sql>
+    <insert id="addOne">
+        insert into t_amount_of_commodity (<include refid="Base_Column_List"/>) values (#{orderId}, #{commodityId},
+        #{priceOfPayment}, #{priceOfCommodity})
+    </insert>
+    <update id="updateOne">
+        update t_amount_of_commodity
+        set price_of_payment   = #{priceOfPayment},
+            price_of_commodity = #{priceOfCommodity}
+        where order_id = #{orderId}
+    </update>
+    <select id="findAll" resultType="com.sweetcat.takewayorder.infrastructure.po.AmountOfCommodityPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_amount_of_commodity where order_id = #{orderId}
+    </select>
+
+</mapper>

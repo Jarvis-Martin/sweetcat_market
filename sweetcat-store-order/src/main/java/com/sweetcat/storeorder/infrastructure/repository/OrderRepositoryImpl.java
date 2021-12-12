@@ -130,41 +130,14 @@ public class OrderRepositoryImpl implements OrderRepository {
                 ArrayList<Order>::new,
                 (con, orderPO) -> {
                     Long orderId = orderPO.getOrderId();
-                    // 订单商品金额信息
-                    List<AmountOfCommodityPO> amountOfCommodityPOS = amountOfCommodityMapper.findAllByOrderId(orderId);
-                    // 订单金额信息
-                    AmountOfOrderPO amountOfOrderPO = amountOfOrderMapper.findOneByOrderId(orderId);
-                    // 订单商品列表信息
-                    List<CommodityPO> commodityPOS = commodityMapper.findAllByOrderId(orderId);
-                    // 商品优惠券信息
-                    List<CouponOfCommodityPO> couponOfCommodityPOS = couponOfCommodityMapper.findAllByOrderId(orderId);
-                    // 订单优惠券信息
-                    List<CouponOfOrderPO> couponOfOrderPOS = couponOfOrderMapper.findAllByOrderId(orderId);
-                    // 订单时间信息
-                    TimeInfoPO timeInfo = timeInfoMapper.findOneByOrderId(orderId);
-                    // 优惠地址信息
-                    UserAddressPO userAddressPO = userAddressMapper.findOneByOrderId(orderId);
-                    // 构造 order
-                    Order order = orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
-                            timeInfo, userAddressPO);
+                    Order order = findNecessaryDataOfOrderAndCreateOrder(orderPO, orderId);
                     con.add(order);
                 },
                 ArrayList<Order>::addAll
         );
     }
 
-    /**
-     * 更具订单id 查订单信息
-     *
-     * @param orderId
-     * @return
-     */
-    @Override
-    public Order findOneByOrderId(Long orderId) {
-        OrderPO orderPO = orderMapper.findOneByOrderId(orderId);
-        if (orderPO == null) {
-            return null;
-        }
+    private Order findNecessaryDataOfOrderAndCreateOrder(OrderPO orderPO, Long orderId) {
         // 订单商品金额信息
         List<AmountOfCommodityPO> amountOfCommodityPOS = amountOfCommodityMapper.findAllByOrderId(orderId);
         // 订单金额信息
@@ -180,8 +153,41 @@ public class OrderRepositoryImpl implements OrderRepository {
         // 优惠地址信息
         UserAddressPO userAddressPO = userAddressMapper.findOneByOrderId(orderId);
         // 构造 order
-        return orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
+        Order order = orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
                 timeInfo, userAddressPO);
+        return order;
+    }
+
+    /**
+     * 更具订单id 查订单信息
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Order findOneByOrderId(Long orderId) {
+        OrderPO orderPO = orderMapper.findOneByOrderId(orderId);
+        if (orderPO == null) {
+            return null;
+        }
+        return findNecessaryDataOfOrderAndCreateOrder(orderPO, orderId);
+        //// 订单商品金额信息
+        //List<AmountOfCommodityPO> amountOfCommodityPOS = amountOfCommodityMapper.findAllByOrderId(orderId);
+        //// 订单金额信息
+        //AmountOfOrderPO amountOfOrderPO = amountOfOrderMapper.findOneByOrderId(orderId);
+        //// 订单商品列表信息
+        //List<CommodityPO> commodityPOS = commodityMapper.findAllByOrderId(orderId);
+        //// 商品优惠券信息
+        //List<CouponOfCommodityPO> couponOfCommodityPOS = couponOfCommodityMapper.findAllByOrderId(orderId);
+        //// 订单优惠券信息
+        //List<CouponOfOrderPO> couponOfOrderPOS = couponOfOrderMapper.findAllByOrderId(orderId);
+        //// 订单时间信息
+        //TimeInfoPO timeInfo = timeInfoMapper.findOneByOrderId(orderId);
+        //// 优惠地址信息
+        //UserAddressPO userAddressPO = userAddressMapper.findOneByOrderId(orderId);
+        //// 构造 order
+        //return orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
+        //        timeInfo, userAddressPO);
     }
 
     /**
@@ -222,6 +228,21 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         // 更新优惠地址信息
         userAddressMapper.updateOne(order.getUserInfo().getAddressInfo());
+    }
+
+    @Override
+    public List<Order> findAllByUserIdAndAddressId(Long userId) {
+        List<OrderPO> orderPOs = orderMapper.findAllByUserId(userId);
+        List<Order> orders = orderPOs.stream().collect(
+                ArrayList<Order>::new,
+                (con, orderPO) -> {
+                    Long orderId = orderPO.getOrderId();
+                    Order order = findNecessaryDataOfOrderAndCreateOrder(orderPO, orderId);
+                    con.add(order);
+                },
+                ArrayList<Order>::addAll
+        );
+        return orders;
     }
 }
 

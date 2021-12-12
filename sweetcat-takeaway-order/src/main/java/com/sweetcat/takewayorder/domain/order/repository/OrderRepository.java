@@ -31,4 +31,6 @@ public interface OrderRepository {
     Order findOneByOrderId(Long orderId);
 
     List<Order> findPage(Integer page, Integer limit);
+
+    List<Order> findAllByUserIdAndAddressId(Long userId);
 }

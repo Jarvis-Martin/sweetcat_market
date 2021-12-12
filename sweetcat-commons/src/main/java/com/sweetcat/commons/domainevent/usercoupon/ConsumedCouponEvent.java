@@ -1,4 +1,4 @@
-package com.sweetcat.commons.domainevent;
+package com.sweetcat.commons.domainevent.usercoupon;
 
 import lombok.Data;
 

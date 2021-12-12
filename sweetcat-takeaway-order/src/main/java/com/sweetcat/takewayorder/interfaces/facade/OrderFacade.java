@@ -1,6 +1,6 @@
 package com.sweetcat.takewayorder.interfaces.facade;
 
-import com.sweetcat.takewayorder.application.command.AddOrderCommand;
+import com.sweetcat.takewayorder.application.command.addordercommand.AddOrderCommand;
 import com.sweetcat.takewayorder.application.service.OrderApplicationService;
 import com.sweetcat.takewayorder.domain.order.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;

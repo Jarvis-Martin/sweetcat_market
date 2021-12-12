@@ -2,7 +2,7 @@ package com.sweetcat.usercoupon.application.service;
 
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.domainevent.ConsumedCouponEvent;
+import com.sweetcat.commons.domainevent.usercoupon.ConsumedCouponEvent;
 import com.sweetcat.commons.exception.CouponInvalidateException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.usercoupon.application.event.publish.DomainEventPublisher;

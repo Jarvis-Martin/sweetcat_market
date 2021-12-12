@@ -27,7 +27,6 @@ import java.time.Instant;
 public class CaptchaRequestedEventSubscriber implements RocketMQListener<CaptchaRequestedEvent> {
     private SmsService smsService;
 
-
     @Autowired
     public void setSmsService(SmsService smsService) {
         this.smsService = smsService;

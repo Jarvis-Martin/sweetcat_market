@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweetcat.takewayorder.infrastructure.dao.StoreInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.takewayorder.infrastructure.po.StoreInfoPO">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="store_id" jdbcType="BIGINT" property="storeId"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="store_logo" jdbcType="VARCHAR" property="storeLogo"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_id
+        , store_id, store_logo, store_name
+    </sql>
+    <insert id="addOne">
+        insert into t_store_info (<include refid="Base_Column_List"/>) values (#{orderId, javaType=LONG}
+        , #{storeId}, #{storeLogo}, #{storeName})
+    </insert>
+    <update id="updateOne">
+        update t_store_info
+        set store_name = #{storeName},
+            store_logo = #{storeLogo}
+        where order_id = #{orderId}
+    </update>
+    <select id="findOneByOrderId" resultType="com.sweetcat.takewayorder.infrastructure.po.StoreInfoPO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_store_info where order_id = #{orderId}
+    </select>
+
+</mapper>

@@ -3,7 +3,6 @@ package com.sweetcat.takewayorder.application.service;
 import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreAddressInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
-import com.sweetcat.api.rpcdto.userinfo.UserAddressRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userorder.UserOrderRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
@@ -11,10 +10,12 @@ import com.sweetcat.commons.exception.AddressNotExistedException;
 import com.sweetcat.commons.exception.OrderNotExistException;
 import com.sweetcat.commons.exception.StoreNotExistedException;
 import com.sweetcat.commons.exception.UserNotExistedException;
-import com.sweetcat.takewayorder.application.command.AddOrderCommand;
-import com.sweetcat.takewayorder.application.command.StoreAddress;
-import com.sweetcat.takewayorder.application.command.TimeInfoOfAddOrderCommand;
-import com.sweetcat.takewayorder.application.command.UserAddress;
+import com.sweetcat.takewayorder.application.command.addordercommand.AddOrderCommand;
+import com.sweetcat.takewayorder.application.command.addordercommand.StoreAddress;
+import com.sweetcat.takewayorder.application.command.addordercommand.TimeInfoOfAddOrderCommand;
+import com.sweetcat.takewayorder.application.command.addordercommand.UserAddress;
+import com.sweetcat.takewayorder.application.command.changecustomeraddresscommand.ChangeCustomerAddressCommand;
+import com.sweetcat.takewayorder.application.command.changecustomeraddresscommand.UserAddressOfCommand;
 import com.sweetcat.takewayorder.application.rpc.CommodityInfoRpc;
 import com.sweetcat.takewayorder.application.rpc.StoreInfoRpc;
 import com.sweetcat.takewayorder.application.rpc.UserInfoRpc;
@@ -177,10 +178,7 @@ public class OrderApplicationService {
 
     private void checkUserOrder(UserOrderRpcDTO userOrder) {
         if (userOrder == null) {
-            throw new OrderNotExistException(
-                    ResponseStatusEnum.ORDERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.ORDERNOTEXISTED.getErrorMessage()
-            );
+            throwOrderNotExistException();
         }
     }
 
@@ -208,42 +206,79 @@ public class OrderApplicationService {
      * @param orderId
      * @return
      */
+    @Transactional
     public Order findOneByOrderId(Long orderId) {
         verifyIdFormatService.verifyIds(orderId);
         return orderRepository.findOneByOrderId(orderId);
     }
 
+    @Transactional
     public List<Order> findPage(Integer page, Integer limit) {
         limit = limit == null || limit < 0 ? 18 : limit;
         page = page == null || page < 0 ? 0 : page * limit;
         return orderRepository.findPage(page, limit);
     }
 
-    public void changeCustomerAddress(Long userId, Long orderId, Long addressId) {
-        verifyIdFormatService.verifyIds(userId, orderId, addressId);
+    @Transactional
+    public void changeCustomerAddress(ChangeCustomerAddressCommand command) {
+        Long userId = command.getUserId();
+        Long addressId = command.getAddressId();
+        verifyIdFormatService.verifyIds(userId, addressId);
         UserInfoRpcDTO userInfoRpcDTO = userInfoRpc.getUserInfo(userId);
         checkUser(userInfoRpcDTO);
-        UserOrderRpcDTO userOrder = userOrderRpc.findOneByUserIdAndOrderId(userId, orderId);
-        checkUserOrder(userOrder);
-        UserAddressRpcDTO userAddressRpcDTO = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
-        if (userAddressRpcDTO == null) {
-            throwAddressNotExistedException();
+        List<Order> orders = orderRepository.findAllByUserIdAndAddressId(userId);
+        if (orders == null || orders.size() <= 0) {
+            throwOrderNotExistException();
         }
-        Order order = orderRepository.findOneByOrderId(orderId);
-        UserInfo userInfo = order.getUserInfo();
-        UserInfo userInfoCloned = null;
-        try {
-            userInfoCloned = userInfo.clone();
-            AddressInfoOfUser userAddress = new AddressInfoOfUser(orderId, userId, addressId);
-            inflateAddressInfoOfUser(userAddressRpcDTO, userAddress);
-            userInfoCloned.setAddressInfoOfUser(userAddress);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        order.setUserInfo(userInfoCloned);
-        orderRepository.saveOne(order);
+        String receiverName = command.getReceiverName();
+        String receiverPhone = command.getReceiverPhone();
+        String provinceName = command.getProvinceName();
+        String areaName = command.getAreaName();
+        String cityName = command.getCityName();
+        String townName = command.getTownName();
+        String detailAddress = command.getDetailAddress();
+        orders.forEach(
+                order -> {
+                    UserInfo userInfo = order.getUserInfo();
+                    UserInfo userInfoCloned = null;
+                    try {
+                        userInfoCloned = userInfo.clone();
+                        Long orderId = order.getOrderId();
+                        AddressInfoOfUser userAddress = new AddressInfoOfUser(orderId, userId, addressId);
+                        inflateAddressInfoOfUser(receiverName, receiverPhone, provinceName, areaName, cityName, townName, detailAddress, userAddress);
+                        userInfoCloned.setAddressInfoOfUser(userAddress);
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    order.setUserInfo(userInfoCloned);
+                    orderRepository.saveOne(order);
+                }
+        );
+
     }
 
+    private void inflateAddressInfoOfUser(String receiverName, String receiverPhone, String provinceName, String areaName, String cityName, String townName, String detailAddress, AddressInfoOfUser userAddress) {
+        userAddress.setReceiverName(receiverName);
+        userAddress.setReceiverPhone(receiverPhone);
+        userAddress.setProvinceName(provinceName);
+        userAddress.setCityName(cityName);
+        userAddress.setAreaName(areaName);
+        userAddress.setTownName(townName);
+        userAddress.setDetailAddress(detailAddress);
+    }
+
+    private void throwOrderNotExistException() {
+        throw new OrderNotExistException(
+                ResponseStatusEnum.ORDERNOTEXISTED.getErrorCode(),
+                ResponseStatusEnum.ORDERNOTEXISTED.getErrorMessage()
+        );
+    }
+
+    private void inflateAddressInfoOfUser(UserAddressOfCommand addressOfCommand, AddressInfoOfUser userAddress) {
+        inflateAddressInfoOfUser(addressOfCommand.getReceiverName(), addressOfCommand.getReceiverPhone(), addressOfCommand.getProvinceName(), addressOfCommand.getAreaName(), addressOfCommand.getCityName(), addressOfCommand.getTownName(), addressOfCommand.getDetailAddress(), userAddress);
+    }
+
+    @Transactional
     public void changeStoreAddress(Long storeId, Long orderId, Long addressId) {
         verifyIdFormatService.verifyIds(storeId, orderId, addressId);
         StoreInfoRpcDTO storeInfoRpcDTO = storeInfoRpc.findOneByStoreId(storeId);
@@ -278,16 +313,6 @@ public class OrderApplicationService {
         if (storeAddressRpcDTO == null) {
             throwAddressNotExistedException();
         }
-    }
-
-    private void inflateAddressInfoOfUser(UserAddressRpcDTO userAddressRpcDTO, AddressInfoOfUser userAddress) {
-        userAddress.setReceiverName(userAddressRpcDTO.getReceiverName());
-        userAddress.setReceiverPhone(userAddressRpcDTO.getReceiverPhone());
-        userAddress.setProvinceName(userAddressRpcDTO.getProvinceName());
-        userAddress.setCityName(userAddressRpcDTO.getCityName());
-        userAddress.setAreaName(userAddressRpcDTO.getAreaName());
-        userAddress.setTownName(userAddressRpcDTO.getTownName());
-        userAddress.setDetailAddress(userAddressRpcDTO.getDetailAddress());
     }
 
     private void throwAddressNotExistedException() {

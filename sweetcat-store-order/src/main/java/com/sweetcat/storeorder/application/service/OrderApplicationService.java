@@ -11,9 +11,11 @@ import com.sweetcat.commons.exception.OrderNotExistException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.storeorder.application.command.AddOrderCommand;
 import com.sweetcat.storeorder.application.command.CommodityCouponMap;
+import com.sweetcat.storeorder.application.command.changecustomeraddresscommand.ChangeCustomerAddressCommand;
 import com.sweetcat.storeorder.application.rpc.CommodityInfoRpc;
 import com.sweetcat.storeorder.application.rpc.UserCouponInfoRpc;
 import com.sweetcat.storeorder.application.rpc.UserInfoRpc;
+import com.sweetcat.storeorder.application.rpc.UserOrderRpc;
 import com.sweetcat.storeorder.domain.order.entity.*;
 import com.sweetcat.storeorder.domain.order.repository.OrderRepository;
 import com.sweetcat.storeorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
@@ -41,6 +43,12 @@ public class OrderApplicationService {
     private UserInfoRpc userInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
     private UserCouponInfoRpc userCouponInfoRpc;
+    private UserOrderRpc userOrderRpc;
+
+    @Autowired
+    public void setUserOrderRpc(UserOrderRpc userOrderRpc) {
+        this.userOrderRpc = userOrderRpc;
+    }
 
     @Autowired
     public void setUserCouponInfoRpc(UserCouponInfoRpc userCouponInfoRpc) {
@@ -176,13 +184,7 @@ public class OrderApplicationService {
     }
 
     private void inflateAddressInfo(UserAddressRpcDTO userAddress, AddressInfo addressInfo) {
-        addressInfo.setReceiverName(userAddress.getReceiverName());
-        addressInfo.setReceiverPhone(userAddress.getReceiverPhone());
-        addressInfo.setProvinceName(userAddress.getProvinceName());
-        addressInfo.setCityName(userAddress.getCityName());
-        addressInfo.setAreaName(userAddress.getAreaName());
-        addressInfo.setTownName(userAddress.getTownName());
-        addressInfo.setDetailAddress(userAddress.getDetailAddress());
+        inflateAddressInfo(addressInfo, userAddress.getReceiverName(), userAddress.getReceiverPhone(), userAddress.getProvinceName(), userAddress.getCityName(), userAddress.getAreaName(), userAddress.getTownName(), userAddress.getDetailAddress());
     }
 
     private void inflateCouponOfCommodity(List<CouponOfCommodity> couponOfCommodities, CouponInfoRpcDTO userCouponInfoRpc, CouponOfCommodity couponOfCommodity) {
@@ -233,6 +235,7 @@ public class OrderApplicationService {
      * @param page
      * @param limit
      */
+    @Transactional
     public List<Order> findPageByCustomerId(Long customerId, Integer page, Integer limit) {
         verifyIdFormatService.verifyIds(customerId);
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(customerId);
@@ -246,32 +249,48 @@ public class OrderApplicationService {
      * @param orderId
      * @return
      */
+    @Transactional
     public Order findOneByOrderId(Long orderId) {
         verifyIdFormatService.verifyIds(orderId);
         return orderRepository.findOneByOrderId(orderId);
     }
 
-    public void changeUserAddress(Long orderId, Long userId, Long addressId) {
+    @Transactional
+    public void changeUserAddress(ChangeCustomerAddressCommand command) {
+        Long userId = command.getUserId();
+        Long addressId = command.getAddressId();
         // 检查id
-        verifyIdFormatService.verifyIds(orderId, userId, addressId);
+        verifyIdFormatService.verifyIds(userId, addressId);
         // 检查 user
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         checkUser(userInfo);
-        // 检查 地址
-        UserAddressRpcDTO addressInfoRpcDTO = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
-        checkUserAddress(addressInfoRpcDTO);
-        // 检查订单
-        Order order = orderRepository.findOneByOrderId(orderId);
-        checkOrder(order);
-        // 创建新地址信息
-        AddressInfo addressInfo = new AddressInfo(orderId, userId, addressId);
-        inflateAddressInfo(addressInfoRpcDTO, addressInfo);
-        // 修改地址信息
-        order.changeUserAddress(addressInfo);
-        // 保存入库
-        orderRepository.saveOne(order);
+
+        List<Order> orders = orderRepository.findAllByUserIdAndAddressId(userId);
+
+        orders.forEach(
+                order -> {
+                    // 创建新地址信息
+                    Long orderId = order.getOrderId();
+                    AddressInfo addressInfo = new AddressInfo(orderId, userId, addressId);
+                    inflateAddressInfo(addressInfo, command.getReceiverName(), command.getReceiverPhone(), command.getProvinceName(), command.getCityName(), command.getAreaName(), command.getTownName(), command.getDetailAddress());
+                    // 修改地址信息
+                    order.changeUserAddress(addressInfo);
+                    // 保存入库
+                    orderRepository.saveOne(order);
+                }
+        );
     }
 
+
+    private void inflateAddressInfo(AddressInfo addressInfo, String receiverName, String receiverPhone, String provinceName, String cityName, String areaName, String townName, String detailAddress) {
+        addressInfo.setReceiverName(receiverName);
+        addressInfo.setReceiverPhone(receiverPhone);
+        addressInfo.setProvinceName(provinceName);
+        addressInfo.setCityName(cityName);
+        addressInfo.setAreaName(areaName);
+        addressInfo.setTownName(townName);
+        addressInfo.setDetailAddress(detailAddress);
+    }
 
 
     private void checkOrder(Order order) {
