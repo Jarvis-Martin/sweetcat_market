@@ -42,7 +42,7 @@ public class UserFootprintRestController {
      *
      * @param command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddUserFootprintCommand command) {
         footprintFacade.addOne(command);
         return response("添加足迹成功", "{}");
@@ -53,7 +53,7 @@ public class UserFootprintRestController {
      *
      * @param footprintId footprintId
      */
-    @DeleteMapping("/delete/{footprint_id}")
+    @DeleteMapping("/{footprint_id}")
     public ResponseDTO deleteOne(@PathVariable("footprint_id") Long footprintId) {
         footprintFacade.deleteOne(footprintId);
         return response("删除足迹成功", "{}");
@@ -71,7 +71,9 @@ public class UserFootprintRestController {
     @GetMapping("/{user_id}")
     public ResponseDTO findByDate(@PathVariable("user_id") Long userId, @RequestParam("date") Long date, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<UserFootprint> footprintPage = footprintFacade.findByDate(userId, date, page, limit);
-
+        if (footprintPage == null) {
+            return response("查询用户足迹分页数据成功", "{}");
+        }
         HashMap<String, Object> dataSection = new HashMap<>(16);
         ArrayList<UserFootprintRestDTO> userFootprintRestDTOs = footprintPage.stream().collect(
                 ArrayList<UserFootprintRestDTO>::new,
@@ -79,7 +81,7 @@ public class UserFootprintRestController {
                 ArrayList::addAll
         );
         dataSection.put("footprints", userFootprintRestDTOs);
-        return response("查询成功", dataSection);
+        return response("查询用户足迹分页数据成功", dataSection);
     }
 
     /**

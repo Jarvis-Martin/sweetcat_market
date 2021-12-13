@@ -8,10 +8,8 @@ import com.sweetcat.user_info.interfaces.facade.assembler.UserAssembler;
 import com.sweetcat.user_info.interfaces.facade.restdto.UserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Author: Coder_Jarvis
@@ -44,11 +42,13 @@ public class UserController {
     @GetMapping("/{user_id}")
     public ResponseDTO getUserInfo(@PathVariable("user_id") Long userId) {
         User user = userInfoFacade.getUserInfo(userId);
-
+        if (user == null) {
+            return response("查询用户信息成功", "{}");
+        }
         // response data 部分
         HashMap<String, Object> userInfo = new HashMap<>(2);
         userInfo.put("user_info", userAssembler.converter2UserInfoDTO(user));
-        return response("一切OK", userInfo);
+        return response("查询用户信息成功", userInfo);
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserController {
      * @param userId   userId
      * @param nickName nickName
      */
-    @GetMapping(value = "/{user_id}", params = {"nickName"})
+    @PatchMapping(value = "/{user_id}", params = {"nickName"})
     public ResponseDTO changeNickName(@PathVariable("user_id") Long userId, String nickName) {
         userInfoFacade.changeNickName(userId, nickName);
         return response("修改昵称成功", "{}");
@@ -69,7 +69,7 @@ public class UserController {
      * @param userId userId
      * @param gender gender
      */
-    @GetMapping(value = "/{user_id}", params = {"gender"})
+    @PatchMapping(value = "/{user_id}", params = {"gender"})
     public ResponseDTO changeGender(@PathVariable("user_id") Long userId, Integer gender) {
         userInfoFacade.changeGender(userId, gender);
         return response("修改性别成功", "{}");
@@ -81,7 +81,7 @@ public class UserController {
      * @param userId   userId
      * @param birthday birthday
      */
-    @GetMapping(value = "/{user_id}", params = {"birthday"})
+    @PatchMapping(value = "/{user_id}", params = {"birthday"})
     public ResponseDTO changeBirthday(@PathVariable("user_id") Long userId, Long birthday) {
         userInfoFacade.changeBirthday(userId, birthday);
         return response("修改生日成功", "{}");
@@ -93,7 +93,7 @@ public class UserController {
      * @param userId                userId
      * @param personalizedSignature personalizedSignature
      */
-    @GetMapping(value = "/{user_id}", params = {"personalizedSignature"})
+    @PatchMapping(value = "/{user_id}", params = {"personalizedSignature"})
     public ResponseDTO changePersonalizedSignature(@PathVariable("user_id") Long userId, String personalizedSignature) {
         userInfoFacade.changePersonalizedSignature(userId, personalizedSignature);
         return response("修改个性签名成功", "{}");
@@ -105,7 +105,7 @@ public class UserController {
      * @param userId userId
      * @param avatar avatar
      */
-    @PostMapping("/{user_id}/avatar/upload")
+    @PatchMapping("/{user_id}/avatar/upload")
     public ResponseDTO changeAvatar(@PathVariable("user_id") Long userId, @RequestParam("avatar") String avatar) {
         userInfoFacade.changeAvatar(userId, avatar);
 
@@ -178,7 +178,7 @@ public class UserController {
         String jwt = userInfoFacade.generateJwt(userLogined);
         // response data 部分
         HashMap<String, Object> userInfo = new HashMap<>(2);
-        userInfo.put("user_info", userInfoDTO);
+        userInfo.put("userInfo", userInfoDTO);
         userInfo.put("token", jwt);
         return response("登录成功", userInfo);
     }
@@ -199,7 +199,7 @@ public class UserController {
         User user = userInfoFacade.register(nickname, password, gender, birthday, phone);
         // response data 部分
         HashMap<String, Long> userId = new HashMap<>(2);
-        userId.put("user_id", user.getUserId());
+        userId.put("userId", user.getUserId());
         return response("注册成功，前往登录吧！", userId);
     }
 

@@ -2,7 +2,6 @@ package com.sweetcat.credit.interfaces.web;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
-import com.sweetcat.credit.application.service.CommodityApplicationService;
 import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
 import com.sweetcat.credit.interfaces.facade.CommodityFacade;
 import com.sweetcat.credit.interfaces.facade.assembler.CommodityAssembler;
@@ -28,12 +27,6 @@ import java.util.List;
 public class CommodityRestController {
     private CommodityFacade commodityFacade;
     private CommodityAssembler commodityAssembler;
-    private CommodityApplicationService commodityApplicationService;
-
-    @Autowired
-    public void setCommodityApplicationService(CommodityApplicationService commodityApplicationService) {
-        this.commodityApplicationService = commodityApplicationService;
-    }
 
     @Autowired
     public void setCommodityAssembler(CommodityAssembler commodityAssembler) {
@@ -56,7 +49,7 @@ public class CommodityRestController {
      */
     @GetMapping("/commodities")
     public ResponseDTO findPageByCommodityType(Integer commodityType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
-        List<BaseCommodity> commodityPage = commodityApplicationService.findPageByCommodityType(commodityType, page, limit);
+        List<BaseCommodity> commodityPage = commodityFacade.findPageByCommodityType(commodityType, page, limit);
         if (commodityPage == null || commodityPage.size() <= 0) {
             return response("查询成功", "{}");
         }

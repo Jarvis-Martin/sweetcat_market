@@ -29,7 +29,7 @@ public class RewritePathGlobalFilter implements GlobalFilter, Ordered {
         logger.info("Custom GlobalFilter: RewritePathGlobalFilter /api/v1/xx => /xx");
         ServerHttpRequest request = exchange.getRequest();
         if (request.getPath().toString().startsWith(apiVersionStr)) {
-            // 从原 request 的 path 截取出正在的 paht（如 /api/v1/xx => /xx),并设置到新 request 中
+            // 从原 request 的 path 截取出正在的 path（如 /api/v1/xx => /xx),并设置到新 request 中
             ServerHttpRequest newReq = request.mutate().path(request.getPath().toString().substring(7)).build();
             logger.info("Request path after rewrite by RewritePathGlobalFilter: " + newReq.getPath().toString());
             // 用 newReq 替换 exhange 中的原request

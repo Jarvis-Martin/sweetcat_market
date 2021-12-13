@@ -41,7 +41,7 @@ public class UserFavoriteRestController {
      *
      * @param command command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddUserFavoriteCommand command) {
         footprintFacade.addOne(command);
         return response("收藏商品成功", "{}");
@@ -69,6 +69,9 @@ public class UserFavoriteRestController {
     public ResponseDTO findPageByUserId(@PathVariable("user_id") Long userid, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 查
         List<UserFavorate> userFavoritePage = footprintFacade.findPageByUserId(userid, page, limit);
+        if (userFavoritePage == null || userFavoritePage.size() <= 0) {
+            return response("查询用户收藏商品分页数据成功", "{}");
+        }
         // 创建 response data
         HashMap<String, Object> dataSection = new HashMap<>(16);
         // do 转 dto
@@ -80,7 +83,7 @@ public class UserFavoriteRestController {
         // 组装 dto
         dataSection.put("favorite_commodities", userFavoriteDTOPage);
         // 响应
-        return response("查询成功", dataSection);
+        return response("查询用户收藏商品分页数据成功", dataSection);
     }
 
     /**

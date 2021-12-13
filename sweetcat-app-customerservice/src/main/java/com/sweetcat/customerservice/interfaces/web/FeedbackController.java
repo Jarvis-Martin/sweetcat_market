@@ -26,7 +26,7 @@ public class FeedbackController {
         this.feedbackFacade = feedbackFacade;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddFeedbackCommand command) {
         feedbackFacade.addOne(command);
         return response("添加成功", "{}");

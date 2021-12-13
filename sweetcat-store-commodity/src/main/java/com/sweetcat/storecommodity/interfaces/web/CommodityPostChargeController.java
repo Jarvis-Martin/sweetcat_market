@@ -38,7 +38,7 @@ public class CommodityPostChargeController {
      *
      * @param command command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddCommodityPostChargeCommand command) {
         postChargeFacade.addOne(command);
         return response("插入商品邮费记录成功", "{}");
@@ -59,7 +59,7 @@ public class CommodityPostChargeController {
         }
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("post_charge", postChargeRestAssembler.converterToCommodityPostChargeDTO(commodityPostCharge));
-        return response("查询成功", dataSection);
+        return response("查询商品优惠记录成功", dataSection);
     }
 
     /**

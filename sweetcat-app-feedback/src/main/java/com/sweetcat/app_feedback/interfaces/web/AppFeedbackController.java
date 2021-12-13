@@ -1,5 +1,6 @@
 package com.sweetcat.app_feedback.interfaces.web;
 
+import com.sweetcat.app_feedback.application.command.UploadFeedbackCommand;
 import com.sweetcat.app_feedback.interfaces.facade.AppFeedbackFacade;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
@@ -25,8 +26,8 @@ public class AppFeedbackController {
     }
 
     @PostMapping("/upload")
-    public ResponseDTO addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
-        feedbackFacade.addAFeedback(userId, content, feedbackPics, feedbackTime);
+    public ResponseDTO addAFeedback(UploadFeedbackCommand command) {
+        feedbackFacade.addAFeedback(command);
 
         String tip = "反馈成功，客服人员将及时为您处理，请稍等";
         return response(tip, "{}");

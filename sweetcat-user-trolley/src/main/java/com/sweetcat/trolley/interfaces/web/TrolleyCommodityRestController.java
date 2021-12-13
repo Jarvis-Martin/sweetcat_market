@@ -36,7 +36,7 @@ public class TrolleyCommodityRestController {
         this.commodityFacade = commodityFacade;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOneCommodity(AddTrolleyCommodityCommand command) {
         commodityFacade.addOneCommodity(command);
         return response("添加购物商品成功", "{}");

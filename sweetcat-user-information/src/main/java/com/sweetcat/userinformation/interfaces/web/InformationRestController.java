@@ -45,8 +45,8 @@ public class InformationRestController {
     @GetMapping("/informations/{receiver_id}")
     public ResponseDTO findPageByReceiverId(@PathVariable("receiver_id") Long receiverId, Integer page, Integer limit) {
         List<Information> informationPage = informationFacade.findPageByReceiverId(receiverId, page, limit);
-        if (informationPage == null || informationPage.size() < 0) {
-            return response("删除成功", "[]");
+        if (informationPage == null || informationPage.size() <= 0) {
+            return response("查询通知分页数据成功", "{}");
         }
         ArrayList<InformationRestDTO> informationRestDTOPage = informationPage.stream().collect(
                 ArrayList<InformationRestDTO>::new,
@@ -55,14 +55,14 @@ public class InformationRestController {
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("informations", informationRestDTOPage);
-        return response("查询成功", dataSection);
+        return response("查询通知分页数据成功", dataSection);
     }
 
     /**
      * 根据 informationId 查找 information
      * @param informationId
      */
-    @GetMapping("/information_id")
+    @GetMapping("/information/{information_id}")
     public ResponseDTO findOneByInformationId(@PathVariable("information_id") Long informationId) {
         Information information = informationFacade.findOneByInformationId(informationId);
         HashMap<String, Object> dataSection = new HashMap<>(2);
@@ -74,7 +74,7 @@ public class InformationRestController {
      * 移除
      * @param informationId
      */
-    @DeleteMapping("/{information_id}")
+    @DeleteMapping("/information/{information_id}")
     public ResponseDTO removeOne(@PathVariable("information_id") Long informationId) {
         informationFacade.removeOne(informationId);
 

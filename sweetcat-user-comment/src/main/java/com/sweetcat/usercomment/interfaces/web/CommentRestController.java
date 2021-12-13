@@ -42,7 +42,7 @@ public class CommentRestController {
      *
      * @param command
      */
-    @PostMapping("/commodity_comment/add")
+    @PostMapping("/commodity_comment")
     public ResponseDTO addOneCommodityComment(AddCommodityCommentCommand command) {
         commentFacade.addOneCommodityComment(command);
         return response("添加商品评价成功", "{}");
@@ -53,7 +53,7 @@ public class CommentRestController {
      *
      * @param command
      */
-    @PostMapping("/comment_comment/add")
+    @PostMapping("/comment_comment")
     public ResponseDTO addOneCommentComment(AddCommentCommentCommand command) {
         commentFacade.addOneCommentComment(command);
         return response("添加评论成功", "{}");
@@ -83,7 +83,7 @@ public class CommentRestController {
             return response("查询评论成功", "[]");
         }
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("comments", commentAssembler.converterToCommentRestDTO(comment));
+        dataSection.put("comment", commentAssembler.converterToCommentRestDTO(comment));
         return response("查询成功", dataSection);
     }
 
@@ -97,7 +97,7 @@ public class CommentRestController {
     public ResponseDTO findPageByPublisherId(Long publisherId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Comment> commentPage = commentFacade.findPageByPublisherId(publisherId, page, limit);
         if (commentPage == null || commentPage.size() <= 0) {
-            return response("查询评论成功", "[]");
+            return response("查询评论分页成功", "[]");
         }
         ArrayList<CommentRestDTO> commentRestDTOPage = commentPage.stream().collect(
                 ArrayList<CommentRestDTO>::new,
@@ -106,7 +106,7 @@ public class CommentRestController {
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("comments", commentRestDTOPage);
-        return response("查询成功", dataSection);
+        return response("查询评论分页成功", dataSection);
     }
 
     /**

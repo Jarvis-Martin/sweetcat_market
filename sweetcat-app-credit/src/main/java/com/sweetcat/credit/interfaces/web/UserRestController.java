@@ -33,8 +33,11 @@ public class UserRestController {
     }
 
     @GetMapping("/{user_id}")
-    public ResponseDTO findOneByUserId(Long userId) {
+    public ResponseDTO findOneByUserId(@PathVariable("user_id") Long userId) {
         User user = userFacade.findOneByUserId(userId);
+        if (user == null) {
+            return response("查询成功", "{}");
+        }
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("user", userAssembler.converterToUserRestDTO(user));
         return response("查询成功", dataSection);

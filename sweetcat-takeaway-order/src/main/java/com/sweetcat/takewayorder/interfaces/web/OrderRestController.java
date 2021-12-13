@@ -40,7 +40,7 @@ public class OrderRestController {
      * 添加一条记录
      * @param command
      */
-    @PostMapping("/order")
+    @PostMapping("/")
     public ResponseDTO addOne(AddOrderCommand command) {
         orderFacade.addOne(command);
         return response("插入订单成功", "{}");

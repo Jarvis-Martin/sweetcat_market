@@ -46,14 +46,17 @@ public class CommodityCommentController {
     public ResponseDTO findByCommentId(@PathVariable("comment_id") Long commentId) {
         // 找到 DO
         CommodityComment commentDO = commentFacade.findByCommentId(commentId);
+        if (commentDO == null) {
+           return response("返回成功", "{}");
+        }
         // response 的 data
-        HashMap<String, Object> dataSectioin = new HashMap<>(2);
+        HashMap<String, Object> dataSection = new HashMap<>(2);
         // DO 转 DTO
         CommodityCommentDTO commentDTO = commentAssembler.converterToCommodityCommentDTO(commentDO);
         // 装入 data
-        dataSectioin.put("comment", commentDTO);
+        dataSection.put("comment", commentDTO);
         // 返回 response
-        return response("返回成功", dataSectioin);
+        return response("返回成功", dataSection);
     }
 
     /**
@@ -68,18 +71,21 @@ public class CommodityCommentController {
     public ResponseDTO findPageByCommodityId(Long commodityId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 找到 DO
         List<CommodityComment> commentDOPage = commentFacade.findPageByCommodityId(commodityId, page, limit);
+        if (commentDOPage == null || commentDOPage.size() <= 0) {
+            return response("查询商品评论分页数据成功", "{}");
+        }
         // response 的 data
-        HashMap<String, Object> dataSectioin = new HashMap<>(2);
+        HashMap<String, Object> dataSection = new HashMap<>(2);
         // DO List 转 DTO List
         ArrayList<CommodityCommentDTO> commentDTOPage = commentDOPage.stream().collect(
                 ArrayList<CommodityCommentDTO>::new,
                 (con, commentDTO) -> con.add(commentAssembler.converterToCommodityCommentDTO(commentDTO)),
-                ArrayList::addAll
+                ArrayList<CommodityCommentDTO>::addAll
         );
         // 装入 data
-        dataSectioin.put("comments", commentDTOPage);
+        dataSection.put("comments", commentDTOPage);
         // 返回 response
-        return response("返回成功", dataSectioin);
+        return response("返回成功", dataSection);
     }
 
     /**
@@ -87,7 +93,7 @@ public class CommodityCommentController {
      *
      * @param command command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddCommodityCommentCommand command) {
         commentFacade.addOne(command);
         return response("添加成功", "{}");
@@ -98,7 +104,7 @@ public class CommodityCommentController {
      *
      * @param commentId commentId
      */
-    @GetMapping("/remove/{comment_id}")
+    @DeleteMapping("/{comment_id}")
     public ResponseDTO removeOne(@PathVariable("comment_id") Long commentId) {
         commentFacade.removeOne(commentId);
         return response("删除成功", "{}");

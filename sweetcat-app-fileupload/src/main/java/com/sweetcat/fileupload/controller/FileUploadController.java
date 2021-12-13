@@ -38,12 +38,16 @@ public class FileUploadController {
             file.transferTo(dest);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new SaveFileFailException(
-                    ResponseStatusEnum.SAVEFILEFAILE.getErrorCode(),
-                    ResponseStatusEnum.SAVEFILEFAILE.getErrorMessage()
-            );
+            throwSaveFileException();
         }
         String fullFilePath = staticServerAddress + avatarImgPath + destFileName;
         return new FileUploadResult(fullFilePath, "done", fullFilePath);
+    }
+
+    private void throwSaveFileException() {
+        throw new SaveFileFailException(
+                ResponseStatusEnum.SAVEFILEFAILE.getErrorCode(),
+                ResponseStatusEnum.SAVEFILEFAILE.getErrorMessage()
+        );
     }
 }

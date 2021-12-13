@@ -55,6 +55,9 @@ public class ManInfoContorller {
     @GetMapping("/{man_id}")
     public ResponseDTO getOne(@PathVariable("man_id") Long manId) {
         ManInfo manInfo = manInfoFacade.getOne(manId);
+        if (manInfo == null) {
+            return response("获取信息成功", "{}");
+        }
         HashMap<String, ManInfoDTO> manInfoDTO = new HashMap<>(2);
         manInfoDTO.put("takeawayManInfo", manInfoAssembler.converterToManInfoDTO(manInfo));
         return response("获取信息成功", manInfoDTO);

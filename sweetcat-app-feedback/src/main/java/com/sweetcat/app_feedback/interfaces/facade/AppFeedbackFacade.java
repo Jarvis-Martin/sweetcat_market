@@ -1,5 +1,6 @@
 package com.sweetcat.app_feedback.interfaces.facade;
 
+import com.sweetcat.app_feedback.application.command.UploadFeedbackCommand;
 import com.sweetcat.app_feedback.application.service.AppFeedbackApplicationService;
 import com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class AppFeedbackFacade {
         this.feedbackApplicationService = feedbackApplicationService;
     }
 
-    public void addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
-        feedbackApplicationService.addAFeedback(userId, content, feedbackPics, feedbackTime);
+    public void addAFeedback(UploadFeedbackCommand command) {
+        feedbackApplicationService.addAFeedback(command);
     }
 
     public AppFeedback findOneByFeedbackId(Long feedbackId) {

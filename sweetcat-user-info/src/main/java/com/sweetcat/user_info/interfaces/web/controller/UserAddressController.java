@@ -39,46 +39,44 @@ public class UserAddressController {
         this.userAddressAssembler = userAddressAssembler;
     }
 
-    @GetMapping("/user/{user_id}/address_list")
+    @GetMapping("/user/{user_id}/addresses")
     public ResponseDTO getPage(@PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<UserAddress> addressPage = userAddressFacade.getPage(userId, page, limit);
-
+        if (addressPage == null) {
+            return response("查询用户地址列表分页数据成功", "{}");
+        }
         ArrayList<UserAddressDTO> userAddressDTOPage = addressPage.stream().collect(
-                ArrayList::new,
+                ArrayList<UserAddressDTO>::new,
                 (con, userAddress) -> con.add(userAddressAssembler.converter2UserAddressDTO(userAddress)),
                 ArrayList::addAll
         );
         userAddressDTOPage.forEach(address -> {
             System.out.println(address.getAddressId());
         });
-        HashMap<String, List<UserAddressDTO>> userAddressList = new HashMap<>(16);
-        userAddressList.put("address_list", userAddressDTOPage);
-        return response("一切OK", userAddressList);
+        HashMap<String, List<UserAddressDTO>> dataSection = new HashMap<>(16);
+        dataSection.put("addresses", userAddressDTOPage);
+        return response("查询用户地址列表分页数据成功", dataSection);
     }
 
-    @PostMapping("/user/{user_id}/address/add")
-    public ResponseDTO addAddress(@PathVariable("user_id") Long userId, @RequestParam("receiverName") String receiverName, @RequestParam("receiverPhone") String receiverPhone,
-                                  @RequestParam("provinceName") String provinceName, @RequestParam("cityName") String cityName, @RequestParam("areaName") String areaName,
-                                  @RequestParam("townName") String townName, @RequestParam("detailAddress") String detailAddress, @RequestParam("defaultAddress") Integer defaultAddress,
-                                  @RequestParam("createTime")Long createTime) {
-        AddAddressCommand addAddressCommand = new AddAddressCommand(
-                userId, receiverName, receiverPhone, provinceName, cityName, areaName, townName, detailAddress, defaultAddress, createTime
-        );
-        UserAddress userAddress = userAddressFacade.addAddress(addAddressCommand);
+    @PostMapping("/user/{user_id}/address")
+    public ResponseDTO addAddress(AddAddressCommand command) {
+        UserAddress userAddress = userAddressFacade.addAddress(command);
 
         UserAddressDTO userAddressDTO = userAddressAssembler.converter2UserAddressDTO(userAddress);
         HashMap<String, UserAddressDTO> addressDetail = new HashMap<>(2);
-        addressDetail.put("address_detail", userAddressDTO);
+        addressDetail.put("address", userAddressDTO);
         return response("添加收货地址成功！", addressDetail);
     }
 
     @GetMapping("/user/{user_id}/address/{address_id}")
     public ResponseDTO getAddressDetail(@PathVariable("user_id") Long userId, @PathVariable("address_id") Long addressId) {
         UserAddress addressDetail = userAddressFacade.findAddressById(addressId);
-
-        HashMap<String, UserAddressDTO> addressDTODetail = new HashMap<>(2);
-        addressDTODetail.put("address_detail", userAddressAssembler.converter2UserAddressDTO(addressDetail));
-        return response("一切OK", addressDTODetail);
+        if (addressDetail == null) {
+            return response("查询用户地址详细记录成功", "{}");
+        }
+        HashMap<String, UserAddressDTO> dataSection = new HashMap<>(2);
+        dataSection.put("address_detail", userAddressAssembler.converter2UserAddressDTO(addressDetail));
+        return response("查询用户地址详细记录成功", dataSection);
 
     }
 
@@ -115,14 +113,8 @@ public class UserAddressController {
     }
 
     @PostMapping("/user/{user_id}/address/{address_id}/edit")
-    public ResponseDTO editAddress(@PathVariable("user_id") Long userId, @PathVariable("address_id") Long addressId, @RequestParam("receiverName") String receiverName,
-                                   @RequestParam("receiverPhone") String receiverPhone, @RequestParam("provinceName") String provinceName, @RequestParam("cityName") String cityName,
-                                   @RequestParam("areaName") String areaName, @RequestParam("townName") String townName, @RequestParam("detailAddress") String detailAddress,
-                                   @RequestParam("defaultAddress") Integer defaultAddress, @RequestParam("updateTime")Long updateTime) {
-        EditAddressCommand editAddressCommand = new EditAddressCommand(
-                addressId, userId, receiverName, receiverPhone, provinceName, cityName, areaName, townName, detailAddress, defaultAddress, updateTime
-        );
-        userAddressFacade.editAddress(editAddressCommand);
+    public ResponseDTO editAddress(EditAddressCommand command) {
+        userAddressFacade.editAddress(command);
 
         return response("修改收货地址成功！", "{}");
     }

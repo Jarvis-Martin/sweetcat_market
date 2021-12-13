@@ -42,10 +42,10 @@ public class RedeemLogRestController {
      * @param limit
      * @return
      */
-    @GetMapping("/redeem_logs")
+    @GetMapping("/redeemlogs")
     public ResponseDTO findPage(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<RedeemLog> redeemLogPage = redeemLogFacade.findPage(page, limit);
-        if (redeemLogPage == null || redeemLogPage.size() < 0) {
+        if (redeemLogPage == null || redeemLogPage.size() <= 0) {
             return response("查询成功", "{}");
         }
         ArrayList<RedeemLogRestDTO> redeemLogRestDTOPage = redeemLogPage.stream().collect(
@@ -54,8 +54,8 @@ public class RedeemLogRestController {
                 ArrayList::addAll
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("redeem_logs", redeemLogRestDTOPage);
-        return response("查询成功", dataSection);
+        dataSection.put("redeemLogs", redeemLogRestDTOPage);
+        return response("查找兑换记录分页数据", dataSection);
     }
 
     /**
@@ -64,7 +64,7 @@ public class RedeemLogRestController {
      * @param userId
      * @param redeemLogId
      */
-    @DeleteMapping("/redeem_log/{redeem_log_id}")
+    @DeleteMapping("/redeemlog/{redeem_log_id}")
     public ResponseDTO remove(Long userId, @PathVariable("redeem_log_id") Long redeemLogId) {
         redeemLogFacade.remove(userId, redeemLogId);
         return response("删除 redeemLog 成功", "{}");

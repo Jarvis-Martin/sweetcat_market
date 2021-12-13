@@ -1,5 +1,6 @@
 package com.sweetcat.storeinfo.interfaces.facade;
 
+import com.sweetcat.storeinfo.application.commmand.AddStoreAddressCommand;
 import com.sweetcat.storeinfo.application.service.StoreAddressApplicationService;
 import com.sweetcat.storeinfo.domain.storeaddress.entity.StoreAddress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,7 @@ public class StoreAddressFacade {
         return storeAddressApplicationService.getOneById(storeId);
     }
 
-    public void addOne(Long storeId, String provinceName, String cityName, String areaName, String townName, String detailAddress,
-                      Long createTime) {
-        storeAddressApplicationService.addOne(storeId, provinceName, cityName, areaName, townName, detailAddress, createTime);
+    public void addOne(AddStoreAddressCommand command) {
+        storeAddressApplicationService.addOne(command);
     }
 }

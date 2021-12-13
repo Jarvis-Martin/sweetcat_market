@@ -1,7 +1,5 @@
 package com.sweetcat.storeinfo.application.service;
 
-import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
 import com.sweetcat.storeinfo.domain.storeinfo.entity.StoreInfo;
 import com.sweetcat.storeinfo.domain.storeinfo.repository.StoreInfoRepository;
 import com.sweetcat.storeinfo.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
@@ -9,9 +7,6 @@ import com.sweetcat.storeinfo.infrastructure.service.phone_format_verfiy_service
 import com.sweetcat.storeinfo.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.Arrays;
 
 /**
  * @Author: Coder_Jarvis
@@ -67,34 +62,13 @@ public class StoreInfoApplicationService {
      * @param createTime
      */
     public void addOne(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime) {
-        // 检查 店铺名，开店人姓名， 主营业务mainBusiness可以为null
-        verifyString(storeName, principalName);
         // 检查手机号格式
         verifyPhoneFormatService.verifyPhoneFormat(principalPhone);
-        // 检查创建时间
-        createTime = createTime == null || createTime < 0 ? Instant.now().toEpochMilli() : createTime;
         // 构建 storeInfo
         long storeId = snowFlakeService.snowflakeId();
         StoreInfo storeInfo = new StoreInfo(storeId);
-        storeInfo.setStoreName(storeName);
-        storeInfo.setPrincipalName(principalName);
-        storeInfo.setPrincipalPhone(principalPhone);
-        storeInfo.setMainBusiness(mainBusiness);
-        storeInfo.setType(type);
-        storeInfo.setCreateTime(createTime);
-        storeInfo.setUpdateTime(createTime);
+        inflateStoreInfo(storeName, principalName, principalPhone, mainBusiness, type, createTime, storeInfo);
         storeInfoRepository.addOne(storeInfo);
-    }
-
-    private void verifyString(String... strs) {
-        Arrays.stream(strs).forEach(str -> {
-            if (str == null || str.length() < 0) {
-                throw new ParameterFormatIllegalityException(
-                        ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
-                        ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
-                );
-            }
-        });
     }
 
     /**
@@ -107,5 +81,15 @@ public class StoreInfoApplicationService {
         verifyIdFormatService.verifyIds(storeId);
         // 查询 storeId 是否以及存在
         return storeInfoRepository.storeIsExisted(storeId);
+    }
+
+    private void inflateStoreInfo(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime, StoreInfo storeInfo) {
+        storeInfo.setStoreName(storeName);
+        storeInfo.setPrincipalName(principalName);
+        storeInfo.setPrincipalPhone(principalPhone);
+        storeInfo.setMainBusiness(mainBusiness);
+        storeInfo.setType(type);
+        storeInfo.setCreateTime(createTime);
+        storeInfo.setUpdateTime(createTime);
     }
 }

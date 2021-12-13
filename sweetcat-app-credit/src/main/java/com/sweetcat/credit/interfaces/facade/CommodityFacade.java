@@ -30,7 +30,7 @@ public class CommodityFacade {
      * @param limit
      * @return
      */
-    List<BaseCommodity> findPageByCommodityType(Integer commodityType, Integer page, Integer limit) {
+    public List<BaseCommodity> findPageByCommodityType(Integer commodityType, Integer page, Integer limit) {
         return commodityApplicationService.findPageByCommodityType(commodityType, page, limit);
     }
 }

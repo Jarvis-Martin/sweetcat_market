@@ -1,15 +1,12 @@
 package com.sweetcat.storeinfo.application.service;
 
-import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
+import com.sweetcat.storeinfo.application.commmand.AddStoreAddressCommand;
 import com.sweetcat.storeinfo.domain.storeaddress.entity.StoreAddress;
 import com.sweetcat.storeinfo.domain.storeaddress.repository.StoreAddressRepository;
 import com.sweetcat.storeinfo.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
-import com.sweetcat.storeinfo.infrastructure.service.timestamp_format_verfiy_service.VerifyTimeStampFormatService;
+import com.sweetcat.storeinfo.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 /**
  * @Author: Coder_Jarvis
@@ -21,11 +18,11 @@ import java.util.Arrays;
 public class StoreAddressApplicationService {
     private StoreAddressRepository storeAddressRepository;
     private VerifyIdFormatService verifyIdFormatService;
-    private VerifyTimeStampFormatService verifyTimeStampFormatService;
+    private SnowFlakeService snowFlakeService;
 
     @Autowired
-    public void setVerifyTimeStampFormatService(VerifyTimeStampFormatService verifyTimeStampFormatService) {
-        this.verifyTimeStampFormatService = verifyTimeStampFormatService;
+    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
+        this.snowFlakeService = snowFlakeService;
     }
 
     @Autowired
@@ -44,26 +41,12 @@ public class StoreAddressApplicationService {
         return storeAddressRepository.find(storeId);
     }
 
-    public void addOne(Long storeId, String provinceName, String cityName, String areaName, String townName, String detailAddress,
-                       Long createTime) {
-        // 检查 店铺地址
-        verifyString(provinceName, cityName, areaName, townName, detailAddress, detailAddress);
-        // 检查创建时间
-        verifyTimeStampFormatService.verifyTimeStamps(createTime);
+    public void addOne(AddStoreAddressCommand command) {
+        long addressId = snowFlakeService.snowflakeId();
         // 构造店铺地址
-        StoreAddress storeAddress = new StoreAddress(storeId, provinceName, cityName, areaName, townName, detailAddress, createTime, createTime);
+        StoreAddress storeAddress = new StoreAddress(command.getStoreId(), addressId);
         // 添加
         storeAddressRepository.addOne(storeAddress);
     }
 
-    private void verifyString(String... strs) {
-        Arrays.stream(strs).forEach(str -> {
-            if (str == null || str.length() < 0) {
-                throw new ParameterFormatIllegalityException(
-                        ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
-                        ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
-                );
-            }
-        });
-    }
 }

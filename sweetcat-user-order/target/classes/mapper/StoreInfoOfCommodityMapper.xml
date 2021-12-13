@@ -27,7 +27,7 @@
         where order_id = #{orderId}
     </delete>
     <select id="findOneByOrderId" resultType="com.sweetcat.userorder.infrastructure.po.StoreInfoOfCommodityPO">
-        select
+        select distinct
         <include refid="Base_Column_List"/>
         from t_store_info_of_commodity where order_id = #{orderId}
     </select>

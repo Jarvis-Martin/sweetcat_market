@@ -2,6 +2,7 @@ package com.sweetcat.storeinfo.interfaces.web;
 
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
+import com.sweetcat.storeinfo.application.commmand.AddStoreAddressCommand;
 import com.sweetcat.storeinfo.domain.storeaddress.entity.StoreAddress;
 import com.sweetcat.storeinfo.interfaces.facade.StoreAddressFacade;
 import com.sweetcat.storeinfo.interfaces.facade.assembler.StoreAddressAssembler;
@@ -33,20 +34,21 @@ public class StoreAddressController {
     }
 
     @GetMapping("/{store_id}")
-    public ResponseDTO getOneById(@PathVariable("/store_id") Long storeId) {
+    public ResponseDTO getOneById(@PathVariable("store_id") Long storeId) {
         StoreAddress storeAddress = storeAddressFacade.getOneById(storeId);
-
+        if (storeAddress == null) {
+            return response("查询店铺地址信息成功", "{}");
+        }
         HashMap<String, Object> storeAddressDTO = new HashMap<>(2);
-        storeAddressDTO.put("store_address", storeAddressAssembler.converterToStoreAddressDTO(storeAddress));
+        storeAddressDTO.put("address", storeAddressAssembler.converterToStoreAddressDTO(storeAddress));
         return response("一切OK", storeAddressDTO);
     }
 
-    @PostMapping("/add")
-    public ResponseDTO addOne(Long storeId, String provinceName, String cityName, String areaName, String townName, String detailAddress,
-                              Long createTime) {
-        storeAddressFacade.addOne(storeId, provinceName, cityName, areaName, townName, detailAddress, createTime);
+    @PostMapping("/")
+    public ResponseDTO addOne(AddStoreAddressCommand command) {
+        storeAddressFacade.addOne(command);
 
-        return response("一切OK", "{}");
+        return response("添加店地址铺信息成功", "{}");
     }
 
     /**

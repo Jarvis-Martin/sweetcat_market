@@ -14,3 +14,4 @@ spring:
             namespace: dev
             group: SWEETCAT_GROUP
             refresh: True
+

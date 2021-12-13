@@ -41,7 +41,7 @@ public class UserCommodityRecommendRestController {
      *
      * @param command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddCommodityRecommendCommand command) {
         recommendFacade.addOne(command);
 
@@ -68,22 +68,22 @@ public class UserCommodityRecommendRestController {
      * @param limit
      * @return
      */
-    @GetMapping("/page/{referrer_id}")
+    @GetMapping("/{referrer_id}")
     public ResponseDTO findPageByReferrerId(@PathVariable("referrer_id") Long referrerId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<RecommendForm> recommendFormPage = recommendFacade.findPageByReferrerId(referrerId, page, limit);
+        if (recommendFormPage == null || recommendFormPage.size() <= 0) {
+            return response("查询用户商品推荐记录(分页)成功", "{}");
+        }
+
         HashMap<String, Object> dataSection = new HashMap<>(2);
 
-        if (recommendFormPage == null || recommendFormPage.size() < 0) {
-            dataSection.put("recommoded_commodities", "[]");
-            return response("查询成功", dataSection);
-        }
         ArrayList<UserCommodityRecommendRestDTO> commodityRecommendRestDTOPage = recommendFormPage.stream().collect(
                 ArrayList<UserCommodityRecommendRestDTO>::new,
                 (con, recommendForm) -> con.add(recommendAssembler.converterToUserCommodityRecommendRestDTO(recommendForm)),
                 ArrayList::addAll
         );
-        dataSection.put("recommoded_commodities", commodityRecommendRestDTOPage);
-        return response("查询成功", dataSection);
+        dataSection.put("recommends", commodityRecommendRestDTOPage);
+        return response("查询用户商品推荐记录(分页)成功", dataSection);
     }
 
     /**
@@ -92,12 +92,15 @@ public class UserCommodityRecommendRestController {
      * @param recordId recordId
      * @return
      */
-    @GetMapping("/{record_id}")
+    @GetMapping(value = "/{record_id}")
     public ResponseDTO findByRecordId(@PathVariable("record_id") Long recordId) {
-        HashMap<String, Object> dataSection = new HashMap<>(2);
         RecommendForm recommendForm = recommendFacade.findByRecordId(recordId);
-        dataSection.put("recommoded_commodity", recommendAssembler.converterToUserCommodityRecommendRestDTO(recommendForm));
-        return response("查询成功", dataSection);
+        if (recommendForm == null) {
+            return response("查询用户推荐商品记录成功", "{}");
+        }
+        HashMap<String, Object> dataSection = new HashMap<>(2);
+        dataSection.put("recommend", recommendAssembler.converterToUserCommodityRecommendRestDTO(recommendForm));
+        return response("查询用户推荐商品记录成功", dataSection);
     }
 
     /**

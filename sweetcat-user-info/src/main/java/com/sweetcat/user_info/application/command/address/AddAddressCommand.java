@@ -1,10 +1,7 @@
 package com.sweetcat.user_info.application.command.address;
 
-import com.sweetcat.user_info.domain.address.exception.UserAddressPropertyException;
-import lombok.AllArgsConstructor;
-
-import java.time.Instant;
-import java.util.regex.Pattern;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author: Coder_Jarvis
@@ -12,6 +9,8 @@ import java.util.regex.Pattern;
  * @Date: 2021-10-2021/10/30-13:55
  * @Version: 1.0
  */
+@Data
+@NoArgsConstructor
 public class AddAddressCommand {
     /**
      * 地址所属用户的 id
@@ -62,132 +61,4 @@ public class AddAddressCommand {
      * 创建时间
      */
     private Long createTime;
-
-    public AddAddressCommand(Long userId, String receiverName, String receiverPhone, String provinceName,
-                             String cityName, String areaName, String townName, String detailAddress,
-                             Integer defaultAddress, Long createTime) {
-        this.userId = userId;
-        this.receiverName = receiverName;
-        this.receiverPhone = receiverPhone;
-        this.provinceName = provinceName;
-        this.cityName = cityName;
-        this.areaName = areaName;
-        this.townName = townName;
-        this.detailAddress = detailAddress;
-        this.defaultAddress = defaultAddress;
-        this.createTime = createTime;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public String getReceiverPhone() {
-        return receiverPhone;
-    }
-
-    public String getProvinceName() {
-        return provinceName;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public String getTownName() {
-        return townName;
-    }
-
-    public String getDetailAddress() {
-        return detailAddress;
-    }
-
-    public Integer getDefaultAddress() {
-        return defaultAddress;
-    }
-
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    private void setUserId(Long userId) {
-        if (userId == null || userId < 0) {
-            throw new UserAddressPropertyException("收货地址所属用户编号格式错误");
-        }
-        this.userId = userId;
-    }
-
-    private void setReceiverName(String receiverName) {
-        if (receiverName == null || receiverName.length() <= 0) {
-            throw new UserAddressPropertyException("收货人姓名不能为空");
-        }
-        this.receiverName = receiverName;
-    }
-
-    private void setReceiverPhone(String receiverPhone) {
-        // 手机号为 null，通知用户参数格式错误
-        if (receiverPhone == null) {
-            throw new UserAddressPropertyException("收货人手机号不能为空");
-        }
-        // 正则验证手机号格式
-        String phoneRegex = "^1[3-9]\\d{9}$";
-        boolean phoneMatches = Pattern.matches(phoneRegex, receiverPhone);
-        // phone 格式不匹配，通知用户参数格式错误
-        if (!phoneMatches) {
-            throw new UserAddressPropertyException("收货人手机号格式错误");
-        }
-        this.receiverPhone = receiverPhone;
-    }
-
-    private void setProvinceName(String provinceName) {
-        if (provinceName == null || provinceName.length() <= 0) {
-            throw new UserAddressPropertyException("收货地址省名称不能为空");
-        }
-        this.provinceName = provinceName;
-    }
-
-    private void setCityName(String cityName) {
-        if (cityName == null || cityName.length() <= 0) {
-            throw new UserAddressPropertyException("收货地址市名称不能为空");
-        }
-        this.cityName = cityName;
-    }
-
-    private void setAreaName(String areaName) {
-        if (areaName == null || areaName.length() <= 0) {
-            throw new UserAddressPropertyException("收货地址区名称不能为空");
-        }
-        this.areaName = areaName;
-    }
-
-    private void setTownName(String townName) {
-        if (townName == null || townName.length() <= 0) {
-            throw new UserAddressPropertyException("收货地址街道名称不能为空");
-        }
-        this.townName = townName;
-    }
-
-    private void setDetailAddress(String detailAddress) {
-        if (detailAddress == null || detailAddress.length() <= 0) {
-            throw new UserAddressPropertyException("详细收货地址不能为空");
-        }
-        this.detailAddress = detailAddress;
-    }
-
-    private void setDefaultAddress(Integer defaultAddress) {
-        this.defaultAddress = defaultAddress;
-    }
-
-    private void setCreateTime(Long createTime) {
-        long milli = Instant.now().toEpochMilli();
-        this.createTime = createTime < 0 || createTime > milli ? 0 : milli;
-    }
 }

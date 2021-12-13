@@ -38,7 +38,7 @@ public class SKCommodityPostChargeController {
      *
      * @param command command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddSKCommodityPostChargeCommand command) {
         postChargeFacade.addOne(command);
         return response("插入商品邮费记录成功", "{}");

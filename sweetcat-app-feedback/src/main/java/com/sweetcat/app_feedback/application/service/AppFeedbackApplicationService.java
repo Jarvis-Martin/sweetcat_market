@@ -1,6 +1,7 @@
 package com.sweetcat.app_feedback.application.service;
 
 import com.sweetcat.app_feedback.application.command.ProcessFeedbackCommand;
+import com.sweetcat.app_feedback.application.command.UploadFeedbackCommand;
 import com.sweetcat.app_feedback.application.event.publish.DomainEventPublisher;
 import com.sweetcat.app_feedback.domain.feedback.entity.AppFeedback;
 import com.sweetcat.app_feedback.domain.feedback.repository.AppFeedbackRepository;
@@ -79,7 +80,11 @@ public class AppFeedbackApplicationService {
         return feedbackRepository.findOneByFeedbackId(feedbackId);
     }
 
-    public void addAFeedback(Long userId, String content, String[] feedbackPics, Long feedbackTime) {
+    public void addAFeedback(UploadFeedbackCommand command) {
+        long userId = command.getUserId();
+        String[] feedbackPics = command.getFeedbackPics();
+        long feedbackTime = command.getFeedbackTime();
+        String content = command.getContent();
         // 检查 userId
         verifyIdFormatService.verifyIds(userId);
         // 反馈配图文件名转 json 字符串，以备存入db
@@ -90,6 +95,17 @@ public class AppFeedbackApplicationService {
         long feedbackId = snowFlakeService.snowflakeId();
         // 创建 反馈
         AppFeedback feedback = new AppFeedback(feedbackId);
+        inflateAppFeedback(userId, feedbackTime, content, feedbackPicsStr, feedback);
+        // 加入db
+        feedbackRepository.add(feedback);
+        // 构建 FeedbackSubmittedEvent
+        FeedbackSubmittedEvent feedbackSubmittedEvent = new FeedbackSubmittedEvent(feedbackId, userId);
+        // 触发领域事件 FeedbackSubmittedEvent
+        System.out.println("sweetcat-app-feedback: 触发领域事件 feedbackSubmittedEvent 时间为：" + Instant.now().toEpochMilli());
+        eventPublisher.syncSend("feedback_topic", feedbackSubmittedEvent);
+    }
+
+    private void inflateAppFeedback(long userId, long feedbackTime, String content, String feedbackPicsStr, AppFeedback feedback) {
         feedback.setUserId(userId);
         feedback.setContent(content);
         feedback.setResponseTitle(null);
@@ -97,13 +113,6 @@ public class AppFeedbackApplicationService {
         feedback.setStatus(AppFeedback.STATUS_PROCESSING);
         feedback.setCreateTime(feedbackTime);
         feedback.setProcessTime(null);
-        // 加入db
-        feedbackRepository.add(feedback);
-        // 构建 FeedbackSubmittedEvent
-        FeedbackSubmittedEvent feedbackSubmittedEvent = new FeedbackSubmittedEvent(feedbackId, userId);
-        // 触发领域事件 FeedbackSubmittedEvent
-        eventPublisher.syncSend("feedback_topic", feedbackSubmittedEvent);
-        System.out.println("sweetcat-app-feedback: 触发领域事件 feedbackSubmittedEvent 时间为：" + Instant.now().toEpochMilli());
     }
 
     /**

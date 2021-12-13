@@ -45,8 +45,8 @@ public class UserCouponRestController {
     @GetMapping("/coupons")
     public ResponseDTO findPageByUserId(Long userId, Integer page, Integer limit) {
         List<UserCoupon> userCouponPage = userCouponFacade.findPageByUserId(userId, page, limit);
-        if (userCouponPage == null) {
-            return response("查询优惠券成功", "{}");
+        if (userCouponPage == null || userCouponPage.size() <= 0) {
+            return response("查询用户优惠券分页数据成功", "{}");
         }
         ArrayList<CouponRestDTO> couponRestDTOPage = userCouponPage.stream().collect(
                 ArrayList<CouponRestDTO>::new,
@@ -56,7 +56,7 @@ public class UserCouponRestController {
 
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("coupons", couponRestDTOPage);
-        return response("查询成功", dataSection);
+        return response("查询用户优惠券分页数据成功", dataSection);
     }
 
     /**

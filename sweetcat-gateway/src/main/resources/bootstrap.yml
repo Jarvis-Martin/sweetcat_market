@@ -20,12 +20,12 @@ spring:
         - id: sweetcat-app-carousel
           uri: lb://sweetcat-app-carousel
           predicates:
-            - Path=/api/v1/app/carousel/**
+            - Path=/api/v1/app/carousels/**
         # 应用管理域：活动上下文
         - id: sweetcat-app-activity
           uri: lb://sweetcat-app-activity
           predicates:
-            - Path=/api/v1/app/activity_list/**
+            - Path=/api/v1/app/activities/**
         # 应用管理域：反馈上下问
         - id: sweetcat-app-feedback
           uri: lb://sweetcat-app-feedback

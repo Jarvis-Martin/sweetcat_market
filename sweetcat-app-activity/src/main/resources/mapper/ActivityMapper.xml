@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sweetcat.app_activity.infrastructure.dao.ActivityMapper">
-    <resultMap id="BaseResultMap" type="com.sweetcat.app_activity.domain.activity.entity.Activity">
+<mapper namespace="com.sweetcat.appactivity.infrastructure.dao.ActivityMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.appactivity.domain.activity.entity.Activity">
         <id column="activity_id" jdbcType="BIGINT" property="activityId"/>
         <result column="pic_small" jdbcType="VARCHAR" property="picSmall"/>
         <result column="pic_content" jdbcType="VARCHAR" property="picContent"/>
@@ -17,7 +17,7 @@
         , pic_small, pic_content, is_show_immediately, target_url, create_time,
     update_time, start_time, deadline
     </sql>
-    <select id="getActivityPage" resultType="com.sweetcat.app_activity.infrastructure.po.ActivityPO">
+    <select id="getActivityPage" resultType="com.sweetcat.appactivity.infrastructure.po.ActivityPO">
         select
             <include refid="Base_Column_List" />
         from t_app_activity
@@ -25,7 +25,7 @@
         order by start_time desc
         limit #{page}, #{limit}
     </select>
-    <select id="getOne" resultType="com.sweetcat.app_activity.infrastructure.po.ActivityPO">
+    <select id="getOne" resultType="com.sweetcat.appactivity.infrastructure.po.ActivityPO">
         select
             <include refid="Base_Column_List" />
         from t_app_activity

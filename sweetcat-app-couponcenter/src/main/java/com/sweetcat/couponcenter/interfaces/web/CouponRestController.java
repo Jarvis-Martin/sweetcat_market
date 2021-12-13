@@ -60,10 +60,10 @@ public class CouponRestController {
      * @param limit
      * @return
      */
-    @GetMapping("/commodity_coupons")
+    @GetMapping("/coupons/commodity")
     public ResponseDTO findPageCommodityCoupon(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<CommodityCoupon> commodityCouponPage = commodityCouponFacade.findPage(page, limit);
-        if (commodityCouponPage == null) {
+        if (commodityCouponPage == null || commodityCouponPage.size() <= 0) {
             return response("查询成功", "{}");
         }
         ArrayList<CouponRestDTO> commodityCouponRestDTOPage = commodityCouponPage.stream().collect(
@@ -85,10 +85,10 @@ public class CouponRestController {
      * @param limit
      * @return
      */
-    @GetMapping("/universal_coupons")
+    @GetMapping("/coupons/universal")
     public ResponseDTO findPageUniversalCoupon(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<UniversalCoupon> universalCouponPage = universalCouponFacade.findPage(page, limit);
-        if (universalCouponPage == null) {
+        if (universalCouponPage == null || universalCouponPage.size() <= 0) {
             return response("查询成功", "{}");
         }
         ArrayList<CouponRestDTO> commodityCouponRestDTOPage = universalCouponPage.stream().collect(
@@ -102,16 +102,16 @@ public class CouponRestController {
         return response("查询成功", dataSection);
     }
 
-    @PostMapping("/add_commodity_coupon")
-    public ResponseDTO addCommodityCoupon(AddCommodityCouponCommand command) {
+    @PostMapping("/")
+    public ResponseDTO addCommodityCoupon(@RequestParam AddCommodityCouponCommand command) {
         commodityCouponFacade.addOne(command);
 
         return response("插入成功", "{}");
 
     }
 
-    @PostMapping("/add_universal_coupon")
-    public ResponseDTO addUniversalCoupon(AddUniversalCouponCommand command) {
+    @PostMapping("/")
+    public ResponseDTO addUniversalCoupon(@RequestParam AddUniversalCouponCommand command) {
         universalCouponFacade.addOne(command);
 
         return response("插入成功", "{}");

@@ -64,17 +64,6 @@ public class StoreAddress implements Serializable {
         this.addressId = addressId;
     }
 
-    public StoreAddress(Long storeId, String provinceName, String cityName, String areaName, String townName, String detailAddress, Long createTime, Long updateTime) {
-        this.setStoreId(storeId);
-        this.setProvinceName(provinceName);
-        this.setCityName(cityName);
-        this.setAreaName(areaName);
-        this.setTownName(townName);
-        this.setDetailAddress(detailAddress);
-        this.setCreateTime(createTime);
-        this.setUpdateTime(updateTime);
-    }
-
     public Long getStoreId() {
         return storeId;
     }

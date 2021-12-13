@@ -46,14 +46,17 @@ public class SKCommodityCommentController {
     public ResponseDTO findByCommentId(@PathVariable("comment_id") Long commentId) {
         // 找到 DO
         SKCommodityComment commentDO = commentFacade.findByCommentId(commentId);
+        if (commentDO == null) {
+            return response("查询商品评论成功", "{}");
+        }
         // response 的 data
-        HashMap<String, Object> dataSectioin = new HashMap<>(2);
+        HashMap<String, Object> dataSection = new HashMap<>(2);
         // DO 转 DTO
         SKCommodityCommentDTO commentDTO = commentAssembler.converterToSKCommodityCommentDTO(commentDO);
         // 装入 data
-        dataSectioin.put("comment", commentDTO);
+        dataSection.put("comment", commentDTO);
         // 返回 response
-        return response("查询成功", dataSectioin);
+        return response("查询商品评论成功", dataSection);
     }
 
     /**
@@ -68,6 +71,9 @@ public class SKCommodityCommentController {
     public ResponseDTO findPageByCommodityId(Long commodityId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 找到 DO
         List<SKCommodityComment> commentDOPage = commentFacade.findPageByCommodityId(commodityId, page, limit);
+        if (commentDOPage == null) {
+            return response("返回商品评论分页数据成功", "{}");
+        }
         // response 的 data
         HashMap<String, Object> dataSectioin = new HashMap<>(2);
         // DO List 转 DTO List
@@ -79,7 +85,7 @@ public class SKCommodityCommentController {
         // 装入 data
         dataSectioin.put("comments", commentDTOPage);
         // 返回 response
-        return response("返回成功", dataSectioin);
+        return response("返回商品评论分页数据成功", dataSectioin);
     }
 
     /**
@@ -87,7 +93,7 @@ public class SKCommodityCommentController {
      *
      * @param command command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddSKCommodityCommentCommand command) {
         commentFacade.addOne(command);
         return response("添加成功", "{}");

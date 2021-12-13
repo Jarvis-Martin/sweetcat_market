@@ -44,10 +44,9 @@ public class FollowRelationShipController {
                 (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipFansDTO(followRelationShip)),
                 ArrayList::addAll
         );
-        Map<String, Object> fansList = new HashMap<>(12);
-        fansList.put("data_list", fansDTOList);
-        String tip = "一切OK！";
-        return response(tip, fansList);
+        Map<String, Object> dataSection = new HashMap<>(12);
+        dataSection.put("data_list", fansDTOList);
+        return response("查询粉丝列表成功！", dataSection);
     }
 
     @GetMapping("/user/{user_id}/subscriber_list")
@@ -58,10 +57,9 @@ public class FollowRelationShipController {
                 (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipSubscriberDTO(followRelationShip)),
                 ArrayList::addAll
         );
-        Map<String, Object> subscriberList = new HashMap<>(12);
-        subscriberList.put("data_list", subscriberDTOList);
-        String tip = "一切OK！";
-        return response(tip, subscriberList);
+        Map<String, Object> dataSection = new HashMap<>(12);
+        dataSection.put("data_list", subscriberDTOList);
+        return response("查询关注人列表成功", dataSection);
     }
 
     @GetMapping("/user/{user_id}/like/{target_user_id}")

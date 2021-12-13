@@ -46,16 +46,17 @@ public class CommodityInfoController {
     @GetMapping("/{commodity_id}")
     public ResponseDTO findByCommodityId(@PathVariable("commodity_id") Long commodityId) {
         Commodity commodity = commodityInfoFacade.findByCommodityId(commodityId);
-        HashMap<String, Object> dataSection = new HashMap<>(2);
-        if (commodity != null) {
-            dataSection.put("good_info", commodityRestAssembler.converterToCommodityInfoDTO(commodity));
+        if (commodity == null) {
+            return response("查询商品信息成功", "{}");
         }
-        return response("一切OK", dataSection);
+        HashMap<String, Object> dataSection = new HashMap<>(2);
+        dataSection.put("commodity", commodityRestAssembler.converterToCommodityInfoDTO(commodity));
+        return response("查询商品信息成功", dataSection);
     }
 
 
     /**
-     * 查找 指定门店商品分页数据
+     * 查找积分可兑换商品
      *
      * @param page
      * @param limit
@@ -64,17 +65,19 @@ public class CommodityInfoController {
     @GetMapping("/credit/commodities")
     public ResponseDTO findPageCreditCanOffsetAPart(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> commodityPage = commodityInfoFacade.findPageCreditCanOffsetAPart(page, limit);
-
-        ArrayList<CommoditySummaryInfoRestDTO> commoditySummaryInfoRestDTOPage = commodityPage.stream().collect(
+        if (commodityPage == null || commodityPage.size() <= 0) {
+            return response("查找积分可兑换商品", "{}");
+        }
+        ArrayList<CommoditySummaryInfoRestDTO> commodities = commodityPage.stream().collect(
                 ArrayList<CommoditySummaryInfoRestDTO>::new,
                 (con, commodityInfo) -> con.add(commodityRestAssembler.converterToCommoditySummaryInfoRestDTO(commodityInfo)),
                 ArrayList<CommoditySummaryInfoRestDTO>::addAll
         );
 
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("commodities", commoditySummaryInfoRestDTOPage);
+        dataSection.put("commodities", commodities);
 
-        return response("一切OK", dataSection);
+        return response("查找积分可兑换商品", dataSection);
     }
 
     /**
@@ -88,23 +91,27 @@ public class CommodityInfoController {
     @GetMapping("/store/commodities")
     public ResponseDTO findPageByStoreId(@PathVariable("store_id") Long storeId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> commodityPage = commodityInfoFacade.findPageByStoreId(storeId, page, limit);
-
-        List<CommodityDetailDTO> commodityDetailDTOS = converterCommodityInfoListToCommodityInfoDTOList(commodityPage);
+        if (commodityPage == null) {
+            return response("指定门店商品分页数据", "{}");
+        }
+        List<CommodityDetailDTO> commodities = converterCommodityInfoListToCommodityInfoDTOList(commodityPage);
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("commodities", commodityDetailDTOS);
+        dataSection.put("commodities", commodities);
 
-        return response("一切OK", dataSection);
+        return response("指定门店商品分页数据", dataSection);
     }
 
-    @GetMapping("/new_commodities")
+    @GetMapping("/commodities/newlisting")
     public ResponseDTO findPageNewCommodities(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> pageNewCommodities = commodityInfoFacade.findPageNewCommodities(page, limit);
-
-        List<CommodityDetailDTO> newCommodityDetailDTOS = converterCommodityInfoListToCommodityInfoDTOList(pageNewCommodities);
+        if (pageNewCommodities == null) {
+            return response("新上架商品", "{}");
+        }
+        List<CommodityDetailDTO> commodities = converterCommodityInfoListToCommodityInfoDTOList(pageNewCommodities);
         HashMap<String, Object> dataSection = new HashMap<>(2);
-        dataSection.put("commodities", newCommodityDetailDTOS);
+        dataSection.put("commodities", commodities);
 
-        return response("一切OK", dataSection);
+        return response("新上架商品", dataSection);
     }
 
     /**
@@ -131,7 +138,7 @@ public class CommodityInfoController {
      * @param addStoreCommodityCommand
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddStoreCommodityCommand addStoreCommodityCommand) {
         commodityInfoFacade.addOne(addStoreCommodityCommand);
         return response("添加商品成功", "{}");

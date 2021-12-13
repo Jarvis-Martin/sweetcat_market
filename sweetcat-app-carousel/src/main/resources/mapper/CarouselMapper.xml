@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sweetcat.app_carousel.infrastructure.dao.CarouselMapper">
-    <resultMap id="BaseResultMap" type="com.sweetcat.app_carousel.infrastructure.po.CarouselPO">
+<mapper namespace="com.sweetcat.appcarousel.infrastructure.dao.CarouselMapper">
+    <resultMap id="BaseResultMap" type="com.sweetcat.appcarousel.infrastructure.po.CarouselPO">
         <id column="carousel_id" jdbcType="BIGINT" property="carouselId"/>
         <result column="pic_path" jdbcType="VARCHAR" property="picPath"/>
         <result column="target_url" jdbcType="VARCHAR" property="targetUrl"/>
@@ -16,7 +16,7 @@
         , pic_path, target_url, create_time, update_time, start_time, deadline,
     is_show_immediately
     </sql>
-    <select id="getCarouselPage" resultType="com.sweetcat.app_carousel.infrastructure.po.CarouselPO">
+    <select id="getCarouselPage" resultType="com.sweetcat.appcarousel.infrastructure.po.CarouselPO">
         select
             <include refid="Base_Column_List"/>
         from t_app_carousel

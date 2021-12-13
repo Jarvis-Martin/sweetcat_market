@@ -45,9 +45,12 @@ public class CreditLogRestController {
      * @param limit
      * @return
      */
-    @GetMapping(value = "/creditlog/1/{user_id}")
+    @GetMapping(value = "/creditlogs/1/{user_id}")
     public ResponseDTO findPageForCurrentMonth(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<CreditLog> creditLogPage = logFacade.findPageForCurrentMonth(timestamp, userId, page, limit);
+        if (creditLogPage == null || creditLogPage.size() <= 0) {
+            return response("获得指定月份的分页数据成功", "{}");
+        }
         ArrayList<CreditLogRestDTO> logRestDTOPage = creditLogPage.stream().collect(
                 ArrayList<CreditLogRestDTO>::new,
                 (con, creditLog) -> con.add(logAssembler.converterToCreditLogRestDTO(creditLog)),
@@ -69,9 +72,13 @@ public class CreditLogRestController {
      * @param limit
      * @return
      */
-    @GetMapping(value = "/creditlog/3/{user_id}")
-    public ResponseDTO findPageForNearlyThreeMonths(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
+    @GetMapping(value = "/creditlogs/3/{user_id}")
+    public ResponseDTO findPageForNearlyThreeMonths(Long timestamp, @PathVariable("user_id") Long userId,
+                                                    @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<CreditLog> creditLogPage = logFacade.findPageForNearlyThreeMonths(timestamp, userId, page, limit);
+        if (creditLogPage == null || creditLogPage.size() <= 0) {
+            return response("获得近3个月的积分收支记录的分页数据", "{}");
+        }
         ArrayList<CreditLogRestDTO> logRestDTOPage = creditLogPage.stream().collect(
                 ArrayList<CreditLogRestDTO>::new,
                 (con, creditLog) -> con.add(logAssembler.converterToCreditLogRestDTO(creditLog)),

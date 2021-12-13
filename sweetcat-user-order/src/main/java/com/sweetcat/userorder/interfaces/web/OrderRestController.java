@@ -41,7 +41,7 @@ public class OrderRestController {
      *
      * @param command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddOrderCommand command) {
         orderFacade.addOne(command);
         return response("创建订单成功", "{}");
@@ -61,7 +61,7 @@ public class OrderRestController {
     @GetMapping("/orders")
     public ResponseDTO findPageByUserId(Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<ChildrenOrder> childrenOrderPage = orderFacade.findPageByUserId(userId, page, limit);
-        if (childrenOrderPage == null) {
+        if (childrenOrderPage == null || childrenOrderPage.size() <= 0) {
             return response("查询订单成功", "{}");
         }
         ArrayList<OrderRestDTO> orders = childrenOrderPage.stream().collect(

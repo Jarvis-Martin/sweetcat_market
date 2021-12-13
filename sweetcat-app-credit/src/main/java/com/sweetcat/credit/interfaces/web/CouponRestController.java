@@ -42,7 +42,7 @@ public class CouponRestController {
      *
      * @param command
      */
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseDTO addOne(AddCouponCommand command) {
         couponFacade.addOne(command);
         return response("插入积分优惠券成功", "{}");
@@ -59,7 +59,7 @@ public class CouponRestController {
     @GetMapping(value = "/commodities", params = {"targetType", "_page", "_limit"})
     public ResponseDTO findPageByTargetType(Long targetType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Coupon> couponPage = couponFacade.findPageByTargetType(targetType, page, limit);
-        if (couponPage == null) {
+        if (couponPage == null || couponPage.size() <= 0) {
             return response("查询成功", "{}");
         }
         ArrayList<CreditCenterCommodityRestDTO> couponRestDTOPage = couponPage.stream().collect(
@@ -85,7 +85,7 @@ public class CouponRestController {
     @GetMapping(value = "/commodities", params = {"timeType", "_page", "_limit"})
     public ResponseDTO findPageByTimeType(Long timeType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Coupon> couponPage = couponFacade.findPageByTargetType(timeType, page, limit);
-        if (couponPage == null) {
+        if (couponPage == null || couponPage.size() <= 0) {
             return response("查询成功", "{}");
         }
         ArrayList<CreditCenterCommodityRestDTO> couponRestDTOPage = couponPage.stream().collect(
