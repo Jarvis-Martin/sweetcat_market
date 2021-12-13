@@ -28,8 +28,7 @@ public class ActivityFactory {
     }
 
     private Activity converterToCarousel(ActivityPO activityPO) {
-        Activity activity = new Activity();
-        activity.setActivityId(activityPO.getActivityId());
+        Activity activity = new Activity(activityPO.getActivityId());
         activity.setPicSmall(activityPO.getPicSmall());
         activity.setPicContent(activityPO.getPicContent());
         activity.setShowImmediately(activityPO.getShowImmediately());

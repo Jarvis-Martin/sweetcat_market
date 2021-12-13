@@ -15,6 +15,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * 默认 spring boot只扫描 com.sweetcat.app_activity，
  * 过不扫描 GlobalExceptionHandler，则全局异常处理将不好生效，
  * 故此处扩大了 spring boot 的扫包范围
+ * @author 86152
  */
 @SpringBootApplication(scanBasePackages = "com.sweetcat")
 @EnableDiscoveryClient

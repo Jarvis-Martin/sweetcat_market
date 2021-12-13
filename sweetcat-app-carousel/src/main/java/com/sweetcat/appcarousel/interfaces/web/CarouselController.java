@@ -1,5 +1,6 @@
 package com.sweetcat.appcarousel.interfaces.web;
 
+import com.sweetcat.appcarousel.application.command.AddCarouselCommand;
 import com.sweetcat.appcarousel.domain.carousel.entity.Carousel;
 import com.sweetcat.appcarousel.interfaces.facade.AppCarouselFacade;
 import com.sweetcat.appcarousel.interfaces.facade.assembler.CarouselAssembler;
@@ -7,6 +8,7 @@ import com.sweetcat.appcarousel.interfaces.facade.restdto.CarouselDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,7 +47,7 @@ public class CarouselController {
         Long curTimeStamp = Instant.now().toEpochMilli();
         // 调用 防腐层，获得 领域对象 Carousel实例 集合
         List<Carousel> carouselPage = facade.getCarouselPage(page, limit, curTimeStamp);
-        if (carouselPage == null) {
+        if (carouselPage == null || carouselPage.size() <= 0) {
             return response("查询平台轮播图分页数据成功", "{}");
         }
         // 领域对象 Carousel 转 CarouseDTO
@@ -58,6 +60,12 @@ public class CarouselController {
         Map<String, List<CarouselDTO>> dataSection = new HashMap<>(16);
         dataSection.put("carousel", carouselDTOList);
         return response("查询平台轮播图分页数据成功", dataSection);
+    }
+
+    @PostMapping("/carousel")
+    public ResponseDTO addOne(AddCarouselCommand command) {
+        facade.addOne(command);
+        return response("插入成功", "{}");
     }
 
     /**

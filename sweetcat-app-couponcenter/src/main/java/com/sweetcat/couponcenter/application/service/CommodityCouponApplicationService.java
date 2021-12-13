@@ -12,11 +12,11 @@ import com.sweetcat.couponcenter.application.rpc.CommodityInfoRpc;
 import com.sweetcat.couponcenter.application.rpc.StoreInfoRpc;
 import com.sweetcat.couponcenter.application.rpc.UserInfoRpc;
 import com.sweetcat.couponcenter.domain.coupon.entity.CommodityCoupon;
-import com.sweetcat.couponcenter.domain.coupon.entity.Coupon;
 import com.sweetcat.couponcenter.domain.coupon.repository.CommodityCouponRepository;
 import com.sweetcat.couponcenter.domain.coupon.vo.Commodity;
 import com.sweetcat.couponcenter.domain.coupon.vo.Creator;
 import com.sweetcat.couponcenter.domain.coupon.vo.Store;
+import com.sweetcat.couponcenter.infrastructure.cache.BloomFilter;
 import com.sweetcat.couponcenter.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.couponcenter.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +38,12 @@ public class CommodityCouponApplicationService {
     private StoreInfoRpc storeInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
     private CommodityCouponRepository commodityCouponRepository;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setCommodityInfoRpc(CommodityInfoRpc commodityInfoRpc) {
@@ -86,6 +92,8 @@ public class CommodityCouponApplicationService {
 
     public CommodityCoupon findOneByCouponId(Long couponId) {
         verifyIdFormatService.verifyIds(couponId);
+        // bloomFilter 过滤
+        bloomFilter.verifyIds(couponId);
         return commodityCouponRepository.findOneByCouponId(couponId);
     }
 
@@ -94,46 +102,32 @@ public class CommodityCouponApplicationService {
      * @param command
      */
     public void addOne(AddCommodityCouponCommand command) {
-        Long creatorId = command.getCreatorId();
-        Integer couponTargetType = command.getTargetType();
+        long creatorId = command.getCreatorId();
         // 检查id
         verifyIdFormatService.verifyIds(creatorId);
         // 检查用户
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(creatorId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 商品券
-        Long storeId = command.getStoreId();
-        Long commodityId = command.getCommodityId();
+        long storeId = command.getStoreId();
+        long commodityId = command.getCommodityId();
         // 检查 id
         verifyIdFormatService.verifyIds(storeId, commodityId);
         // 检查 store
         StoreInfoRpcDTO storeInfo = storeInfoRpc.findOneByStoreId(storeId);
         // 店铺不存在
-        if (storeInfo == null) {
-            throw new StoreNotExistedException(
-                    ResponseStatusEnum.STORENOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.STORENOTEXISTED.getErrorMessage()
-            );
-        }
+        checkStore(storeInfo);
         // 检查 commodity
         CommodityInfoRpcDTO commodityInfo = commodityInfoRpc.findByCommodityId(commodityId);
         // 商品不存在
-        if (commodityInfo == null) {
-            throw new CommodityNotExistedException(
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkCommodity(commodityInfo);
         // 生成couponId
         long couponId = snowFlakeService.snowflakeId();
         Creator creator = new Creator(command.getCreatorId());
-        Long createTime = command.getCreateTime();
+        long createTime = command.getCreateTime();
+        // 加入 bloomFilter
+        bloomFilter.add(couponId);
         // 构建商品券
         CommodityCoupon commodityCoupon = new CommodityCoupon(
                 couponId,
@@ -161,6 +155,33 @@ public class CommodityCouponApplicationService {
         commodityCoupon.setDeadline(command.getDeadline());
         // 加入db
         commodityCouponRepository.addOne(commodityCoupon);
+    }
+
+    private void checkStore(StoreInfoRpcDTO storeInfo) {
+        if (storeInfo == null) {
+            throw new StoreNotExistedException(
+                    ResponseStatusEnum.STORENOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.STORENOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
+    private void checkCommodity(CommodityInfoRpcDTO commodityInfo) {
+        if (commodityInfo == null) {
+            throw new CommodityNotExistedException(
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
     }
 
 }

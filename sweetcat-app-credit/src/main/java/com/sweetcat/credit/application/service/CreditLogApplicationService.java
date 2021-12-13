@@ -2,13 +2,13 @@ package com.sweetcat.credit.application.service;
 
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.credit.application.command.AddCreditLogCommand;
 import com.sweetcat.credit.application.rpc.UserInfoRpc;
 import com.sweetcat.credit.domain.creditlog.entity.CreditLog;
 import com.sweetcat.credit.domain.creditlog.entity.CreditLogUser;
 import com.sweetcat.credit.domain.creditlog.repository.CreditLogRepository;
+import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,12 @@ public class CreditLogApplicationService {
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
     private UserInfoRpc userInfoRpc;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setUserInfoRpc(UserInfoRpc userInfoRpc) {
@@ -58,30 +64,39 @@ public class CreditLogApplicationService {
      * @param command
      */
     public void addOne(AddCreditLogCommand command) {
-        Long userId = command.getUserId();
+        long userId = command.getUserId();
         // 检查 userId
         verifyIdFormatService.verifyIds(userId);
+        bloomFilter.add(userId);
         // 检查用户信息
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         // 用户不存在
+        checkUser(userInfo);
+        // 生成 credit log id
+        long creditLogId = snowFlakeService.snowflakeId();
+        // 创建 creditLog 实例
+        CreditLog creditLog = new CreditLog(creditLogId);
+        CreditLogUser creditLogUser = new CreditLogUser(userId);
+        inflateCreditLog(command, creditLog, creditLogUser);
+        // 加入db
+        logRepository.addOne(creditLog);
+    }
+
+    private void inflateCreditLog(AddCreditLogCommand command, CreditLog creditLog, CreditLogUser creditLogUser) {
+        creditLog.setCreditLogUser(creditLogUser);
+        creditLog.setLogType(command.getLogType());
+        creditLog.setDescription(command.getDescription());
+        creditLog.setCreditNumber(command.getCreditNumber());
+        creditLog.setCreateTime(command.getCreateTime());
+    }
+
+    private void checkUser(UserInfoRpcDTO userInfo) {
         if (userInfo == null) {
             throw new UserNotExistedException(
                     ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
                     ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
             );
         }
-        // 生成 credit log id
-        long creditLogId = snowFlakeService.snowflakeId();
-        // 创建 creditLog 实例
-        CreditLog creditLog = new CreditLog(creditLogId);
-        CreditLogUser creditLogUser = new CreditLogUser(userId);
-        creditLog.setCreditLogUser(creditLogUser);
-        creditLog.setLogType(command.getLogType());
-        creditLog.setDescription(command.getDescription());
-        creditLog.setCreditNumber(command.getCreditNumber());
-        creditLog.setCreateTime(command.getCreateTime());
-        // 加入db
-        logRepository.addOne(creditLog);
     }
 
     /**
@@ -94,17 +109,11 @@ public class CreditLogApplicationService {
      * @return
      */
     public List<CreditLog> findPageForCurrentMonth(Long timestamp, Long userId, Integer page, Integer limit) {
-        // 检查时间戳格式
-        verifyTimestampFormat(timestamp);
+        bloomFilter.verifyIds(userId);
         // 创建用户
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // page，limit 检查
         limit = limit < 0 ? 15 : limit;
         page = page < 0 ? 0 : page * limit;
@@ -134,17 +143,11 @@ public class CreditLogApplicationService {
      * @return
      */
     public List<CreditLog> findPageForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
-        // 检查时间戳格式
-        verifyTimestampFormat(timestamp);
+        bloomFilter.verifyIds(userId);
         // 创建用户
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // page，limit 检查
         limit = limit < 0 ? 15 : limit;
         page = page < 0 ? 0 : page * limit;
@@ -165,15 +168,6 @@ public class CreditLogApplicationService {
         return logRepository.findPageBetween(firstDayTimeStampOfGivenTimeStamp, lastDayTimeStampOfGivenTimeStamp, userId, page, limit);
     }
 
-    private void verifyTimestampFormat(Long timestamp) {
-        if (timestamp == null || timestamp < 0 || timestamp.toString().length() > 13) {
-            throw new ParameterFormatIllegalityException(
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
-                    ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorMessage()
-            );
-        }
-    }
-
     /**
      * 获得本月总收入
      *
@@ -184,6 +178,7 @@ public class CreditLogApplicationService {
      * @return
      */
     public Long totalIncomeForThisMonth(Long timestamp, Long userId, Integer page, Integer limit) {
+        bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForCurrentMonth(timestamp, userId, page, limit);
         return pageForCurrentMonth.stream()
                 .mapToLong(
@@ -201,10 +196,11 @@ public class CreditLogApplicationService {
      * @return
      */
     public Long totalOutComeForThisMonth(Long timestamp, Long userId, Integer page, Integer limit) {
+        bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForCurrentMonth(timestamp, userId, page, limit);
         return pageForCurrentMonth.stream()
                 .mapToLong(
-                        creditLog -> CreditLog.LOGTYPE_EXPAND.equals(creditLog.getCreditNumber()) ? creditLog.getCreditNumber() : 0
+                        creditLog -> CreditLog.LOGTYPE_EXPAND.equals(creditLog.getLogType()) ? creditLog.getCreditNumber() : 0
                 ).sum();
     }
 
@@ -218,10 +214,11 @@ public class CreditLogApplicationService {
      * @return
      */
     public Long totalIncomeForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
+        bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForNearlyThreeMonths(timestamp, userId, page, limit);
         return pageForCurrentMonth.stream()
                 .mapToLong(
-                        creditLog -> CreditLog.LOGTYPE_ACQUIRE.equals(creditLog.getCreditNumber()) ? creditLog.getCreditNumber() : 0
+                        creditLog -> CreditLog.LOGTYPE_ACQUIRE.equals(creditLog.getLogType()) ? creditLog.getCreditNumber() : 0
                 ).sum();
     }
 
@@ -235,10 +232,11 @@ public class CreditLogApplicationService {
      * @return
      */
     public Long totalOutComeForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
+        bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForNearlyThreeMonths(timestamp, userId, page, limit);
         return pageForCurrentMonth.stream()
                 .mapToLong(
-                        creditLog -> CreditLog.LOGTYPE_EXPAND.equals(creditLog.getCreditNumber()) ? creditLog.getCreditNumber() : 0
+                        creditLog -> CreditLog.LOGTYPE_EXPAND.equals(creditLog.getLogType()) ? creditLog.getCreditNumber() : 0
                 ).sum();
     }
 }

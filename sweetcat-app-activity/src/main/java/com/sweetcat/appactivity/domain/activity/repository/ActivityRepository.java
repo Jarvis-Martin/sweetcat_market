@@ -26,4 +26,6 @@ public interface ActivityRepository {
      * @return
      */
     Activity find(Long activityId);
+
+    void addOne(Activity activity);
 }

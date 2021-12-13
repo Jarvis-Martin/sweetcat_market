@@ -3,6 +3,7 @@ package com.sweetcat.appactivity.infrastructure.po;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * t_cms_activity
@@ -23,7 +24,7 @@ public class ActivityPO implements Serializable {
     /**
      * 活动内容图
      */
-    private String picContent;
+    private List<String> picContent;
 
     /**
      * 是否立即展示.0：不是；1：是

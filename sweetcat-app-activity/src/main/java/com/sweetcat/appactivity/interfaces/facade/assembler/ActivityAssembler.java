@@ -40,7 +40,7 @@ public class ActivityAssembler {
     private void inflateActivityDetailDTO(Activity activityDO, ActivityDetailDTO activityDetailDTO) {
         activityDetailDTO.setActivityId(activityDO.getActivityId());
         activityDetailDTO.setPicSmall(activityDO.getPicSmall());
-        activityDetailDTO.setPicContent(JSONUtils.fromJson(activityDO.getPicContent(), List.class));
+        activityDetailDTO.setPicContent(activityDO.getPicContent());
         activityDetailDTO.setTargetUrl(activityDO.getTargetUrl());
         activityDetailDTO.setStartTime(activityDO.getStartTime());
         activityDetailDTO.setDeadline(activityDO.getDeadline());

@@ -1,6 +1,6 @@
 package com.sweetcat.appcarousel.domain.carousel.entity;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * t_app_carousel
  * @author 
  */
-@Data
+@Getter
 public class Carousel implements Serializable {
     /**
      * 轮播图id
@@ -49,6 +49,42 @@ public class Carousel implements Serializable {
      * 是否立即展示.0：不是；1：是
      */
     private Byte showImmediately;
+
+    public Carousel(Long carouselId) {
+        this.carouselId = carouselId;
+    }
+
+    public void setCarouselId(Long carouselId) {
+        this.carouselId = carouselId;
+    }
+
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
+    }
+
+    public void setTargetUrl(String targetUrl) {
+        this.targetUrl = targetUrl;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setDeadline(Long deadline) {
+        this.deadline = deadline;
+    }
+
+    public void setShowImmediately(Byte showImmediately) {
+        this.showImmediately = showImmediately;
+    }
 
     private static final long serialVersionUID = 1L;
 }

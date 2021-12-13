@@ -13,6 +13,7 @@ import com.sweetcat.couponcenter.domain.coupon.entity.Coupon;
 import com.sweetcat.couponcenter.domain.coupon.repository.CommodityCouponRepository;
 import com.sweetcat.couponcenter.domain.coupon.repository.CouponRepository;
 import com.sweetcat.couponcenter.domain.coupon.vo.CouponTargetType;
+import com.sweetcat.couponcenter.infrastructure.cache.BloomFilter;
 import com.sweetcat.couponcenter.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public class CouponApplicationService {
     private UserInfoRpc userInfoRpc;
     private DomainEventPublisher domainEventPublisher;
     private VerifyIdFormatService verifyIdFormatService;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setDomainEventPublisher(DomainEventPublisher domainEventPublisher) {
@@ -61,6 +68,7 @@ public class CouponApplicationService {
     public Coupon findByCouponId(Long couponId) {
         // 检查 id
         verifyIdFormatService.verifyIds(couponId);
+        bloomFilter.verifyIds(couponId);
         return couponRepository.findByCouponId(couponId);
     }
 
@@ -76,6 +84,8 @@ public class CouponApplicationService {
         verifyIdFormatService.verifyIds(userId, couponId);
         // 检查用户
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
+        // 检查本地是否有该 coupon
+        bloomFilter.verifyIds(couponId);
         // 检查 user
         checkUser(userInfo);
         Coupon coupon = couponRepository.findByCouponId(couponId);

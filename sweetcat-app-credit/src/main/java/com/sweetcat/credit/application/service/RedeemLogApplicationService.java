@@ -12,6 +12,7 @@ import com.sweetcat.credit.domain.redeemlog.entity.RedeemLog;
 import com.sweetcat.credit.domain.redeemlog.entity.RedeemUser;
 import com.sweetcat.credit.domain.redeemlog.entity.RedeemedCommodity;
 import com.sweetcat.credit.domain.redeemlog.repository.RedeemLogRepository;
+import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class RedeemLogApplicationService {
     private CommodityRepository commodityRepository;
     private RedeemLogRepository redeemLogRepository;
     private UserInfoRpc userInfoRpc;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setCommodityRepository(CommodityRepository commodityRepository) {
@@ -84,24 +91,15 @@ public class RedeemLogApplicationService {
         Long commodityId = command.getCommodityId();
         // 检查 redeemUserId, commodityId
         verifyIdFormatService.verifyIds(redeemUserId, commodityId);
+        bloomFilter.add(redeemUserId, commodityId);
         // 检查 user with userId 是否存在
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(redeemUserId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 检查要兑换的商品是否存在
         BaseCommodity baseCommodity = commodityRepository.findOneMarketItemId(command.getCommodityId());
         // 兑换的商品 不存在
-        if (baseCommodity == null) {
-            throw new CommodityNotExistedException(
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkCommodity(baseCommodity);
         // 生成 redeemLogId
         long redeemLogId = snowFlakeService.snowflakeId();
         // 构建 redeemUser
@@ -118,6 +116,24 @@ public class RedeemLogApplicationService {
         redeemLog.setCreateTime(command.getCreateTime());
         // 添加入 db
         redeemLogRepository.addOne(redeemLog);
+    }
+
+    private void checkCommodity(BaseCommodity baseCommodity) {
+        if (baseCommodity == null) {
+            throw new CommodityNotExistedException(
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
     }
 
     /**

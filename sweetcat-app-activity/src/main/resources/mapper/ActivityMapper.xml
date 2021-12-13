@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sweetcat.appactivity.infrastructure.dao.ActivityMapper">
-    <resultMap id="BaseResultMap" type="com.sweetcat.appactivity.domain.activity.entity.Activity">
+    <resultMap id="BaseResultMap" type="com.sweetcat.appactivity.infrastructure.po.ActivityPO">
         <id column="activity_id" jdbcType="BIGINT" property="activityId"/>
         <result column="pic_small" jdbcType="VARCHAR" property="picSmall"/>
-        <result column="pic_content" jdbcType="VARCHAR" property="picContent"/>
-        <result column="is_show_immediately" jdbcType="TINYINT" property="isShowImmediately"/>
+        <result column="pic_content" jdbcType="VARCHAR" property="picContent"
+                typeHandler="com.sweetcat.appactivity.infrastructure.dao.typehandler.ListCharTypeHandler"/>
+        <result column="is_show_immediately" jdbcType="TINYINT" property="showImmediately"/>
         <result column="target_url" jdbcType="VARCHAR" property="targetUrl"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
@@ -17,9 +18,16 @@
         , pic_small, pic_content, is_show_immediately, target_url, create_time,
     update_time, start_time, deadline
     </sql>
+    <insert id="insertOne">
+        insert into t_app_activity(<include refid="Base_Column_List"/>) values (#{activityId}
+        , #{picSmall},
+        #{picContent, javaType=List, jdbcType=VARCHAR, typeHandler=com.sweetcat.appactivity.infrastructure.dao.typehandler.ListCharTypeHandler},
+        #{showImmediately}, #{targetUrl}, #{createTime},
+        #{updateTime}, #{startTime}, #{deadline})
+    </insert>
     <select id="getActivityPage" resultType="com.sweetcat.appactivity.infrastructure.po.ActivityPO">
         select
-            <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from t_app_activity
         where is_show_immediately = 1 and deadline >= #{curTimeStamp}
         order by start_time desc
@@ -27,7 +35,7 @@
     </select>
     <select id="getOne" resultType="com.sweetcat.appactivity.infrastructure.po.ActivityPO">
         select
-            <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from t_app_activity
         where activity_id = #{activityId}
     </select>

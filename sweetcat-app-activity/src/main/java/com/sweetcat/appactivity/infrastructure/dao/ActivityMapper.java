@@ -1,5 +1,6 @@
 package com.sweetcat.appactivity.infrastructure.dao;
 
+import com.sweetcat.appactivity.domain.activity.entity.Activity;
 import com.sweetcat.appactivity.infrastructure.po.ActivityPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,4 +15,6 @@ public interface ActivityMapper {
             @Param("curTimeStamp") Long curTimeStamp);
 
     ActivityPO getOne(Long activityId);
+
+    void insertOne(Activity activity);
 }

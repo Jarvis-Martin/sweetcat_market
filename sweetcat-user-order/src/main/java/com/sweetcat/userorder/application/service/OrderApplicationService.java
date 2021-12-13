@@ -346,7 +346,7 @@ public class OrderApplicationService {
 
     private void throwParameterFormatIllegalException() {
         throw new ParameterFormatIllegalityException(
-                ResponseStatusEnum.PARAMETERFORMATILLEGALITY.getErrorCode(),
+                ResponseStatusEnum.PARAMETERERROR.getErrorCode(),
                 ResponseStatusEnum.PARAMETERERROR.getErrorMessage()
         );
     }

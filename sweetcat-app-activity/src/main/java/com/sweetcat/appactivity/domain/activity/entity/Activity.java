@@ -1,7 +1,9 @@
 package com.sweetcat.appactivity.domain.activity.entity;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * t_app_activity
@@ -22,7 +24,7 @@ public class Activity implements Serializable {
     /**
      * 活动内容图
      */
-    private String picContent;
+    private List<String> picContent;
 
     /**
      * 是否立即展示.0：不是；1：是
@@ -53,6 +55,10 @@ public class Activity implements Serializable {
      * 结束时间
      */
     private Long deadline;
+
+    public Activity(Long activityId) {
+        this.activityId = activityId;
+    }
 
     private static final long serialVersionUID = 1L;
 }

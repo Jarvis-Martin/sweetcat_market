@@ -1,5 +1,6 @@
 package com.sweetcat.appactivity.interfaces.facade;
 
+import com.sweetcat.appactivity.application.command.AddActivityCommand;
 import com.sweetcat.appactivity.application.service.ActivityApplicationService;
 import com.sweetcat.appactivity.domain.activity.entity.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,4 +31,9 @@ public class AppActivityFacade {
     public Activity getActivityDetail(Long activityId) {
         return activityApplicationService.getActivityDetail(activityId);
     }
+
+    public void addOne(AddActivityCommand command) {
+        activityApplicationService.addOne(command);
+    }
+
 }

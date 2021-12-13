@@ -30,6 +30,9 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     public List<Activity> find(Integer page, Integer limit, Long curTimeStamp) {
         // 获取分页 activity
         List<ActivityPO> activityPage = activityMapper.getActivityPage(page, limit, curTimeStamp);
+        if (activityPage == null || activityPage.size() <= 0) {
+            return null;
+        }
         // ActivityPO 转 Activity 并返回
         return activityPage.stream().collect(
                 ArrayList<Activity>::new,
@@ -40,6 +43,14 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     @Override
     public Activity find(Long activityId) {
         ActivityPO activityPO = activityMapper.getOne(activityId);
+        if (activityPO == null) {
+            return null;
+        }
         return activityFactory.create(activityPO);
+    }
+
+    @Override
+    public void addOne(Activity activity) {
+        activityMapper.insertOne(activity);
     }
 }

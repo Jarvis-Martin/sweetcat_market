@@ -1,5 +1,6 @@
 package com.sweetcat.appcarousel.application.service;
 
+import com.sweetcat.appcarousel.application.command.AddCarouselCommand;
 import com.sweetcat.appcarousel.domain.carousel.entity.Carousel;
 
 import java.util.List;
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface CarouselApplicationService {
     List<Carousel> getCarouselPage(Integer page, Integer limit, Long curTimeStamp);
+
+    void addOne(AddCarouselCommand command);
 }

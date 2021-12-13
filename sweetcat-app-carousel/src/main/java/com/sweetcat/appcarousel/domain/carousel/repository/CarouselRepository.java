@@ -19,4 +19,6 @@ public interface CarouselRepository {
      * @return 分页 carousel
      */
     List<Carousel> find(Integer page, Integer limit, Long curTimeStamp);
+
+    void addOne(Carousel carousel);
 }

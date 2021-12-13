@@ -16,9 +16,14 @@
         , pic_path, target_url, create_time, update_time, start_time, deadline,
     is_show_immediately
     </sql>
+    <insert id="insertOne">
+        insert into t_app_carousel (<include refid="Base_Column_List"/>) values (#{carouselId}
+        , #{picPath}, #{targetUrl}, #{createTime}, #{updateTime}, #{startTime}, #{deadline},
+        #{showImmediately})
+    </insert>
     <select id="getCarouselPage" resultType="com.sweetcat.appcarousel.infrastructure.po.CarouselPO">
         select
-            <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
         from t_app_carousel
         where is_show_immediately = 1 and deadline >= #{curTimeStamp}
         order by start_time desc

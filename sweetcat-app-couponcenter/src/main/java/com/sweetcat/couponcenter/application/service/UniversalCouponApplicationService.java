@@ -8,6 +8,7 @@ import com.sweetcat.couponcenter.application.rpc.UserInfoRpc;
 import com.sweetcat.couponcenter.domain.coupon.entity.UniversalCoupon;
 import com.sweetcat.couponcenter.domain.coupon.repository.UniversalCouponRepository;
 import com.sweetcat.couponcenter.domain.coupon.vo.Creator;
+import com.sweetcat.couponcenter.infrastructure.cache.BloomFilter;
 import com.sweetcat.couponcenter.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.couponcenter.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,12 @@ public class UniversalCouponApplicationService {
     private UniversalCouponRepository universalCouponRepository;
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
@@ -68,25 +75,21 @@ public class UniversalCouponApplicationService {
      * @param command
      */
     public void addOne(AddUniversalCouponCommand command) {
-        Long creatorId = command.getCreatorId();
-        Integer couponTargetType = command.getTargetType();
+        long creatorId = command.getCreatorId();
         // 检查id
         verifyIdFormatService.verifyIds(creatorId);
         // 检查用户
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(creatorId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 生成通用券id
         long couponId = snowFlakeService.snowflakeId();
         // 优惠券创建人
         Creator creator = new Creator(command.getCreatorId());
         // 优惠券创建时间
-        Long createTime = command.getCreateTime();
+        long createTime = command.getCreateTime();
+        // couponId 加入 bloomFilter
+        bloomFilter.add(couponId);
         // 构造优惠券对象
         UniversalCoupon universalCoupon = new UniversalCoupon(
                 couponId,
@@ -107,8 +110,18 @@ public class UniversalCouponApplicationService {
         universalCouponRepository.addOne(universalCoupon);
     }
 
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
     public UniversalCoupon findOneByCouponId(Long couponId) {
         verifyIdFormatService.verifyIds(couponId);
+        bloomFilter.verifyIds(couponId);
         return universalCouponRepository.findOneByCouponId(couponId);
     }
 }

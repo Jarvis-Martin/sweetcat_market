@@ -19,8 +19,7 @@ public class CarouselFactory {
     }
 
     private Carousel converterToCarousel(CarouselPO carouselPO) {
-        Carousel carouselDO = new Carousel();
-        carouselDO.setCarouselId(carouselPO.getCarouselId());
+        Carousel carouselDO = new Carousel(carouselPO.getCarouselId());
         carouselDO.setPicPath(carouselPO.getPicPath());
         carouselDO.setTargetUrl(carouselPO.getTargetUrl());
         carouselDO.setCreateTime(carouselPO.getCreateTime());

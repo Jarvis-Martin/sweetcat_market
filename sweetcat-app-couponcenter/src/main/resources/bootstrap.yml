@@ -66,6 +66,25 @@ spring:
             column: coupon_id
             type: SNOWFLAKE
 
+  # redis 基础配置
+  redis:
+    database: 0
+    host: 192.168.193.129
+    port: 6379
+    password: 123456
+    timeout: 3000
+    # lettuce 连接池配置
+    lettuce:
+      pool:
+        # 连接池最大活跃连接数
+        max-active: 8
+        # 连接池最大阻塞等待世界（负值：表示没有限制）
+        max-wait: -1
+        # 最大空闲连接数
+        max-idle: 8
+        # 最小空闲连接数
+        min-idle: 0
+
 # rocketmq 配置
 rocketmq:
   name-server: 127.0.0.1:9876
@@ -77,6 +96,7 @@ rocketmq:
     retry-times-when-send-failed: 2
     # 发送消息超时时间。默认3s
     send-message-timeout: 3000
+
 
 # 由于 spring acuator 健康检查会导致服务启动报错：
 # org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid

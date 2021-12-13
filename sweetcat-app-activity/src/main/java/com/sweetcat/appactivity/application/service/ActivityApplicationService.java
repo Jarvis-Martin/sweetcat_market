@@ -1,5 +1,6 @@
 package com.sweetcat.appactivity.application.service;
 
+import com.sweetcat.appactivity.application.command.AddActivityCommand;
 import com.sweetcat.appactivity.domain.activity.entity.Activity;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface ActivityApplicationService {
      * @return activity 数据
      */
     Activity getActivityDetail(Long activityId);
+
+    void addOne(AddActivityCommand command);
 }

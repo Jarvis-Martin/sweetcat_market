@@ -4,8 +4,8 @@ import com.sweetcat.credit.application.command.AddBaseCommodityCommand;
 import com.sweetcat.credit.domain.commodity.entity.BaseCommodity;
 import com.sweetcat.credit.domain.commodity.repository.CommodityRepository;
 import com.sweetcat.credit.domain.commodity.vo.Creator;
+import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
-import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +21,16 @@ import java.util.List;
 public class CommodityApplicationService {
     private CommodityRepository commodityRepository;
     private VerifyIdFormatService verifyIdFormatService;
-    private SnowFlakeService snowFlakeService;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setVerifyIdFormatService(VerifyIdFormatService verifyIdFormatService) {
         this.verifyIdFormatService = verifyIdFormatService;
-    }
-
-    @Autowired
-    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
-        this.snowFlakeService = snowFlakeService;
     }
 
     @Autowired
@@ -45,14 +45,16 @@ public class CommodityApplicationService {
      */
     public void addOne(AddBaseCommodityCommand commodity) {
         Long creatorId = commodity.getCreatorId();
+        Long marketItemId = commodity.getMarketItemId();
         // 创建创建人id
-        verifyIdFormatService.verifyIds(creatorId);
+        verifyIdFormatService.verifyIds(creatorId, marketItemId);
+        bloomFilter.add(marketItemId);
         // 构建 creator
         Creator creator = new Creator(commodity.getCreatorId());
         creator.setCreatorName(commodity.getCreatorName());
         // 构建 BaseCommodity
         BaseCommodity baseCommodity = new BaseCommodity(
-                commodity.getMarketItemId(),
+                marketItemId,
                 creator,
                 commodity.getStock(),
                 commodity.getCreateTime(),

@@ -20,20 +20,35 @@ import java.util.List;
 @Repository
 public class CarouselRepositoryImpl implements CarouselRepository {
 
-    @Autowired
     private CarouselMapper carouselMapper;
+    private CarouselFactory carouselFactory;
 
     @Autowired
-    private CarouselFactory carouselFactory;
+    public void setCarouselMapper(CarouselMapper carouselMapper) {
+        this.carouselMapper = carouselMapper;
+    }
+
+    @Autowired
+    public void setCarouselFactory(CarouselFactory carouselFactory) {
+        this.carouselFactory = carouselFactory;
+    }
 
     @Override
     public List<Carousel> find(Integer page, Integer limit, Long curTimeStamp) {
         // 获取分页数据
         List<CarouselPO> carouselPOPage = carouselMapper.getCarouselPage(page, limit, curTimeStamp);
+        if (carouselPOPage == null) {
+            return null;
+        }
         // carouselPO 转 carousel list并返回
-        return carouselPOPage.stream().collect(ArrayList<Carousel>::new,
+        return carouselPOPage.stream().collect(
+                ArrayList<Carousel>::new,
                 (l, carouselPO) -> l.add(carouselFactory.create(carouselPO)),
                 ArrayList::addAll);
+    }
 
+    @Override
+    public void addOne(Carousel carousel) {
+        carouselMapper.insertOne(carousel);
     }
 }

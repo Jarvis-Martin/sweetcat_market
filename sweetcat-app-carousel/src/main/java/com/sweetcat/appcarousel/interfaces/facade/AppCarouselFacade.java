@@ -1,5 +1,6 @@
 package com.sweetcat.appcarousel.interfaces.facade;
 
+import com.sweetcat.appcarousel.application.command.AddCarouselCommand;
 import com.sweetcat.appcarousel.application.service.CarouselApplicationService;
 import com.sweetcat.appcarousel.domain.carousel.entity.Carousel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,9 @@ public class AppCarouselFacade {
 
     public List<Carousel> getCarouselPage(Integer page, Integer limit, Long curTimeStamp) {
         return carouselApplicationService.getCarouselPage(page, limit, curTimeStamp);
+    }
+
+    public void addOne(AddCarouselCommand command) {
+        carouselApplicationService.addOne(command);
     }
 }

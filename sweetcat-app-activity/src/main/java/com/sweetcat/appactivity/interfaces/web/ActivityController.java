@@ -1,5 +1,6 @@
 package com.sweetcat.appactivity.interfaces.web;
 
+import com.sweetcat.appactivity.application.command.AddActivityCommand;
 import com.sweetcat.appactivity.domain.activity.entity.Activity;
 import com.sweetcat.appactivity.interfaces.facade.AppActivityFacade;
 import com.sweetcat.appactivity.interfaces.facade.assembler.ActivityAssembler;
@@ -8,10 +9,7 @@ import com.sweetcat.appactivity.interfaces.facade.restdto.ActivityPageDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.responsedto.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -82,6 +80,12 @@ public class ActivityController {
         return response("查询平台官方活动详细信息成功", dataSection);
     }
 
+    @PostMapping("/activity")
+    public ResponseDTO addOne(AddActivityCommand command) {
+        facade.addOne(command);
+        return response("插入获得成功", "{}");
+    }
+
     /**
      * 通用的放回 ResponseDTO
      *
@@ -97,4 +101,5 @@ public class ActivityController {
                 data
         );
     }
+
 }

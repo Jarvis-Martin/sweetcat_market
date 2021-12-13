@@ -5,6 +5,7 @@ import com.sweetcat.credit.application.command.AddCouponCommand;
 import com.sweetcat.credit.domain.commodity.entity.Coupon;
 import com.sweetcat.credit.domain.commodity.repository.CouponRepository;
 import com.sweetcat.credit.domain.commodity.vo.Creator;
+import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ public class CouponApplicationService {
     private CommodityApplicationService commodityApplicationService;
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
+    private BloomFilter bloomFilter;
+
+    @Autowired
+    public void setBloomFilter(BloomFilter bloomFilter) {
+        this.bloomFilter = bloomFilter;
+    }
 
     @Autowired
     public void setCouponRepository(CouponRepository couponRepository) {
@@ -78,16 +85,10 @@ public class CouponApplicationService {
         long startTime = command.getStartTime() == null ? 0L : command.getStartTime();
         long deadline = command.getDeadline() == null ? 0L : command.getDeadline();
 
+        bloomFilter.add(marketItemId, couponId);
         // 构建 AddBaseCommodityCommand
         AddBaseCommodityCommand addBaseCommodityCommand = new AddBaseCommodityCommand();
-        addBaseCommodityCommand.setMarketItemId(marketItemId);
-        addBaseCommodityCommand.setCreatorId(creatorId);
-        addBaseCommodityCommand.setCreatorName(creatorName);
-        addBaseCommodityCommand.setStock(stock);
-        addBaseCommodityCommand.setCreateTime(createTime);
-        addBaseCommodityCommand.setUpdateTime(createTime);
-        addBaseCommodityCommand.setCreditNumber(creditNumber);
-        addBaseCommodityCommand.setCommodityType(commodityType);
+        inflateAddBaseCommodityCommand(creatorId, marketItemId, creatorName, stock, createTime, creditNumber, commodityType, addBaseCommodityCommand);
         // 添加一个 BaseCommodity
         commodityApplicationService.addOne(addBaseCommodityCommand);
 
@@ -104,6 +105,12 @@ public class CouponApplicationService {
                 creditNumber,
                 commodityType
         );
+        inflateCoupon(couponId, thresholdPrice, counteractPrice, targetType, storeId, storeName, commodityId, commodityPicSmall, commodityName, timeType, validDuration, startTime, deadline, coupon);
+        // 加入db
+        couponRepository.addOne(coupon);
+    }
+
+    private void inflateCoupon(long couponId, BigDecimal thresholdPrice, BigDecimal counteractPrice, int targetType, long storeId, String storeName, long commodityId, List<String> commodityPicSmall, String commodityName, int timeType, long validDuration, long startTime, long deadline, Coupon coupon) {
         coupon.setCouponId(couponId);
         coupon.setThresholdPrice(thresholdPrice);
         coupon.setCounteractPrice(counteractPrice);
@@ -117,8 +124,17 @@ public class CouponApplicationService {
         coupon.setValidDuration(validDuration);
         coupon.setStartTime(startTime);
         coupon.setDeadline(deadline);
-        // 加入db
-        couponRepository.addOne(coupon);
+    }
+
+    private void inflateAddBaseCommodityCommand(Long creatorId, long marketItemId, String creatorName, long stock, long createTime, long creditNumber, int commodityType, AddBaseCommodityCommand addBaseCommodityCommand) {
+        addBaseCommodityCommand.setMarketItemId(marketItemId);
+        addBaseCommodityCommand.setCreatorId(creatorId);
+        addBaseCommodityCommand.setCreatorName(creatorName);
+        addBaseCommodityCommand.setStock(stock);
+        addBaseCommodityCommand.setCreateTime(createTime);
+        addBaseCommodityCommand.setUpdateTime(createTime);
+        addBaseCommodityCommand.setCreditNumber(creditNumber);
+        addBaseCommodityCommand.setCommodityType(commodityType);
     }
 
     /**
