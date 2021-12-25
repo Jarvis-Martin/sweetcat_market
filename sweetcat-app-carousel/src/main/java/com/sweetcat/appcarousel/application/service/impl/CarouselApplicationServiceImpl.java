@@ -6,9 +6,12 @@ import com.sweetcat.appcarousel.domain.carousel.entity.Carousel;
 import com.sweetcat.appcarousel.domain.carousel.repository.CarouselRepository;
 import com.sweetcat.appcarousel.infrastructure.cache.BloomFilter;
 import com.sweetcat.appcarousel.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -53,6 +56,8 @@ public class CarouselApplicationServiceImpl implements CarouselApplicationServic
     }
 
     @Override
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddCarouselCommand command) {
         long carouselId = snowFlakeService.snowflakeId();
         bloomFilter.add(carouselId);

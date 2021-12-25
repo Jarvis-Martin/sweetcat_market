@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       config:
@@ -15,6 +17,52 @@ spring:
             namespace: dev
             group: SWEETCAT_GROUP
             refresh: True
+#  datasource:
+#    druid:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      username: test
+#      password: mysqladmin123
+#      url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_carousel?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+#      max-active: 40 # 数据库最大活跃连接数
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    datasource:
+      names: ds0, ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_carousel0?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_carousel1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: test
+        password: mysqladmin123
+    # 分库配置 ， 根据good_id分库
+    sharding:
+      # 分表配置，根据member_id分表
+      tables:
+        t_app_carousel:
+          actual-data-nodes: ds$->{0..1}.t_app_carousel$->{0..1}
+          logical-table: t_app_carousel
+          database-strategy:
+            inline:
+              sharding-column: carousel_id
+              algorithm-expression: ds$->{carousel_id % 2}
+          table-strategy:
+            inline:
+              sharding-column: carousel_id
+              algorithm-expression: t_app_carousel$->{carousel_id % 2}
+          key-generator:
+            column: carousel_id
+            type: SNOWFLAKE
+
+
+#==========================================================
 
   # redis 基础配置
   redis:
@@ -34,3 +82,44 @@ spring:
         max-idle: 8
         # 最小空闲连接数
         min-idle: 0
+
+#==========================================================
+
+logging:
+  level:
+    io:
+      seata: debug
+
+#Seata分布式事务配置(AT模式)
+seata:
+  # 以下配置项，默认值为true
+  enabled: true
+  application-id: ${spring.application.name}
+  #客户端和服务端在同一个事务组
+  tx-service-group: sweetcat_app_carousel_tx_group
+  # 以下配置项，默认值为true
+  enable-auto-data-source-proxy: false
+  service:
+    vgroup-mapping:
+      sweetcat_app_carousel_tx_group: default
+    grouplist:
+      # seata 服务端地址
+      default: localhost:8091
+  #服务注册到nacos
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace: "dev"
+      username: "nacos"
+      password: "nacos"
+      cluster: default
+# 由于 spring acuator 健康检查会导致服务启动报错：
+# org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
+# 但不影响服务注册注册
+management:
+  health:
+    db:
+      enabled: false

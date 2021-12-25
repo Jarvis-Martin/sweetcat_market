@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,8 +50,8 @@ public class CommodityCouponRepositoryImpl implements CommodityCouponRepository 
     @Override
     public List<CommodityCoupon> findPage(Integer targetType, Integer page, Integer limit) {
         List<ConcreteCouponPO> couponPOPage = concreteCouponMapper.findPage(targetType, page, limit);
-        if (couponPOPage == null || couponPOPage.size() <= 0) {
-            return null;
+        if (couponPOPage == null || couponPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return couponPOPage.stream().collect(
                 ArrayList<CommodityCoupon>::new,

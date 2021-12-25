@@ -1,6 +1,7 @@
 package com.sweetcat.api.rpcdto.storeinfo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: Coder_Jarvis
@@ -9,6 +10,7 @@ import lombok.Data;
  * @version: 1.0
  */
 @Data
+@NoArgsConstructor
 public class StoreInfoRpcDTO {
     /**
      * 商家编号

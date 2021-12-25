@@ -11,8 +11,11 @@ import com.sweetcat.couponcenter.domain.coupon.vo.Creator;
 import com.sweetcat.couponcenter.infrastructure.cache.BloomFilter;
 import com.sweetcat.couponcenter.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.couponcenter.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class UniversalCouponApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<UniversalCoupon> findPage(Integer targetType, Integer page, Integer limit) {
         // 调整 page,limit
         limit = limit == null || limit < 0 ? 15 : limit;
@@ -74,6 +78,8 @@ public class UniversalCouponApplicationService {
      * add a universal
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddUniversalCouponCommand command) {
         long creatorId = command.getCreatorId();
         // 检查id
@@ -119,6 +125,7 @@ public class UniversalCouponApplicationService {
         }
     }
 
+    @Transactional
     public UniversalCoupon findOneByCouponId(Long couponId) {
         verifyIdFormatService.verifyIds(couponId);
         bloomFilter.verifyIds(couponId);

@@ -19,8 +19,13 @@ import com.sweetcat.couponcenter.domain.coupon.vo.Store;
 import com.sweetcat.couponcenter.infrastructure.cache.BloomFilter;
 import com.sweetcat.couponcenter.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.couponcenter.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +37,8 @@ import java.util.List;
  */
 @Service
 public class CommodityCouponApplicationService {
+    Logger logger = LoggerFactory.getLogger(CommodityCouponApplicationService.class);
+
     private SnowFlakeService snowFlakeService;
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
@@ -83,6 +90,7 @@ public class CommodityCouponApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<CommodityCoupon> findPage(Integer targetType, Integer page, Integer limit) {
         // 调整 page,limit
         limit = limit == null || limit < 0 ? 15 : limit;
@@ -90,6 +98,7 @@ public class CommodityCouponApplicationService {
         return commodityCouponRepository.findPage(targetType, page, limit);
     }
 
+    @Transactional
     public CommodityCoupon findOneByCouponId(Long couponId) {
         verifyIdFormatService.verifyIds(couponId);
         // bloomFilter 过滤
@@ -101,6 +110,8 @@ public class CommodityCouponApplicationService {
      * add a commodity coupon
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddCommodityCouponCommand command) {
         long creatorId = command.getCreatorId();
         // 检查id
