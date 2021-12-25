@@ -8,6 +8,7 @@ import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class CommodityApplicationService {
      *
      * @param commodity
      */
+    @Transactional
     public void addOne(AddBaseCommodityCommand commodity) {
         Long creatorId = commodity.getCreatorId();
         Long marketItemId = commodity.getMarketItemId();
@@ -74,6 +76,7 @@ public class CommodityApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<BaseCommodity> findPageByCommodityType(Integer commodityType, Integer page, Integer limit) {
         // page limit检查
         limit = limit == null || limit < 0 ? 15 : limit;

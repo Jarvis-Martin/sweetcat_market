@@ -45,13 +45,13 @@ public class RedeemLogRestController {
     @GetMapping("/redeemlogs")
     public ResponseDTO findPage(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<RedeemLog> redeemLogPage = redeemLogFacade.findPage(page, limit);
-        if (redeemLogPage == null || redeemLogPage.size() <= 0) {
+        if (redeemLogPage == null || redeemLogPage.isEmpty()) {
             return response("查询成功", "{}");
         }
         ArrayList<RedeemLogRestDTO> redeemLogRestDTOPage = redeemLogPage.stream().collect(
                 ArrayList<RedeemLogRestDTO>::new,
-                (con, RedeemLogRestDTO) -> con.add(redeemLogAssembler.converterToRedeemLogRestDTO(RedeemLogRestDTO)),
-                ArrayList::addAll
+                (con, redeemLogRestDTO) -> con.add(redeemLogAssembler.converterToRedeemLogRestDTO(redeemLogRestDTO)),
+                ArrayList<RedeemLogRestDTO>::addAll
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("redeemLogs", redeemLogRestDTOPage);

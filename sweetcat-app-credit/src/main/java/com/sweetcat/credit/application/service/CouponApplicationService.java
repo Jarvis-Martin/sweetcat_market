@@ -10,6 +10,7 @@ import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.Verif
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -58,6 +59,7 @@ public class CouponApplicationService {
      *
      * @param command
      */
+    @Transactional
     public void addOne(AddCouponCommand command) {
         Long creatorId = command.getCreatorId();
         // 检查 creatorId
@@ -145,6 +147,7 @@ public class CouponApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<Coupon> findPageByTargetType(Long targetType, Integer page, Integer limit) {
         // page limit 检查
         limit = limit == null || limit < 0 ? 15 : limit;
@@ -161,6 +164,7 @@ public class CouponApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<Coupon> findPageByTimeType(Long timeType, Integer page, Integer limit) {
         // page limit 检查
         limit = limit == null || limit < 0 ? 15 : limit;

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,11 +63,11 @@ public class CouponRepositoryImpl implements CouponRepository {
         // 直接查 积分商品优惠券表
         List<CouponPO> couponPOPage = couponMapper.findPageByTargetType(targetType, page, limit);
         // 查询结果为空
-        if (couponPOPage == null || couponPOPage.size() < 0) {
-            return null;
+        if (couponPOPage == null || couponPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         // coupon PO -> coupon DO
-        ArrayList<Coupon> couponPage = couponPOPage.stream().collect(
+        return couponPOPage.stream().collect(
                 ArrayList<Coupon>::new,
                 (con, couponPO) -> {
                     // 根据 t_market_commodity_coupon # market_item_id
@@ -77,7 +78,6 @@ public class CouponRepositoryImpl implements CouponRepository {
                 },
                 ArrayList::addAll
         );
-        return couponPage;
     }
 
     /**
@@ -91,10 +91,10 @@ public class CouponRepositoryImpl implements CouponRepository {
     public List<Coupon> findPageByTimeType(@Param("timeType") Long timeType, @Param("page") Integer page, @Param("limit") Integer limit) {
         List<CouponPO> couponPOPage = couponMapper.findPageByTimeType(timeType, page, limit);
         if (couponPOPage == null) {
-            return null;
+            return Collections.emptyList();
         }
         // coupon PO -> coupon DO
-        ArrayList<Coupon> couponPage = couponPOPage.stream().collect(
+        return couponPOPage.stream().collect(
                 ArrayList<Coupon>::new,
                 (con, couponPO) -> {
                     // 根据 t_market_commodity_coupon # market_item_id
@@ -103,9 +103,8 @@ public class CouponRepositoryImpl implements CouponRepository {
                     // coupon PO -> coupon DO by couponFactory
                     con.add(couponFactory.create(couponBaseCommodityInfo, couponPO));
                 },
-                ArrayList::addAll
+                ArrayList<Coupon>::addAll
         );
-        return couponPage;
     }
 
     @Override

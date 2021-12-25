@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,11 +54,13 @@ public class CreditLogRepositoryImpl implements CreditLogRepository {
     @Override
     public List<CreditLog> findPageBetween(Long startDate, Long deadline,  Long userId, Integer page, Integer limit) {
         List<CreditLogPO> logPOPage = logMapper.findPageBetween(startDate, deadline, userId, page, limit);
-        ArrayList<CreditLog> logPage = logPOPage.stream().collect(
+        if (logPOPage == null || logPOPage.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return logPOPage.stream().collect(
                 ArrayList<CreditLog>::new,
                 (con, creditLogPO) -> con.add(logFactory.create(creditLogPO)),
                 ArrayList<CreditLog>::addAll
         );
-        return logPage;
     }
 }

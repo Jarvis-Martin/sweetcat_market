@@ -11,8 +11,11 @@ import com.sweetcat.credit.domain.creditlog.repository.CreditLogRepository;
 import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -63,6 +66,8 @@ public class CreditLogApplicationService {
      *
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddCreditLogCommand command) {
         long userId = command.getUserId();
         // 检查 userId
@@ -108,6 +113,8 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public List<CreditLog> findPageForCurrentMonth(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         // 创建用户
@@ -142,6 +149,8 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public List<CreditLog> findPageForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         // 创建用户
@@ -177,6 +186,7 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public Long totalIncomeForThisMonth(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForCurrentMonth(timestamp, userId, page, limit);
@@ -195,6 +205,7 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public Long totalOutComeForThisMonth(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForCurrentMonth(timestamp, userId, page, limit);
@@ -213,6 +224,7 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public Long totalIncomeForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForNearlyThreeMonths(timestamp, userId, page, limit);
@@ -231,6 +243,7 @@ public class CreditLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public Long totalOutComeForNearlyThreeMonths(Long timestamp, Long userId, Integer page, Integer limit) {
         bloomFilter.verifyIds(userId);
         List<CreditLog> pageForCurrentMonth = findPageForNearlyThreeMonths(timestamp, userId, page, limit);

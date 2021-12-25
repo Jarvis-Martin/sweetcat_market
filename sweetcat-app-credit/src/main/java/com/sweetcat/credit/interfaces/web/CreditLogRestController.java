@@ -48,7 +48,7 @@ public class CreditLogRestController {
     @GetMapping(value = "/creditlogs/1/{user_id}")
     public ResponseDTO findPageForCurrentMonth(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<CreditLog> creditLogPage = logFacade.findPageForCurrentMonth(timestamp, userId, page, limit);
-        if (creditLogPage == null || creditLogPage.size() <= 0) {
+        if (creditLogPage == null || creditLogPage.isEmpty()) {
             return response("获得指定月份的分页数据成功", "{}");
         }
         ArrayList<CreditLogRestDTO> logRestDTOPage = creditLogPage.stream().collect(
@@ -76,7 +76,7 @@ public class CreditLogRestController {
     public ResponseDTO findPageForNearlyThreeMonths(Long timestamp, @PathVariable("user_id") Long userId,
                                                     @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<CreditLog> creditLogPage = logFacade.findPageForNearlyThreeMonths(timestamp, userId, page, limit);
-        if (creditLogPage == null || creditLogPage.size() <= 0) {
+        if (creditLogPage == null || creditLogPage.isEmpty()) {
             return response("获得近3个月的积分收支记录的分页数据", "{}");
         }
         ArrayList<CreditLogRestDTO> logRestDTOPage = creditLogPage.stream().collect(
@@ -103,7 +103,7 @@ public class CreditLogRestController {
     @GetMapping("/income/1/{user_id}")
     public ResponseDTO totalIncomeForThisMonth(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         long credit = logFacade.totalIncomeForThisMonth(timestamp, userId, page, limit);
-        Map<String, Object> dataSection = new HashMap<String, Object>(2);
+        Map<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("totalIncomeForThisMonth", credit);
         return response("查询本月总收入成功", dataSection);
     }
@@ -120,7 +120,7 @@ public class CreditLogRestController {
     @GetMapping("/outcome/1/{user_id}")
     public ResponseDTO totalOutComeForThisMonth(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_page") Integer limit) {
         long credit = logFacade.totalOutComeForThisMonth(timestamp, userId, page, limit);
-        Map<String, Object> dataSection = new HashMap<String, Object>(2);
+        Map<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("totalOutComeForThisMonth", credit);
         return response("查询本月总支出成功", dataSection);
     }
@@ -137,7 +137,7 @@ public class CreditLogRestController {
     @GetMapping("/income/3/{user_id}")
     public ResponseDTO totalIncomeForNearlyThreeMonths(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         long credit = logFacade.totalIncomeForNearlyThreeMonths(timestamp, userId, page, limit);
-        Map<String, Object> dataSection = new HashMap<String, Object>(2);
+        Map<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("totalIncomeForNearlyThreeMonths", credit);
         return response("查询近3个月总收入成功", dataSection);
     }
@@ -154,7 +154,7 @@ public class CreditLogRestController {
     @GetMapping("/outcome/3/{user_id}")
     public ResponseDTO totalOutComeForNearlyThreeMonths(Long timestamp, @PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         long credit = logFacade.totalOutComeForNearlyThreeMonths(timestamp, userId, page, limit);
-        Map<String, Object> dataSection = new HashMap<String, Object>(2);
+        Map<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("totalOutComeForNearlyThreeMonths", credit);
         return response("查询近3个月总支出成功", dataSection);
 

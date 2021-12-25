@@ -19,9 +19,14 @@ import com.sweetcat.credit.domain.user.repository.UserRepository;
 import com.sweetcat.credit.domain.user.service.UserDomainService;
 import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -34,6 +39,7 @@ import java.time.LocalDateTime;
  */
 @Service
 public class UserApplicationService {
+    Logger logger = LoggerFactory.getLogger(UserApplicationService.class);
     @Value("${base-credit-bonus-per-day}")
     private Integer baseCreditBonusPerDay;
     private VerifyIdFormatService verifyIdFormatService;
@@ -91,6 +97,8 @@ public class UserApplicationService {
      * @param userId
      * @return
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public User findOneByUserId(Long userId) {
         // 检查id
         verifyIdFormatService.verifyIds(userId);
@@ -107,6 +115,7 @@ public class UserApplicationService {
      *
      * @param command
      */
+    @Transactional
     public void addOne(AddUserCommand command) {
         Long userId = command.getUserId();
         // 检查 userId
@@ -126,6 +135,8 @@ public class UserApplicationService {
      *
      * @param userId
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void checkIn(Long userId) {
         // 检查id
         verifyIdFormatService.verifyIds(userId);
@@ -141,7 +152,7 @@ public class UserApplicationService {
         // 判断今天是否已签到
         Boolean isCheckedIn = userDomainService.isCheckedIn(user, now);
         // 已签
-        if (isCheckedIn) {
+        if (Boolean.TRUE.equals(isCheckedIn)) {
             throw new CheckedInException(
                     ResponseStatusEnum.CHECKEDIN.getErrorCode(),
                     ResponseStatusEnum.CHECKEDIN.getErrorMessage()
@@ -155,13 +166,13 @@ public class UserApplicationService {
         // 计算今天 签到所得积分数量
         long creditBonus = baseCreditBonusPerDay + continuousCheckInDays * 10;
         // 增加用户积分
-        user.acquire((long) creditBonus);
+        user.acquire(creditBonus);
         // 保存进db
         userRepository.save(user);
         // 触发领域事件 CreditCenterCheckedInEvent
         UserCreditChangedEvent userCreditChangedEvent = new UserCreditChangedEvent(userId);
         inflateUserCreditChangedEvent(creditBonus, userCreditChangedEvent, CreditLog.LOGTYPE_ACQUIRE, "积分中心签到，积分收入: ", creditBonus, Instant.now().toEpochMilli());
-        System.out.println("sweetcat-app-credit: 触发领域事件 CreditCenterCheckedInEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-app-credit: 触发领域事件 CreditCenterCheckedInEvent 时间为：%d" + Instant.now().toEpochMilli());
         domainEventPublisher.syncSend("credit_center_topic:credit_change", userCreditChangedEvent);
     }
 
@@ -178,6 +189,8 @@ public class UserApplicationService {
      * @param userId
      * @param marketItemId
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void redeemCommodity(Long userId, Long marketItemId, Long createTime) {
         // 检查userId
         verifyIdFormatService.verifyIds(userId, marketItemId);
@@ -190,7 +203,7 @@ public class UserApplicationService {
         // 检查用户在积分商城微服务中是否存在记录
         User user = userRepository.findOneByUserId(userId);
         // 积分商城不存在该用户记录
-        if (user == null) {
+        if (null == user) {
             // 添加一个用户记录
             addOneUserByUserInfo(userInfo);
         }
@@ -228,14 +241,14 @@ public class UserApplicationService {
             // 构建领域事件 CreditRedeemedCommodityEvent
             CreditRedeemedCommodityEvent creditRedeemedCommodityEvent = new CreditRedeemedCommodityEvent();
             inflateCreditRedeemedCommodityEvent(userId, createTime, commodity, creditNumberOfCommodity, creditRedeemedCommodityEvent);
-            System.out.println("sweetcat-app-credit: 触发领域事件 CreditRedeemedCommodityEvent 时间为：" + Instant.now().toEpochMilli());
+            logger.info("sweetcat-app-credit: 触发领域事件 CreditRedeemedCommodityEvent 时间为：{}", Instant.now().toEpochMilli());
             domainEventPublisher.syncSend("credit_center_topic:credit_redeem_coupon", creditRedeemedCommodityEvent);
             // 构建领域时间 UserAcquireCommodityCouponEvent
             UserAcquiredCommodityCouponEvent userAcquiredCommodityCouponEvent = new UserAcquiredCommodityCouponEvent();
             // 获得 coupon data 以便于填充 UserAcquiredCommodityCouponEvent
             Coupon coupon = couponRepository.findOneByMarketItemId(marketItemId);
             inflateUserAcquiredCommodityCouponEvent(userId, userAcquiredCommodityCouponEvent, coupon);
-            System.out.println("sweetcat-app-credit: 触发领域事件 UserAcquireCommodityCouponEvent 时间为：" + Instant.now().toEpochMilli());
+            logger.info("sweetcat-app-credit: 触发领域事件 UserAcquireCommodityCouponEvent 时间为：{}", Instant.now().toEpochMilli());
             domainEventPublisher.syncSend("credit_center_topic:user_acquire_commodity_coupon", userAcquiredCommodityCouponEvent);
         }
         // 构建领域事件 UserCreditChangedEvent
@@ -287,6 +300,8 @@ public class UserApplicationService {
         addOne(addUserCommand);
     }
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void updateUserCredit(Long userId, Long incrementOfCredit, Long updateTime) {
         // 检查 userId
         verifyIdFormatService.verifyIds(userId);

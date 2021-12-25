@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -80,7 +81,7 @@ public class CommodityRepositoryImpl implements CommodityRepository {
      */
     @Override
     public List<BaseCommodity> findPage(Integer page, Integer limit) {
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -96,11 +97,11 @@ public class CommodityRepositoryImpl implements CommodityRepository {
         // 查到总分页数据 po
         List<BaseCommodityPO> pOPageByCommodity = baseCommodityInfoMapper.findPageByCommodityType(commodityType, page, limit);
         // 结果集非空判断
-        if (pOPageByCommodity == null || pOPageByCommodity.size() <= 0) {
-            return null;
+        if (pOPageByCommodity == null || pOPageByCommodity.isEmpty()) {
+            return Collections.emptyList();
         }
         // 根据 commodityType 使用对应的 mapper 从db表 中取数据，并使用对用 factory 构造领域对象
-        ArrayList<BaseCommodity> baseCommoditiePage = pOPageByCommodity.stream().collect(
+        return pOPageByCommodity.stream().collect(
                 ArrayList<BaseCommodity>::new,
                 (con, baseCommodity) -> {
                     switch (baseCommodity.getCommodityType()) {
@@ -120,7 +121,6 @@ public class CommodityRepositoryImpl implements CommodityRepository {
                     }
                 },
                 ArrayList::addAll);
-        return baseCommoditiePage;
     }
 
     /**

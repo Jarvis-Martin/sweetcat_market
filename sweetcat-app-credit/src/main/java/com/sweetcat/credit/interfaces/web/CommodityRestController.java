@@ -50,15 +50,13 @@ public class CommodityRestController {
     @GetMapping("/commodities")
     public ResponseDTO findPageByCommodityType(Integer commodityType, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<BaseCommodity> commodityPage = commodityFacade.findPageByCommodityType(commodityType, page, limit);
-        if (commodityPage == null || commodityPage.size() <= 0) {
+        if (commodityPage == null || commodityPage.isEmpty()) {
             return response("查询成功", "{}");
         }
         ArrayList<CreditCenterCommodityRestDTO> commodityDTOPage = commodityPage.stream().collect(
                 ArrayList<CreditCenterCommodityRestDTO>::new,
-                (con, baseCommodity) -> {
-                    con.add(commodityAssembler.converterToCreditCenterCommodityRestDTO(baseCommodity));
-                },
-                ArrayList::addAll
+                (con, baseCommodity) -> con.add(commodityAssembler.converterToCreditCenterCommodityRestDTO(baseCommodity)),
+                ArrayList<CreditCenterCommodityRestDTO>::addAll
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);
         dataSection.put("commodities", commodityDTOPage);

@@ -15,8 +15,11 @@ import com.sweetcat.credit.domain.redeemlog.repository.RedeemLogRepository;
 import com.sweetcat.credit.infrastructure.cache.BloomFilter;
 import com.sweetcat.credit.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.credit.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -72,6 +75,7 @@ public class RedeemLogApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<RedeemLog> findPage(Integer page, Integer limit) {
         // page limit 检查
         limit = limit == null || limit < 0 ? 15 : limit;
@@ -85,6 +89,8 @@ public class RedeemLogApplicationService {
      *
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddRedeemLogCommand command) {
         // 提取数据
         Long redeemUserId = command.getRedeemUserId();
@@ -142,6 +148,7 @@ public class RedeemLogApplicationService {
      * @param userId
      * @param redeemLogId
      */
+    @Transactional
     public void remove(Long userId, Long redeemLogId) {
         // 检查 userId， redeemLogId
         verifyIdFormatService.verifyIds(userId, redeemLogId);

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,15 +57,14 @@ public class RedeemLogRepositoryImpl implements RedeemLogRepository {
     @Override
     public List<RedeemLog> findPage(Integer page, Integer limit) {
         List<RedeemLogPO> redeemLogPOPage = redeemLogMapper.findPage(page, limit);
-        if (redeemLogPOPage == null || redeemLogPOPage.size() < 0) {
-            return null;
+        if (redeemLogPOPage == null || redeemLogPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
-        ArrayList<RedeemLog> redeemLogPage = redeemLogPOPage.stream().collect(
+        return redeemLogPOPage.stream().collect(
                 ArrayList<RedeemLog>::new,
                 (con, redeemLogPO) -> con.add(redeemLogFactory.create(redeemLogPO)),
                 ArrayList::addAll
         );
-        return redeemLogPage;
     }
 
     /**
