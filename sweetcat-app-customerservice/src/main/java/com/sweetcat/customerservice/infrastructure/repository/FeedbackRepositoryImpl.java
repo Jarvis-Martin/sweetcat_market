@@ -38,6 +38,9 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
     @Override
     public Feedback findOneByRecordId(Long recordId) {
         FeedbackPO feedbackPO = feedbackMapper.findOneByRecordId(recordId);
+        if (feedbackPO == null) {
+            return null;
+        }
         return feedbackFactory.create(feedbackPO);
     }
 

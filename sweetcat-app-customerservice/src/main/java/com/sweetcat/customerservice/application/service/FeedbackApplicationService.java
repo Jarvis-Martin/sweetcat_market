@@ -9,7 +9,6 @@ import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.customerservice.application.command.AddFeedbackCommand;
 import com.sweetcat.customerservice.application.command.ProcessFeedbackCommand;
 import com.sweetcat.customerservice.application.event.publish.DomainEventPublisher;
-import com.sweetcat.customerservice.application.rpc.AppFeedbackRpc;
 import com.sweetcat.customerservice.application.rpc.UserInfoRpc;
 import com.sweetcat.customerservice.domain.feedback.entity.Feedback;
 import com.sweetcat.customerservice.domain.feedback.entity.Informer;
@@ -19,9 +18,13 @@ import com.sweetcat.customerservice.domain.staff.entity.CustomerServiceStaff;
 import com.sweetcat.customerservice.domain.staff.repository.CustomerServiceStaffRepository;
 import com.sweetcat.customerservice.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.customerservice.infrastructure.service.snowflake_service.SnowFlakeService;
-import com.sweetcat.customerservice.infrastructure.service.timestamp_format_verfiy_service.VerifyTimeStampFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -33,13 +36,12 @@ import java.time.Instant;
  */
 @Service
 public class FeedbackApplicationService {
+    Logger logger = LoggerFactory.getLogger(FeedbackApplicationService.class);
     private FeedbackRepository feedbackRepository;
     private CustomerServiceStaffRepository staffRepository;
     private DomainEventPublisher eventPublisher;
     private VerifyIdFormatService verifyIdFormatService;
-    private VerifyTimeStampFormatService verifyTimeStampFormatService;
     private SnowFlakeService snowFlakeService;
-    private AppFeedbackRpc feedbackRpc;
     private UserInfoRpc userInfoRpc;
 
     @Autowired
@@ -63,16 +65,6 @@ public class FeedbackApplicationService {
     }
 
     @Autowired
-    public void setFeedbackRpc(AppFeedbackRpc feedbackRpc) {
-        this.feedbackRpc = feedbackRpc;
-    }
-
-    @Autowired
-    public void setVerifyTimeStampFormatService(VerifyTimeStampFormatService verifyTimeStampFormatService) {
-        this.verifyTimeStampFormatService = verifyTimeStampFormatService;
-    }
-
-    @Autowired
     public void setVerifyIdFormatService(VerifyIdFormatService verifyIdFormatService) {
         this.verifyIdFormatService = verifyIdFormatService;
     }
@@ -86,6 +78,8 @@ public class FeedbackApplicationService {
      * 添加
      * @param command command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddFeedbackCommand command) {
         long feedbackId = command.getFeedbackId();
         long receiverId = command.getReceiverId();
@@ -94,12 +88,7 @@ public class FeedbackApplicationService {
         // 检查反馈人信息
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(receiverId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 生成反馈记录id
         long recordId = snowFlakeService.snowflakeId();
         // 创建反馈对像
@@ -110,6 +99,15 @@ public class FeedbackApplicationService {
         inflateFeedback(command, feedback, receiver);
         // 加入db
         feedbackRepository.addOne(feedback);
+    }
+
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
     }
 
     private void inflateFeedback(AddFeedbackCommand command, Feedback feedback, Receiver receiver) {
@@ -123,6 +121,8 @@ public class FeedbackApplicationService {
         feedback.setResponseContent("");
     }
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void processFeedback(ProcessFeedbackCommand command) {
         long processorId = command.getProcessorId();
         long recordId = command.getRecordId();
@@ -137,21 +137,11 @@ public class FeedbackApplicationService {
         // 处理人（客服）是否存在
         CustomerServiceStaff staff = staffRepository.findByStaffId(processorId);
         // 不存在
-        if (staff == null) {
-            throw new CustomerServiceStaffNotExistedException(
-                    ResponseStatusEnum.CustomerServiceStaffNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.CustomerServiceStaffNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkStaff(staff);
         // 查询 feedback
         Feedback feedback = feedbackRepository.findOneByRecordId(recordId);
         // 反馈不存在
-        if (feedback == null) {
-            throw new AppFeedbackNotExistedException(
-                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkFeedback(feedback);
         Long staffId = staff.getStaffId();
         Informer informer = new Informer(staffId);
         feedback.setInformer(informer);
@@ -166,7 +156,26 @@ public class FeedbackApplicationService {
         // 填充领域事件
         inflateFeedbackProcessedByCustomerServiceEvent(processTime, responseContent, responseTitle, feedback, feedbackProcessedByCustomerServiceEvent);
         // 发布领域时事件 FeedbackProcessedByCustomerServiceEvent
+        logger.info("sweetcat-app-cystinerservuce: 触发领域事件 FeedbackProcessedByCustomerServiceEvent 时间为：{}", Instant.now().toEpochMilli());
         eventPublisher.syncSend("customer_service_topic", feedbackProcessedByCustomerServiceEvent);
+    }
+
+    private void checkFeedback(Feedback feedback) {
+        if (feedback == null) {
+            throw new AppFeedbackNotExistedException(
+                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.FEEDBACKSNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
+    private void checkStaff(CustomerServiceStaff staff) {
+        if (staff == null) {
+            throw new CustomerServiceStaffNotExistedException(
+                    ResponseStatusEnum.CustomerServiceStaffNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.CustomerServiceStaffNOTEXISTED.getErrorMessage()
+            );
+        }
     }
 
     private void inflateFeedbackProcessedByCustomerServiceEvent(long processTime, String responseContent, String responseTitle, Feedback feedback, FeedbackProcessedByCustomerServiceEvent feedbackProcessedByCustomerServiceEvent) {
