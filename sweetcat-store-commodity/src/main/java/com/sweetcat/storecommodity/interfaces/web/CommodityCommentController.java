@@ -71,7 +71,7 @@ public class CommodityCommentController {
     public ResponseDTO findPageByCommodityId(Long commodityId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 找到 DO
         List<CommodityComment> commentDOPage = commentFacade.findPageByCommodityId(commodityId, page, limit);
-        if (commentDOPage == null || commentDOPage.size() <= 0) {
+        if (commentDOPage == null || commentDOPage.isEmpty()) {
             return response("查询商品评论分页数据成功", "{}");
         }
         // response 的 data

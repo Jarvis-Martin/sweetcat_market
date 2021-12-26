@@ -20,6 +20,10 @@ import com.sweetcat.userorder.domain.order.repository.OrderRepository;
 import com.sweetcat.userorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.userorder.infrastructure.service.snowflake_service.SnowFlakeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +45,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class OrderApplicationService {
+    Logger logger = LoggerFactory.getLogger(OrderApplicationService.class);
     private OrderRepository orderRepository;
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
@@ -119,122 +124,116 @@ public class OrderApplicationService {
         log.error("创建父订单：orderId = " + orderId);
         Order order = new Order(orderId);
         //  -- 构造、填充父订单
-        {
-            order.setType(Order.TYPE_UNSPLITED);
+        order.setType(Order.TYPE_UNSPLITED);
 
-            // 订单用户信息
-            UserInfo userInfo = new UserInfo(userId);
-            AddressInfo addressInfo = new AddressInfo(orderId, addressId);
-            //      -- 订单用户信息：获得地址信息并检查
-            UserAddressRpcDTO userAddressRpcDTO = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
-            checkUserAddress(userAddressRpcDTO);
-            //      -- 订单用户信息：填充订单地址信息
-            inflateAddressInfoOfOrder(addressInfo, userAddressRpcDTO);
-            userInfo.setAddressInfo(addressInfo);
-            order.setUserInfo(userInfo);
+        // 订单用户信息
+        UserInfo userInfo = new UserInfo(userId);
+        AddressInfo addressInfo = new AddressInfo(orderId, addressId);
+        //      -- 订单用户信息：获得地址信息并检查
+        UserAddressRpcDTO userAddressRpcDTO = userInfoRpc.findOneAddressByUserIdAndAddressId(userId, addressId);
+        checkUserAddress(userAddressRpcDTO);
+        //      -- 订单用户信息：填充订单地址信息
+        inflateAddressInfoOfOrder(addressInfo, userAddressRpcDTO);
+        userInfo.setAddressInfo(addressInfo);
+        order.setUserInfo(userInfo);
 
-            // 订单时间信息
-            TimeInfo timeInfo = new TimeInfo(orderId);
-            //       -- 订单时间信息：创建订单时，只填充创建订单信息
-            timeInfo.setPlaceOrderTime(command.getPlaceOrderTime());
-            order.setTimeInfo(timeInfo);
+        // 订单时间信息
+        TimeInfo timeInfo = new TimeInfo(orderId);
+        //       -- 订单时间信息：创建订单时，只填充创建订单信息
+        timeInfo.setPlaceOrderTime(command.getPlaceOrderTime());
+        order.setTimeInfo(timeInfo);
 
-            // 订单订单信息
-            OrderInfo orderInfo = new OrderInfo(orderId);
-            orderInfo.setOrderStatus(Order.STATUS_UNPAY);
-            order.setOrderInfo(orderInfo);
+        // 订单订单信息
+        OrderInfo orderInfo = new OrderInfo(orderId);
+        orderInfo.setOrderStatus(Order.STATUS_UNPAY);
+        order.setOrderInfo(orderInfo);
 
-            ArrayList<CommodityInfo> commodityInfos = new ArrayList<>();
-            // 整个订单应付金额
-            BigDecimal priceOfPaymentOfOrder = BigDecimal.ZERO;
-            // 整个订单所含商品总额
-            BigDecimal priceOfCommodityOfOrder = BigDecimal.ZERO;
-            // 整个订单所使用的积分数
-            int creditOfOrder = 0;
-            // 整个订单的优惠券信息
-            ArrayList<Coupon> couponListOfOrder = couponIdsForOrder.parallelStream().collect(
-                    ArrayList<Coupon>::new,
-                    (con, couponId) -> {
-                        CouponInfoRpcDTO couponOfOrderRpcDTO = userCouponInfoRpc.findOneByCouponId(userId, couponId);
-                        checkCoupon(couponOfOrderRpcDTO);
-                        Coupon coupon = new Coupon(orderId, couponId);
-                        BigDecimal thresholdPrice = couponOfOrderRpcDTO.getThresholdPrice();
-                        BigDecimal counteractPrice = couponOfOrderRpcDTO.getCounteractPrice();
-                        inflateCoupon(coupon, counteractPrice, thresholdPrice);
-                        con.add(coupon);
-                    },
-                    ArrayList<Coupon>::addAll
-            );
-
-            for (CommodityCouponMap commodity : commodities) {
-                long commodityId = commodity.getCommodityId();
-                // rpc 获得商品信息
-                CommodityInfoRpcDTO commodityInfoRpcDTO = commodityInfoRpc.findByCommodityId(commodityId);
-                // 订单的商品信息
-                CommodityInfo commodityInfo = new CommodityInfo(orderId, commodityId);
-                // rpc获得店铺信息
-                Long storeId = commodity.getStoreId();
-                StoreInfoRpcDTO storeInfoRpcDTO = storeInfoRpc.findOneByStoreId(storeId);
-                StoreInfo storeInfo = new StoreInfo(orderId, storeId);
-                // 填充 storeInfo
-                {
-                    storeInfo.setStoreName(storeInfoRpcDTO.getStoreName());
-                    storeInfo.setStoreLogo(storeInfoRpcDTO.getStoreLogo());
-                }
-                // 该商品金额信息
-                AmountInfoOfCommodity amountInfoOfCommodity = new AmountInfoOfCommodity(orderId);
-                amountInfoOfCommodity.setCommodityId(commodityId);
-                // 商品总价 = 商品现价(单价) * 购买数量
-                BigDecimal priceOfCommodity = commodityInfoRpcDTO.getCurrentPrice().multiply(BigDecimal.valueOf(commodity.getCount()));
-                amountInfoOfCommodity.setPriceOfCommodity(priceOfCommodity);
-
-                // discountPrice 折扣总金额 = 积分抵扣金额 + 优惠券折扣金额
-                List<Long> couponIds = commodity.getCouponIds();
-                // 商品总折扣金额
-                BigDecimal totalDisAcount = BigDecimal.ZERO;
-                // 商品涉及涉及的优惠券信息
-                ArrayList<Coupon> couponList = new ArrayList<Coupon>();
-                for (long couponId : couponIds) {
-                    // rpc 获得优惠券信息
-                    CouponInfoRpcDTO userCoupon = userCouponInfoRpc.findOneByCouponId(userId, couponId);
-                    // 用户没有该优惠券
-                    checkCoupon(userCoupon);
-                    // 创建商品所使用的优惠券信息
+        ArrayList<CommodityInfo> commodityInfos = new ArrayList<>();
+        // 整个订单应付金额
+        BigDecimal priceOfPaymentOfOrder = BigDecimal.ZERO;
+        // 整个订单所含商品总额
+        BigDecimal priceOfCommodityOfOrder = BigDecimal.ZERO;
+        // 整个订单所使用的积分数
+        int creditOfOrder = 0;
+        // 整个订单的优惠券信息
+        ArrayList<Coupon> couponListOfOrder = couponIdsForOrder.parallelStream().collect(
+                ArrayList<Coupon>::new,
+                (con, couponId) -> {
+                    CouponInfoRpcDTO couponOfOrderRpcDTO = userCouponInfoRpc.findOneByCouponId(userId, couponId);
+                    checkCoupon(couponOfOrderRpcDTO);
                     Coupon coupon = new Coupon(orderId, couponId);
-                    // -- 填充
-                    BigDecimal counteractPrice = userCoupon.getCounteractPrice();
-                    BigDecimal thresholdPrice = userCoupon.getThresholdPrice();
+                    BigDecimal thresholdPrice = couponOfOrderRpcDTO.getThresholdPrice();
+                    BigDecimal counteractPrice = couponOfOrderRpcDTO.getCounteractPrice();
                     inflateCoupon(coupon, counteractPrice, thresholdPrice);
-                    couponList.add(coupon);
-                    // 计算总优惠金额
-                    totalDisAcount = totalDisAcount.add(userCoupon.getCounteractPrice());
-                }
-                // 构建 DiscountPriceInfo
-                DiscountPriceInfo discountPriceInfo = new DiscountPriceInfo();
+                    con.add(coupon);
+                },
+                ArrayList<Coupon>::addAll
+        );
+
+        for (CommodityCouponMap commodity : commodities) {
+            long commodityId = commodity.getCommodityId();
+            // rpc 获得商品信息
+            CommodityInfoRpcDTO commodityInfoRpcDTO = commodityInfoRpc.findByCommodityId(commodityId);
+            // 订单的商品信息
+            CommodityInfo commodityInfo = new CommodityInfo(orderId, commodityId);
+            // rpc获得店铺信息
+            Long storeId = commodity.getStoreId();
+            StoreInfoRpcDTO storeInfoRpcDTO = storeInfoRpc.findOneByStoreId(storeId);
+            StoreInfo storeInfo = new StoreInfo(orderId, storeId);
+            // 填充 storeInfo
+            storeInfo.setStoreName(storeInfoRpcDTO.getStoreName());
+            storeInfo.setStoreLogo(storeInfoRpcDTO.getStoreLogo());
+            // 该商品金额信息
+            AmountInfoOfCommodity amountInfoOfCommodity = new AmountInfoOfCommodity(orderId);
+            amountInfoOfCommodity.setCommodityId(commodityId);
+            // 商品总价 = 商品现价(单价) * 购买数量
+            BigDecimal priceOfCommodity = commodityInfoRpcDTO.getCurrentPrice().multiply(BigDecimal.valueOf(commodity.getCount()));
+            amountInfoOfCommodity.setPriceOfCommodity(priceOfCommodity);
+
+            // discountPrice 折扣总金额 = 积分抵扣金额 + 优惠券折扣金额
+            List<Long> couponIds = commodity.getCouponIds();
+            // 商品总折扣金额
+            BigDecimal totalDisAcount = BigDecimal.ZERO;
+            // 商品涉及涉及的优惠券信息
+            ArrayList<Coupon> couponList = new ArrayList<>();
+            for (long couponId : couponIds) {
+                // rpc 获得优惠券信息
+                CouponInfoRpcDTO userCoupon = userCouponInfoRpc.findOneByCouponId(userId, couponId);
+                // 用户没有该优惠券
+                checkCoupon(userCoupon);
+                // 创建商品所使用的优惠券信息
+                Coupon coupon = new Coupon(orderId, couponId);
                 // -- 填充
-                {
-                    discountPriceInfo.setCoupons(couponList);
-                    discountPriceInfo.setCredit(commodity.getCredits());
-                }
-                amountInfoOfCommodity.setDiscountPriceInfo(discountPriceInfo);
-                // 实际本商品应付金额为：商品总价 - 商品折扣总价
-                BigDecimal priceOfPaymentOfCommodity = priceOfCommodity.subtract(totalDisAcount);
-                amountInfoOfCommodity.setPriceOfPayment(priceOfPaymentOfCommodity);
-                // 填充 commodityInfo
-                inflateCommodityInfo(commodity, commodityInfoRpcDTO, commodityInfo, storeInfo, amountInfoOfCommodity);
-
-                // 将获得商品信息放到 list 中
-                commodityInfos.add(commodityInfo);
-
-                // 初始化订单的金额信息
-                priceOfPaymentOfOrder = priceOfCommodityOfOrder.add(priceOfPaymentOfCommodity);
-                priceOfCommodityOfOrder = priceOfCommodityOfOrder.add(priceOfCommodity);
+                BigDecimal counteractPrice = userCoupon.getCounteractPrice();
+                BigDecimal thresholdPrice = userCoupon.getThresholdPrice();
+                inflateCoupon(coupon, counteractPrice, thresholdPrice);
+                couponList.add(coupon);
+                // 计算总优惠金额
+                totalDisAcount = totalDisAcount.add(userCoupon.getCounteractPrice());
             }
-            order.setCommodityInfoList(commodityInfos);
-            AmountInfo amountInfo = new AmountInfo(orderId);
-            inflateAmountInfo(priceOfPaymentOfOrder, priceOfCommodityOfOrder, creditOfOrder, couponListOfOrder, amountInfo);
-            order.setAmountInfo(amountInfo);
+            // 构建 DiscountPriceInfo
+            DiscountPriceInfo discountPriceInfo = new DiscountPriceInfo();
+            // -- 填充
+            discountPriceInfo.setCoupons(couponList);
+            discountPriceInfo.setCredit(commodity.getCredits());
+            amountInfoOfCommodity.setDiscountPriceInfo(discountPriceInfo);
+            // 实际本商品应付金额为：商品总价 - 商品折扣总价
+            BigDecimal priceOfPaymentOfCommodity = priceOfCommodity.subtract(totalDisAcount);
+            amountInfoOfCommodity.setPriceOfPayment(priceOfPaymentOfCommodity);
+            // 填充 commodityInfo
+            inflateCommodityInfo(commodity, commodityInfoRpcDTO, commodityInfo, storeInfo, amountInfoOfCommodity);
+
+            // 将获得商品信息放到 list 中
+            commodityInfos.add(commodityInfo);
+
+            // 初始化订单的金额信息
+            priceOfPaymentOfOrder = priceOfCommodityOfOrder.add(priceOfPaymentOfCommodity);
+            priceOfCommodityOfOrder = priceOfCommodityOfOrder.add(priceOfCommodity);
         }
+        order.setCommodityInfoList(commodityInfos);
+        AmountInfo amountInfo = new AmountInfo(orderId);
+        inflateAmountInfo(priceOfPaymentOfOrder, priceOfCommodityOfOrder, creditOfOrder, couponListOfOrder, amountInfo);
+        order.setAmountInfo(amountInfo);
         //  -- 父订单入库
         orderRepository.addOne(order);
 
@@ -431,6 +430,7 @@ public class OrderApplicationService {
         orderRepository.removeOne(childrenOrder);
     }
 
+    @Transactional
     public List<ChildrenOrder> findPageByUserId(Long userId, Integer page, Integer limit) {
         verifyIdFormatService.verifyIds(userId);
         // 检查 user
@@ -440,6 +440,7 @@ public class OrderApplicationService {
         return orderRepository.findPageByUserId(userId, page, limit);
     }
 
+    @Transactional
     public ChildrenOrder findOneByUserIdAndOrderId(Long userId, Long orderId) {
         verifyIdFormatService.verifyIds(userId, orderId);
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
@@ -447,6 +448,7 @@ public class OrderApplicationService {
         return orderRepository.findOneByUserIdAndOrderId(userId, orderId);
     }
 
+    @Transactional
     public void cancelOrder(Long userId, Long orderId, Long cancelTime) {
         verifyIdFormatService.verifyIds(userId, orderId);
         ChildrenOrder order = orderRepository.findOneByUserIdAndOrderId(userId, orderId);
@@ -469,6 +471,8 @@ public class OrderApplicationService {
     }
 
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void changeAddress(Long userId, Long orderId, Long addressId) {
         //  检查id
         verifyIdFormatService.verifyIds(userId, orderId, addressId);
@@ -497,14 +501,14 @@ public class OrderApplicationService {
         order.changeAddress(addressInfo);
         // 入库
         orderRepository.saveOne(order);
-        
+
         // 触发领域事件通知其他订单微服务
         //      -- 构建领域事件
         long domainEventId = snowFlakeService.snowflakeId();
         UserChangedAddressEvent userChangedAddressEvent = new UserChangedAddressEvent(domainEventId);
         inflateUserChangedAddressEvent(userId, addressId, receiverName, receiverPhone, provinceName, cityName, townName, detailAddress, userChangedAddressEvent);
         //      -- log
-        System.out.println("sweetcat-app-credit: 触发领域事件 ConsumedCouponEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-app-credit: 触发领域事件 ConsumedCouponEvent 时间为：{}", Instant.now().toEpochMilli());
         //      -- 发送
         domainEventPublisher.syncSend("sweetcat-user-order:user_changed_address", userChangedAddressEvent);
     }

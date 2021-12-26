@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -123,8 +124,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<Order> findPageByCustomerId(Long customerId, Integer page, Integer limit) {
         List<OrderPO> orderPOPage = orderMapper.findPageByCustomerId(customerId, page, limit);
-        if (orderPOPage == null) {
-            return null;
+        if (orderPOPage == null || orderPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return orderPOPage.stream().collect(
                 ArrayList<Order>::new,
@@ -153,9 +154,8 @@ public class OrderRepositoryImpl implements OrderRepository {
         // 优惠地址信息
         UserAddressPO userAddressPO = userAddressMapper.findOneByOrderId(orderId);
         // 构造 order
-        Order order = orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
+        return orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
                 timeInfo, userAddressPO);
-        return order;
     }
 
     /**
@@ -171,23 +171,6 @@ public class OrderRepositoryImpl implements OrderRepository {
             return null;
         }
         return findNecessaryDataOfOrderAndCreateOrder(orderPO, orderId);
-        //// 订单商品金额信息
-        //List<AmountOfCommodityPO> amountOfCommodityPOS = amountOfCommodityMapper.findAllByOrderId(orderId);
-        //// 订单金额信息
-        //AmountOfOrderPO amountOfOrderPO = amountOfOrderMapper.findOneByOrderId(orderId);
-        //// 订单商品列表信息
-        //List<CommodityPO> commodityPOS = commodityMapper.findAllByOrderId(orderId);
-        //// 商品优惠券信息
-        //List<CouponOfCommodityPO> couponOfCommodityPOS = couponOfCommodityMapper.findAllByOrderId(orderId);
-        //// 订单优惠券信息
-        //List<CouponOfOrderPO> couponOfOrderPOS = couponOfOrderMapper.findAllByOrderId(orderId);
-        //// 订单时间信息
-        //TimeInfoPO timeInfo = timeInfoMapper.findOneByOrderId(orderId);
-        //// 优惠地址信息
-        //UserAddressPO userAddressPO = userAddressMapper.findOneByOrderId(orderId);
-        //// 构造 order
-        //return orderFactory.create(orderPO, amountOfCommodityPOS, amountOfOrderPO, commodityPOS, couponOfCommodityPOS, couponOfOrderPOS,
-        //        timeInfo, userAddressPO);
     }
 
     /**
@@ -233,7 +216,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<Order> findAllByUserIdAndAddressId(Long userId) {
         List<OrderPO> orderPOs = orderMapper.findAllByUserId(userId);
-        List<Order> orders = orderPOs.stream().collect(
+        return orderPOs.stream().collect(
                 ArrayList<Order>::new,
                 (con, orderPO) -> {
                     Long orderId = orderPO.getOrderId();
@@ -242,7 +225,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                 },
                 ArrayList<Order>::addAll
         );
-        return orders;
     }
 }
 

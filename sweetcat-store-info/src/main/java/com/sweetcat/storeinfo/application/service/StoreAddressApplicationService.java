@@ -7,6 +7,7 @@ import com.sweetcat.storeinfo.infrastructure.service.id_format_verfiy_service.Ve
 import com.sweetcat.storeinfo.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: Coder_Jarvis
@@ -35,12 +36,14 @@ public class StoreAddressApplicationService {
         this.storeAddressRepository = storeAddressRepository;
     }
 
+    @Transactional
     public StoreAddress getOneById(Long storeId) {
         // 检查 storeId 格式
         verifyIdFormatService.verifyIds(storeId);
         return storeAddressRepository.find(storeId);
     }
 
+    @Transactional
     public void addOne(AddStoreAddressCommand command) {
         long addressId = snowFlakeService.snowflakeId();
         // 构造店铺地址

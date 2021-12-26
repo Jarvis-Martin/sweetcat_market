@@ -17,8 +17,13 @@ import com.sweetcat.usercoupon.domain.usercoupon.repository.UserCouponRepository
 import com.sweetcat.usercoupon.domain.usercoupon.vo.CouponTargetType;
 import com.sweetcat.usercoupon.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.usercoupon.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -30,6 +35,7 @@ import java.time.Instant;
  */
 @Service
 public class UsageRecordApplicationService {
+    Logger logger = LoggerFactory.getLogger(UserCouponApplicationService.class);
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
     private UserCouponRepository userCouponRepository;
@@ -74,6 +80,8 @@ public class UsageRecordApplicationService {
      * @param couponId
      * @param consumeTime
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void consumeOneCoupon(Long userId, Long couponId, Long consumeTime) {
         // 检查 id
         verifyIdFormatService.verifyIds(userId, couponId);
@@ -99,7 +107,7 @@ public class UsageRecordApplicationService {
         // 填充 ConsumedCouponEvent
         inflateConsumedCouponEvent(userId, couponId, consumeTime, consumedCouponEvent);
         // log
-        System.out.println("sweetcat-app-credit: 触发领域事件 ConsumedCouponEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-app-credit: 触发领域事件 ConsumedCouponEvent 时间为：" + Instant.now().toEpochMilli());
         // 发布领域事件 consumedCouponEvent
         domainEventPublisher.syncSend("credit_center_topic:user_acquire_commodity_coupon", consumedCouponEvent);
     }

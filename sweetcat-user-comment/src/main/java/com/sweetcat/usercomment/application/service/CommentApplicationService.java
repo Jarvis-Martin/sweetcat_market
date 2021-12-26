@@ -24,8 +24,11 @@ import com.sweetcat.usercomment.domain.comment.entity.Publisher;
 import com.sweetcat.usercomment.domain.comment.repository.CommentRepository;
 import com.sweetcat.usercomment.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.usercomment.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -85,6 +88,8 @@ public class CommentApplicationService {
      * 添加一条记录
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneCommodityComment(AddCommodityCommentCommand command) {
         boolean isSecondKillCommodity = false;
         Long publisherId = command.getPublisherId();
@@ -180,6 +185,8 @@ public class CommentApplicationService {
         userPublishedCommodityCommentEvent.setCreateTime(command.getCreateTime());
     }
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneCommentComment(AddCommentCommentCommand command) {
         Long publisherId = command.getPublisherId();
         Long parentCommentId = command.getParentCommentId();
@@ -306,6 +313,7 @@ public class CommentApplicationService {
      * 移除一个
      * @param commentId
      */
+    @Transactional
     public void removeOne(Long commentId) {
         // 检查 id
         verifyIdFormatService.verifyIds(commentId);
@@ -338,6 +346,7 @@ public class CommentApplicationService {
      * @param <C>
      * @return
      */
+    @Transactional
     public <C extends Comment> C findOneByCommentId(Long commentId) {
         // 检查 id
         verifyIdFormatService.verifyIds(commentId);
@@ -350,6 +359,7 @@ public class CommentApplicationService {
      * @param publisherId
      * @return
      */
+    @Transactional
     public <T extends Comment> List<T> findPageByPublisherId(Long publisherId, Integer page, Integer limit) {
         // 检查 publisherId
         verifyIdFormatService.verifyIds(publisherId);

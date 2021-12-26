@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,15 +64,14 @@ public class RecommendFormRepositoryImpl implements RecommendFormRepository {
     @Override
     public List<RecommendForm> findPageByReferrerId(Long referrerId, Integer page, Integer limit) {
         List<UserCommodityRecommendPO> recommendFormPOPage = recommendMapper.findPageByReferrerId(referrerId, page, limit);
-        if (recommendFormPOPage == null || recommendFormPOPage.size() < 0) {
-            return null;
+        if (recommendFormPOPage == null || recommendFormPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
-        ArrayList<RecommendForm> recommendFormPage = recommendFormPOPage.stream().collect(
+        return recommendFormPOPage.stream().collect(
                 ArrayList<RecommendForm>::new,
                 (con, recommendFormPO) -> con.add(recommendFactory.create(recommendFormPO)),
                 ArrayList::addAll
         );
-        return recommendFormPage;
     }
 
     /**

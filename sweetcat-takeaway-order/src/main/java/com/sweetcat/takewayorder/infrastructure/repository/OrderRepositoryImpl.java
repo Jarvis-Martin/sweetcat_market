@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -130,6 +131,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order findOneByOrderId(Long orderId) {
         TakeawayOrderPO orderPO = orderMapper.findOne(orderId);
+        if (orderPO == null) {
+            return null;
+        }
         return findNecessaryDataOfOrderAndCreateOrder(orderId, orderPO);
     }
 
@@ -163,7 +167,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<Order> findAllByUserIdAndAddressId(Long userId) {
         List<TakeawayOrderPO> orderPOs = orderMapper.findAllByUserIdAndAddressId(userId);
-        ArrayList<Order> orders = orderPOs.stream().collect(
+        if (orderPOs == null || orderPOs.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return orderPOs.stream().collect(
                 ArrayList<Order>::new,
                 (con, orderPO) -> {
                     Long orderId = orderPO.getOrderId();
@@ -172,6 +179,5 @@ public class OrderRepositoryImpl implements OrderRepository {
                 },
                 ArrayList<Order>::addAll
         );
-        return orders;
     }
 }

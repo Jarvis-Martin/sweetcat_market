@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,8 +67,8 @@ public class UesrCouponRepositoryImpl implements UserCouponRepository {
     @Override
     public List<UserCoupon> findPageByUserId(Long userId, Integer page, Integer limit) {
         List<UserCouponPO> userCouponPOPage = userCouponMapper.findPageByUserId(userId, page, limit);
-        if (userCouponPOPage == null || userCouponPOPage.size() <= 0) {
-            return null;
+        if (userCouponPOPage == null || userCouponPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return userCouponPOPage.stream().collect(
                 ArrayList<UserCoupon>::new,

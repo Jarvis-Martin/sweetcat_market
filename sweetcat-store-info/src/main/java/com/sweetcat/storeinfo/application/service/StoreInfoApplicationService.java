@@ -7,6 +7,7 @@ import com.sweetcat.storeinfo.infrastructure.service.phone_format_verfiy_service
 import com.sweetcat.storeinfo.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: Coder_Jarvis
@@ -47,6 +48,7 @@ public class StoreInfoApplicationService {
      * @param storeId
      * @return
      */
+    @Transactional
     public StoreInfo getOneById(Long storeId) {
         verifyIdFormatService.verifyIds(storeId);
         return storeInfoRepository.find(storeId);
@@ -61,6 +63,7 @@ public class StoreInfoApplicationService {
      * @param type
      * @param createTime
      */
+    @Transactional
     public void addOne(String storeName, String principalName, String principalPhone, String mainBusiness, Integer type, Long createTime) {
         // 检查手机号格式
         verifyPhoneFormatService.verifyPhoneFormat(principalPhone);
@@ -76,6 +79,7 @@ public class StoreInfoApplicationService {
      * @param storeId storeId
      * @return storeId 是否存在
      */
+    @Transactional
     public Boolean storeIsExisted(Long storeId) {
         // 检查 storeId 格式
         verifyIdFormatService.verifyIds(storeId);

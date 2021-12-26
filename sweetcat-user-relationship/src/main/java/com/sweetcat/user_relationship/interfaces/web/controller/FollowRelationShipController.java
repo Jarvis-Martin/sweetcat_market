@@ -39,6 +39,9 @@ public class FollowRelationShipController {
     @GetMapping("/user/{user_id}/fans_list")
     public ResponseDTO getFansPage(@PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<FollowRelationShip> fansPage = followRelationShipFacade.getFansPage(userId, page, limit);
+        if (fansPage == null || fansPage.isEmpty()) {
+            return response("查询粉丝列表成功！", "{}");
+        }
         List<FollowRelationShipDTO> fansDTOList = fansPage.stream().collect(
                 ArrayList<FollowRelationShipDTO>::new,
                 (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipFansDTO(followRelationShip)),
@@ -52,6 +55,9 @@ public class FollowRelationShipController {
     @GetMapping("/user/{user_id}/subscriber_list")
     public ResponseDTO getSubscriberPage(@PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<FollowRelationShip> subscriberPage = followRelationShipFacade.getSubscriberPage(userId, page, limit);
+        if (subscriberPage == null || subscriberPage.isEmpty()) {
+            return response("查询关注人列表成功", "{}");
+        }
         List<FollowRelationShipDTO> subscriberDTOList = subscriberPage.stream().collect(
                 ArrayList<FollowRelationShipDTO>::new,
                 (con, followRelationShip) -> con.add(followRelationShipAssembler.converterToFollowRelationShipSubscriberDTO(followRelationShip)),

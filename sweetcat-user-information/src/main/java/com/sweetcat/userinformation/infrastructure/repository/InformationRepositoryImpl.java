@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,10 +61,10 @@ public class InformationRepositoryImpl implements InformationRepository {
     @Override
     public <T extends Information> List<T> findPageByReceiverId(Long receiverId, Integer page, Integer limit) {
         List<InformationPO> informationPOPage = informationMapper.findPageByReceiverId(receiverId, page, limit);
-        if (informationPOPage == null|| informationPOPage.size() <= 0) {
-            return null;
+        if (informationPOPage == null|| informationPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
-        ArrayList<T> informationPage = informationPOPage.stream().collect(
+        return informationPOPage.stream().collect(
                 ArrayList<T>::new,
                 (con, informationPO) -> {
                     CommentReplyPO commentReplyPO = commentReplyMapper.findOneByInformationId(informationPO.getInformationId());
@@ -71,7 +72,6 @@ public class InformationRepositoryImpl implements InformationRepository {
                 },
                 ArrayList<T>::addAll
         );
-        return informationPage;
     }
 
     /**

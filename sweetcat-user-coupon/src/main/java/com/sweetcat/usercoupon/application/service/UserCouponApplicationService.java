@@ -1,10 +1,8 @@
 package com.sweetcat.usercoupon.application.service;
 
-import com.sweetcat.api.rpcdto.commodityinfo.CommodityInfoRpcDTO;
 import com.sweetcat.api.rpcdto.storeinfo.StoreInfoRpcDTO;
 import com.sweetcat.api.rpcdto.userinfo.UserInfoRpcDTO;
 import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.CommodityNotExistedException;
 import com.sweetcat.commons.exception.StoreNotExistedException;
 import com.sweetcat.commons.exception.UserNotExistedException;
 import com.sweetcat.usercoupon.application.command.AddCommodityCouponCommand;
@@ -12,15 +10,21 @@ import com.sweetcat.usercoupon.application.command.AddUniversalCouponCommand;
 import com.sweetcat.usercoupon.application.rpc.CommodityInfoRpc;
 import com.sweetcat.usercoupon.application.rpc.StoreInfoRpc;
 import com.sweetcat.usercoupon.application.rpc.UserInfoRpc;
-import com.sweetcat.usercoupon.domain.usercoupon.entity.*;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.CommodityCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.UniversalCoupon;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.User;
+import com.sweetcat.usercoupon.domain.usercoupon.entity.UserCoupon;
 import com.sweetcat.usercoupon.domain.usercoupon.repository.CouponInfoRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.repository.UserCouponRepository;
 import com.sweetcat.usercoupon.domain.usercoupon.vo.Commodity;
 import com.sweetcat.usercoupon.domain.usercoupon.vo.Store;
 import com.sweetcat.usercoupon.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.usercoupon.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -82,6 +86,7 @@ public class UserCouponApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<UserCoupon> findPageByUserId(Long userId, Integer page, Integer limit) {
         // 检查userid
         verifyIdFormatService.verifyIds(userId);
@@ -98,6 +103,7 @@ public class UserCouponApplicationService {
      * @param userId
      * @param couponId
      */
+    @Transactional
     public void remove(Long userId, Long couponId) {
         // 检查 id
         verifyIdFormatService.verifyIds(userId, couponId);
@@ -113,6 +119,8 @@ public class UserCouponApplicationService {
      * 添加。该操作一般由 用户领取优惠券而触发
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneCommodityCoupon(AddCommodityCouponCommand command) {
         Long userId = command.getUserId();
         Long couponId = command.getCouponId();
@@ -182,6 +190,8 @@ public class UserCouponApplicationService {
      * 添加。该操作一般由 用户领取优惠券而触发
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneUniversalCoupon(AddUniversalCouponCommand command) {
         Long userId = command.getUserId();
         Long couponId = command.getCouponId();
@@ -251,22 +261,7 @@ public class UserCouponApplicationService {
         }
     }
 
-    /**
-     * 检查商品是否存在，不存在则直接返回
-     * @param commodityId
-     */
-    private void checkCommodity(Long commodityId) {
-        // 检查商品
-        CommodityInfoRpcDTO commodityInfo = commodityInfoRpc.findByCommodityId(commodityId);
-        // 检查不存在
-        if (commodityInfo == null) {
-            throw new CommodityNotExistedException(
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.COMMODITYNOTEXISTED.getErrorMessage()
-            );
-        }
-    }
-
+    @Transactional
     public UserCoupon findfindOneByCouponId(Long userId, Long couponId) {
         verifyIdFormatService.verifyIds(couponId);
         return userCouponRepository.findOneByUserIdAndCouponId(userId, couponId);

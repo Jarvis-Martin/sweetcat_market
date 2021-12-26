@@ -13,8 +13,11 @@ import com.sweetcat.footprint.domain.footprint.repository.UserFootprintRepositor
 import com.sweetcat.footprint.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.footprint.infrastructure.service.snowflake_service.SnowFlakeService;
 import com.sweetcat.footprint.infrastructure.service.timestamp_format_verfiy_service.VerifyTimeStampFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -69,18 +72,15 @@ public class UserFootprintApplicationService {
      *
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddUserFootprintCommand command) {
         long userId = command.getUserId();
         long commodityId = command.getCommodityId();
         // 检查 用户id 是否存在
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(userId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 检查 商品id 是否存在
         CommodityInfoRpcDTO commodityInfo = commodityInfoRpc.findByCommodityId(commodityId);
         // 商品不存在
@@ -108,11 +108,21 @@ public class UserFootprintApplicationService {
         footprintRepository.addOne(userFootprint);
     }
 
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
     /**
      * 删除一条足迹记录
      *
      * @param footprintId footprintId
      */
+    @Transactional
     public void deleteOne(Long footprintId) {
         // 验证 足迹id格式
         verifyIdFormatService.verifyIds(footprintId);
@@ -132,6 +142,7 @@ public class UserFootprintApplicationService {
      * @param limit limit
      * @return
      */
+    @Transactional
     public List<UserFootprint> findByDate(Long userId, Long date, Integer page, Integer limit) {
         // 检查时间格式
         verifyTimeStampFormatService.verifyTimeStamps(date);

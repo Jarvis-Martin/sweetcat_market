@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -184,8 +185,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public List<ChildrenOrder> findPageByUserId(@Param("userId") Long userId, @Param("page") Integer page, @Param("limit") Integer limit) {
         List<ChildrenOrderPO> childrenOrderPOS = childrenOrderMapper.findPageByUserId(userId, page, limit);
-        if (childrenOrderPOS == null || childrenOrderPOS.size() <= 0) {
-            return null;
+        if (childrenOrderPOS == null || childrenOrderPOS.isEmpty()) {
+            return Collections.emptyList();
         }
         return childrenOrderPOS.stream().collect(
                 ArrayList<ChildrenOrder>::new,

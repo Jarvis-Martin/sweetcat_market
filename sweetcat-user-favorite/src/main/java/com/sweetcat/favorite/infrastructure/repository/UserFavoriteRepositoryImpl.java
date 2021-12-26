@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,12 +65,14 @@ public class UserFavoriteRepositoryImpl implements UserFavoriteRepository {
     @Override
     public List<UserFavorate> findPageByUserId(Long userid, Integer page, Integer limit) {
         List<UserFavoritePO> userFavoritePOPage = favorateMapper.findPageByUserId(userid, page, limit);
-        ArrayList<UserFavorate> userFavoratePage = userFavoritePOPage.stream().collect(
+        if (userFavoritePOPage == null || userFavoritePOPage.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return userFavoritePOPage.stream().collect(
                 ArrayList<UserFavorate>::new,
                 (con, userFavoritePO) -> con.add(favoriteFactory.create(userFavoritePO)),
                 ArrayList::addAll
         );
-        return userFavoratePage;
     }
 
 

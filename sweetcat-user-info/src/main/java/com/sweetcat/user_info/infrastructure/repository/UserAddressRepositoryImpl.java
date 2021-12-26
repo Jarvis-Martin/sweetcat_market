@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Repository
 public class UserAddressRepositoryImpl implements UserAddressRepository {
+
 
     @Autowired
     public void setUserAddressMapper(UserAddressMapper userAddressMapper) {
@@ -36,6 +38,9 @@ public class UserAddressRepositoryImpl implements UserAddressRepository {
     @Override
     public UserAddress find(Long addressId) {
         UserAddressPO userAddressPO = this.userAddressMapper.findOne(addressId);
+        if (userAddressPO == null) {
+            return null;
+        }
         return this.userAddressFactory.create(userAddressPO);
     }
 
@@ -51,6 +56,9 @@ public class UserAddressRepositoryImpl implements UserAddressRepository {
     @Override
     public List<UserAddress> find(Long userId, Integer page, Integer limit) {
         List<UserAddressPO> addressPOPage = this.userAddressMapper.getPage(userId, page, limit);
+        if (addressPOPage == null || addressPOPage.isEmpty()) {
+            return Collections.emptyList();
+        }
         return addressPOPage.stream().collect(
                 ArrayList::new,
                 (con, addressPO) -> con.add(this.userAddressFactory.create(addressPO)),
@@ -70,10 +78,11 @@ public class UserAddressRepositoryImpl implements UserAddressRepository {
 
     @Override
     public UserAddress save(UserAddress userAddress) {
-        System.out.println("save ------------------" + userAddress.isDefault());
         this.userAddressMapper.update(userAddress);
         UserAddressPO userAddressPO = userAddressMapper.findOne(userAddress.getAddressId());
-        System.out.println("save userPO------------------" + userAddressPO.getDefaultAddress());
+        if (userAddressPO == null) {
+            return null;
+        }
         return userAddressFactory.create(userAddressPO);
     }
 }

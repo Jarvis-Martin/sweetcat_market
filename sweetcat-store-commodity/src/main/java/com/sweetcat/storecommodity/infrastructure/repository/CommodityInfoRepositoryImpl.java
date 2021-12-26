@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,8 +45,8 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     @Override
     public List<Commodity> findPageByStoreId(Long storeId, Integer page, Integer limit) {
         List<CommodityInfoPO> commodityInfoPOPage = commodityInfoMapper.findPageByStoreId(storeId, page, limit);
-        if (commodityInfoPOPage == null) {
-            return null;
+        if (commodityInfoPOPage == null || commodityInfoPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return commodityInfoPOPage.stream().collect(
                 ArrayList<Commodity>::new,
@@ -57,8 +58,8 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     @Override
     public List<Commodity> findPageNewCommodities(Integer page, Integer limit) {
         List<CommodityInfoPO> newCommodityInfoPOPage = commodityInfoMapper.findPageNewCommodities(page, limit);
-        if (newCommodityInfoPOPage == null) {
-            return null;
+        if (newCommodityInfoPOPage == null || newCommodityInfoPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return newCommodityInfoPOPage.stream().collect(
                 ArrayList<Commodity>::new,
@@ -82,13 +83,13 @@ public class CommodityInfoRepositoryImpl implements CommodityInfoRepository {
     @Override
     public List<Commodity> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
         List<CommodityInfoPO> commodityPageCreditCanOffsetAPart = commodityInfoMapper.findPageCreditCanOffsetAPart(page, limit);
-        if (commodityPageCreditCanOffsetAPart == null) {
-            return null;
+        if (commodityPageCreditCanOffsetAPart == null || commodityPageCreditCanOffsetAPart.isEmpty()) {
+            return Collections.emptyList();
         }
         return commodityPageCreditCanOffsetAPart.stream().collect(
                 ArrayList<Commodity>::new,
                 (con, commodityInfoPO) -> con.add(commodityInfoFactory.create(commodityInfoPO)),
-                ArrayList::addAll
+                ArrayList<Commodity>::addAll
         );
     }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,25 +36,24 @@ public class SKCommodityCommentRepositoryImpl implements SKCommodityCommentRepos
     @Override
     public SKCommodityComment findByCommentId(Long commentId) {
         SKCommodityCommentPO commentPO = commentMapper.findByCommentId(commentId);
-        SKCommodityComment SKCommodityComment = null;
+        SKCommodityComment sKCommodityComment = null;
         if (commentPO != null) {
-            SKCommodityComment = commentFactory.create(commentPO);
+            sKCommodityComment = commentFactory.create(commentPO);
         }
-        return SKCommodityComment;
+        return sKCommodityComment;
     }
 
     @Override
     public List<SKCommodityComment> findPageByCommodityId(Long commodityId, Integer page, Integer limit) {
         List<SKCommodityCommentPO> commentPOList = commentMapper.findPageByCommodityId(commodityId, page, limit);
-        ArrayList<SKCommodityComment> commentList = null;
-        if (commentPOList != null) {
-            commentList = commentPOList.stream().collect(
+        if (commentPOList == null || commentPOList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return commentPOList.stream().collect(
                     ArrayList<SKCommodityComment>::new,
                     (con, commentPO) -> con.add(commentFactory.create(commentPO)),
-                    ArrayList::addAll
+                    ArrayList<SKCommodityComment>::addAll
             );
-        }
-        return commentList;
     }
 
     @Override

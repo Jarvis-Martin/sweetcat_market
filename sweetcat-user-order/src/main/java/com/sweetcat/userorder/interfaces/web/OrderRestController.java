@@ -61,14 +61,12 @@ public class OrderRestController {
     @GetMapping("/orders")
     public ResponseDTO findPageByUserId(Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<ChildrenOrder> childrenOrderPage = orderFacade.findPageByUserId(userId, page, limit);
-        if (childrenOrderPage == null || childrenOrderPage.size() <= 0) {
+        if (childrenOrderPage == null || childrenOrderPage.isEmpty()) {
             return response("查询订单成功", "{}");
         }
         ArrayList<OrderRestDTO> orders = childrenOrderPage.stream().collect(
                 ArrayList<OrderRestDTO>::new,
-                (con, childrenOrder) -> {
-                    con.add(orderRestAssembler.converterToOrderRestDTO(childrenOrder));
-                },
+                (con, childrenOrder) -> con.add(orderRestAssembler.converterToOrderRestDTO(childrenOrder)),
                 ArrayList<OrderRestDTO>::addAll
         );
         HashMap<String, Object> dataSection = new HashMap<>(2);

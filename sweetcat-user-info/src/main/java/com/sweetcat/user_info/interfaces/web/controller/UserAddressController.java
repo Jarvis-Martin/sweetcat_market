@@ -6,7 +6,6 @@ import com.sweetcat.user_info.application.command.address.AddAddressCommand;
 import com.sweetcat.user_info.application.command.address.EditAddressCommand;
 import com.sweetcat.user_info.domain.address.entity.UserAddress;
 import com.sweetcat.user_info.interfaces.UserAddressFacade;
-import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAddressAssembler;
 import com.sweetcat.user_info.interfaces.facade.restdto.UserAddressDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +23,12 @@ import java.util.List;
  */
 @RestController
 public class UserAddressController {
-    private UserInfoFacade userInfoFacade;
     private UserAddressFacade userAddressFacade;
-
     private UserAddressAssembler userAddressAssembler;
 
     @Autowired
-    public void setFacade(UserInfoFacade userInfoFacade) {
-        this.userInfoFacade = userInfoFacade;
+    public void setUserAddressFacade(UserAddressFacade userAddressFacade) {
+        this.userAddressFacade = userAddressFacade;
     }
 
     @Autowired
@@ -42,7 +39,7 @@ public class UserAddressController {
     @GetMapping("/user/{user_id}/addresses")
     public ResponseDTO getPage(@PathVariable("user_id") Long userId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<UserAddress> addressPage = userAddressFacade.getPage(userId, page, limit);
-        if (addressPage == null) {
+        if (addressPage == null || addressPage.isEmpty()) {
             return response("查询用户地址列表分页数据成功", "{}");
         }
         ArrayList<UserAddressDTO> userAddressDTOPage = addressPage.stream().collect(
@@ -50,9 +47,6 @@ public class UserAddressController {
                 (con, userAddress) -> con.add(userAddressAssembler.converter2UserAddressDTO(userAddress)),
                 ArrayList::addAll
         );
-        userAddressDTOPage.forEach(address -> {
-            System.out.println(address.getAddressId());
-        });
         HashMap<String, List<UserAddressDTO>> dataSection = new HashMap<>(16);
         dataSection.put("addresses", userAddressDTOPage);
         return response("查询用户地址列表分页数据成功", dataSection);

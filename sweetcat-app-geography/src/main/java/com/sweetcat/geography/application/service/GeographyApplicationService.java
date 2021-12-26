@@ -8,6 +8,7 @@ import com.sweetcat.geography.domain.geography.entity.Geography;
 import com.sweetcat.geography.domain.geography.repository.GeographyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: Coder_Jarvis
@@ -28,6 +29,7 @@ public class GeographyApplicationService {
      * 添加一条geography
      * @param geographyCommand geographyCommand
      */
+    @Transactional
     public void addOne(AddGeographyCommand geographyCommand) {
         String addressCode = geographyCommand.getAddressCode();
         // 检查 地址代码格式
@@ -43,6 +45,11 @@ public class GeographyApplicationService {
         }
         // 构建 geography
         geography = new Geography();
+        inflateGeography(geographyCommand, geography);
+        geographyRepository.addOne(geography);
+    }
+
+    private void inflateGeography(AddGeographyCommand geographyCommand, Geography geography) {
         geography.setAddressCode(geographyCommand.getAddressCode());
         geography.setAddressName(geographyCommand.getAddressName());
         geography.setProvinceCode(geographyCommand.getProvinceCode());
@@ -51,7 +58,6 @@ public class GeographyApplicationService {
         geography.setTownCode(geographyCommand.getTownCode());
         geography.setCreateTime(geographyCommand.getCreateTime());
         geography.setUpdateTime(geographyCommand.getCreateTime());
-        geographyRepository.addOne(geography);
     }
 
     /**
@@ -59,6 +65,7 @@ public class GeographyApplicationService {
      * @param addressCode addressCode
      * @return
      */
+    @Transactional
     public Geography find(String addressCode) {
         // 检查 地址代码格式
         verifyAddressCode(addressCode);
@@ -70,6 +77,7 @@ public class GeographyApplicationService {
      * 移除一条geography
      * @param geography geography
      */
+    @Transactional
     public void remove(Geography geography) {
         // 检查 addressCode
         verifyAddressCode(geography.getAddressCode());

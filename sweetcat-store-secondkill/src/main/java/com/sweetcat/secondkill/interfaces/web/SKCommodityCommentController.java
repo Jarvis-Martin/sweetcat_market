@@ -71,7 +71,7 @@ public class SKCommodityCommentController {
     public ResponseDTO findPageByCommodityId(Long commodityId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 找到 DO
         List<SKCommodityComment> commentDOPage = commentFacade.findPageByCommodityId(commodityId, page, limit);
-        if (commentDOPage == null) {
+        if (commentDOPage == null || commentDOPage.isEmpty()) {
             return response("返回商品评论分页数据成功", "{}");
         }
         // response 的 data
@@ -80,7 +80,7 @@ public class SKCommodityCommentController {
         ArrayList<SKCommodityCommentDTO> commentDTOPage = commentDOPage.stream().collect(
                 ArrayList<SKCommodityCommentDTO>::new,
                 (con, commentDTO) -> con.add(commentAssembler.converterToSKCommodityCommentDTO(commentDTO)),
-                ArrayList::addAll
+                ArrayList<SKCommodityCommentDTO>::addAll
         );
         // 装入 data
         dataSectioin.put("comments", commentDTOPage);

@@ -71,14 +71,14 @@ public class UserFootprintRestController {
     @GetMapping("/{user_id}")
     public ResponseDTO findByDate(@PathVariable("user_id") Long userId, @RequestParam("date") Long date, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<UserFootprint> footprintPage = footprintFacade.findByDate(userId, date, page, limit);
-        if (footprintPage == null) {
+        if (footprintPage == null || footprintPage.isEmpty()) {
             return response("查询用户足迹分页数据成功", "{}");
         }
         HashMap<String, Object> dataSection = new HashMap<>(16);
         ArrayList<UserFootprintRestDTO> userFootprintRestDTOs = footprintPage.stream().collect(
                 ArrayList<UserFootprintRestDTO>::new,
                 (con, footprint) -> con.add(footprintAssembler.converterToUserFootprintRestDTO(footprint)),
-                ArrayList::addAll
+                ArrayList<UserFootprintRestDTO>::addAll
         );
         dataSection.put("footprints", userFootprintRestDTOs);
         return response("查询用户足迹分页数据成功", dataSection);

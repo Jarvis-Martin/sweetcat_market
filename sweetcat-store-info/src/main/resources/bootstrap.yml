@@ -65,7 +65,32 @@ spring:
             column: store_id
             type: SNOWFLAKE
 
-
+#Seata分布式事务配置(AT模式)
+seata:
+  # 以下配置项，默认值为true
+  enabled: true
+  application-id: ${spring.application.name}
+  #客户端和服务端在同一个事务组
+  tx-service-group: sweetcat_store_info_tx_group
+  # 以下配置项，默认值为true
+  enable-auto-data-source-proxy: false
+  service:
+    vgroup-mapping:
+      sweetcat_store_info_tx_group: default
+    grouplist:
+      # seata 服务端地址
+      default: localhost:8091
+  #服务注册到nacos
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace: "dev"
+      username: "nacos"
+      password: "nacos"
+      cluster: default
 # 由于 spring acuator 健康检查会导致服务启动报错：
 # org.springframework.dao.InvalidDataAccessApiUsageException: ConnectionCallback; isValid; nested exception is java.sql.SQLFeatureNotSupportedException: isValid
 # 但不影响服务注册注册

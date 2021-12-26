@@ -16,6 +16,7 @@ import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_servi
 import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: Coder_Jarvis
@@ -67,6 +68,7 @@ public class CommodityPostChargeApplicationService {
      *
      * @param command command
      */
+    @Transactional
     public void addOne(AddCommodityPostChargeCommand command) {
         long commodityId = command.getCommodityId();
         long storeId = command.getStoreId();
@@ -118,6 +120,7 @@ public class CommodityPostChargeApplicationService {
      * @param addressCode addressCode
      * @return
      */
+    @Transactional
     public CommodityPostCharge find(Long commodityId, String addressCode) {
         // 检查id 格式
         verifyIdFormatService.verifyId(commodityId);
@@ -147,6 +150,7 @@ public class CommodityPostChargeApplicationService {
      *
      * @param chargeId chargeId
      */
+    @Transactional
     public void remove(Long chargeId) {
         // 检查 id
         verifyIdFormatService.verifyId(chargeId);

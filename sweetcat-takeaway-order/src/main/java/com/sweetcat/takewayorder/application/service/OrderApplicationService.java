@@ -23,6 +23,8 @@ import com.sweetcat.takewayorder.application.rpc.UserOrderRpc;
 import com.sweetcat.takewayorder.domain.order.entity.*;
 import com.sweetcat.takewayorder.domain.order.repository.OrderRepository;
 import com.sweetcat.takewayorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +84,7 @@ public class OrderApplicationService {
      * @param command
      */
     @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddOrderCommand command) {
         Long orderId = command.getOrderId();
         Long userId = command.getUserId();
@@ -220,6 +223,7 @@ public class OrderApplicationService {
     }
 
     @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void changeCustomerAddress(ChangeCustomerAddressCommand command) {
         Long userId = command.getUserId();
         Long addressId = command.getAddressId();
@@ -227,7 +231,7 @@ public class OrderApplicationService {
         UserInfoRpcDTO userInfoRpcDTO = userInfoRpc.getUserInfo(userId);
         checkUser(userInfoRpcDTO);
         List<Order> orders = orderRepository.findAllByUserIdAndAddressId(userId);
-        if (orders == null || orders.size() <= 0) {
+        if (orders == null || orders.isEmpty()) {
             throwOrderNotExistException();
         }
         String receiverName = command.getReceiverName();
@@ -274,11 +278,8 @@ public class OrderApplicationService {
         );
     }
 
-    private void inflateAddressInfoOfUser(UserAddressOfCommand addressOfCommand, AddressInfoOfUser userAddress) {
-        inflateAddressInfoOfUser(addressOfCommand.getReceiverName(), addressOfCommand.getReceiverPhone(), addressOfCommand.getProvinceName(), addressOfCommand.getAreaName(), addressOfCommand.getCityName(), addressOfCommand.getTownName(), addressOfCommand.getDetailAddress(), userAddress);
-    }
-
     @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void changeStoreAddress(Long storeId, Long orderId, Long addressId) {
         verifyIdFormatService.verifyIds(storeId, orderId, addressId);
         StoreInfoRpcDTO storeInfoRpcDTO = storeInfoRpc.findOneByStoreId(storeId);

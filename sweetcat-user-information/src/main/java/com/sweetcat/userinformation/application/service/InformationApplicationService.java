@@ -22,8 +22,11 @@ import com.sweetcat.userinformation.domain.information.vo.Publisher;
 import com.sweetcat.userinformation.domain.information.vo.Receiver;
 import com.sweetcat.userinformation.domain.information.vo.Store;
 import com.sweetcat.userinformation.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,6 +76,8 @@ public class InformationApplicationService {
         this.informationRepository = informationRepository;
     }
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneSystemInformation(AddSystemInformationCommand command) {
         Long informationId = command.getInformationId();
         Long publisherId = command.getPublisherId();
@@ -96,6 +101,8 @@ public class InformationApplicationService {
         informationRepository.addOne(systemInformation);
     }
 
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOneCommentReply(AddCommentReplyCommand command) {
         Long commodityId = command.getCommodityId();
         Long informationId = command.getInformationId();
@@ -195,6 +202,7 @@ public class InformationApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public <T extends Information> List<T> findPageByReceiverId(Long receiverId, Integer page, Integer limit) {
         // 检查 id
         verifyIdFormatService.verifyIds(receiverId);
@@ -234,6 +242,7 @@ public class InformationApplicationService {
      * @param informationId
      * @param <T>
      */
+    @Transactional
     public <T extends Information> T findOneByInformationId(Long informationId) {
         // 检查id
         verifyIdFormatService.verifyIds(informationId);
@@ -245,6 +254,7 @@ public class InformationApplicationService {
      *
      * @param informationId
      */
+    @Transactional
     public void removeOne(Long informationId) {
         // 检查id
         verifyIdFormatService.verifyIds(informationId);

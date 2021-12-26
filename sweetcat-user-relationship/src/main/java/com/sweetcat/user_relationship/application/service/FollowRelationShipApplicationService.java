@@ -8,9 +8,12 @@ import com.sweetcat.user_relationship.domain.followrelationship.exception.UserLi
 import com.sweetcat.user_relationship.domain.followrelationship.exception.UserNotLikedException;
 import com.sweetcat.user_relationship.domain.followrelationship.repository.FollowRelationShipRepository;
 import com.sweetcat.user_relationship.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -56,6 +59,7 @@ public class FollowRelationShipApplicationService {
      * @param limit  limit
      * @return 互关关系列表：粉丝列表、关注列表（分页数据）
      */
+    @Transactional
     public List<FollowRelationShip> getFansPage(Long userId, Integer page, Integer limit) {
         // 检查 userId
         verifyIdFormatService.verifyId(userId);
@@ -63,8 +67,7 @@ public class FollowRelationShipApplicationService {
         page = page < 0 ? 0 : page * limit;
         limit = limit < 0 ? this.defaultFansLimit : limit;
         // 返回分页
-        List<FollowRelationShip> fansPage = followRelationShipRepository.getFansPage(userId, page, limit);
-        return fansPage;
+        return followRelationShipRepository.getFansPage(userId, page, limit);
     }
 
     /**
@@ -75,6 +78,7 @@ public class FollowRelationShipApplicationService {
      * @param limit  limit
      * @return 互关关系列表：粉丝列表、关注列表（分页数据）
      */
+    @Transactional
     public List<FollowRelationShip> getSubscriberPage(Long userId, Integer page, Integer limit) {
         // 检查 userId
         verifyIdFormatService.verifyId(userId);
@@ -90,6 +94,8 @@ public class FollowRelationShipApplicationService {
      * @param userId       userId
      * @param targetUserId targetUserId
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void like(Long userId, Long targetUserId) {
         // 检查 id 格式
         verifyIdFormatService.verifyId(userId, targetUserId);
@@ -137,6 +143,8 @@ public class FollowRelationShipApplicationService {
      * @param userId userId
      * @param targetUserId targetUserId
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void disLike(Long userId, Long targetUserId) {
         // 检查id
         verifyIdFormatService.verifyId(userId, targetUserId);

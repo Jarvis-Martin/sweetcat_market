@@ -1,7 +1,5 @@
 package com.sweetcat.user_info.application.service;
 
-import com.sweetcat.commons.ResponseStatusEnum;
-import com.sweetcat.commons.exception.ParameterFormatIllegalityException;
 import com.sweetcat.user_info.application.command.address.AddAddressCommand;
 import com.sweetcat.user_info.application.command.address.EditAddressCommand;
 import com.sweetcat.user_info.domain.address.entity.UserAddress;
@@ -12,8 +10,8 @@ import com.sweetcat.user_info.infrastructure.service.snowflake_service.SnowFlake
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,6 +58,7 @@ public class UserAddressApplicationService {
      * @param limit  limit
      * @return 收货地址分页数据
      */
+    @Transactional
     public List<UserAddress> getPage(Long userId, Integer page, Integer limit) {
         // userId 参数格式错误
         this.verifyIdFormatService.verifyId(userId);
@@ -76,6 +75,7 @@ public class UserAddressApplicationService {
      * @param addAddressCommand addAddressCommand
      * @return 新建的 userAddress
      */
+    @Transactional
     public UserAddress addAddress(AddAddressCommand addAddressCommand) {
         // 检查新添加的收货地址 收货人手机号是否合法
         this.verifyPhoneFormatService.verifyPhoneFormat(addAddressCommand.getReceiverPhone());
@@ -119,6 +119,7 @@ public class UserAddressApplicationService {
      * @param addressId addressId
      * @return 地址信息 with addressId
      */
+    @Transactional
     public UserAddress findAddressById(Long addressId) {
         // 参数检查 addressId，不合法时通知用户参数格式错误
         this.verifyIdFormatService.verifyId(addressId);
@@ -131,6 +132,7 @@ public class UserAddressApplicationService {
      * @param userId    userId
      * @param addressId addressId
      */
+    @Transactional
     public void deleteAddressById(Long userId, Long addressId) {
         // 参数检查 addressId，不合法时通知用户参数格式错误
         this.verifyIdFormatService.verifyId(userId, addressId);
@@ -150,6 +152,7 @@ public class UserAddressApplicationService {
      * @param userId    userId
      * @param addressId addressId
      */
+    @Transactional
     public void change2DefaultAddress(Long userId, Long addressId) {
         // userId,addressId 检查
         this.verifyIdFormatService.verifyId(userId, addressId);
@@ -175,6 +178,7 @@ public class UserAddressApplicationService {
      * @param userId    userId
      * @param addressId addressId
      */
+    @Transactional
     public void change2NotDefaultAddress(Long userId, Long addressId) {
         // userId,addressId 检查
         this.verifyIdFormatService.verifyId(userId, addressId);
@@ -191,6 +195,7 @@ public class UserAddressApplicationService {
      *
      * @param editAddressCommand editAddressCommand
      */
+    @Transactional
     public void editAddress(EditAddressCommand editAddressCommand) {
         Long addressId = editAddressCommand.getAddressId();
         Long userId = editAddressCommand.getUserId();

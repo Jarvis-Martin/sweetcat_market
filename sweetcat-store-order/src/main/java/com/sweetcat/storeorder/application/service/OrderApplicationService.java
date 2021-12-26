@@ -20,6 +20,8 @@ import com.sweetcat.storeorder.domain.order.entity.*;
 import com.sweetcat.storeorder.domain.order.repository.OrderRepository;
 import com.sweetcat.storeorder.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.storeorder.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,18 +39,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 public class OrderApplicationService {
-    private SnowFlakeService snowFlakeService;
     private OrderRepository orderRepository;
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
     private CommodityInfoRpc commodityInfoRpc;
     private UserCouponInfoRpc userCouponInfoRpc;
-    private UserOrderRpc userOrderRpc;
-
-    @Autowired
-    public void setUserOrderRpc(UserOrderRpc userOrderRpc) {
-        this.userOrderRpc = userOrderRpc;
-    }
 
     @Autowired
     public void setUserCouponInfoRpc(UserCouponInfoRpc userCouponInfoRpc) {
@@ -58,11 +53,6 @@ public class OrderApplicationService {
     @Autowired
     public void setCommodityInfoRpc(CommodityInfoRpc commodityInfoRpc) {
         this.commodityInfoRpc = commodityInfoRpc;
-    }
-
-    @Autowired
-    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
-        this.snowFlakeService = snowFlakeService;
     }
 
     @Autowired
@@ -236,6 +226,7 @@ public class OrderApplicationService {
      * @param limit
      */
     @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public List<Order> findPageByCustomerId(Long customerId, Integer page, Integer limit) {
         verifyIdFormatService.verifyIds(customerId);
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(customerId);
@@ -256,6 +247,7 @@ public class OrderApplicationService {
     }
 
     @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void changeUserAddress(ChangeCustomerAddressCommand command) {
         Long userId = command.getUserId();
         Long addressId = command.getAddressId();
@@ -292,13 +284,4 @@ public class OrderApplicationService {
         addressInfo.setDetailAddress(detailAddress);
     }
 
-
-    private void checkOrder(Order order) {
-        if (order == null) {
-            throw new OrderNotExistException(
-                    ResponseStatusEnum.ORDERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.ORDERNOTEXISTED.getErrorMessage()
-            );
-        }
-    }
 }

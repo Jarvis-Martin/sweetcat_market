@@ -21,3 +21,31 @@ spring:
       password: mysqladmin123
       url: jdbc:mysql://192.168.193.129:3306/sweetcat_market_app_geography?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
       max-active: 40 # 数据库最大活跃连接数
+
+
+#Seata分布式事务配置(AT模式)
+seata:
+  # 以下配置项，默认值为true
+  enabled: true
+  application-id: ${spring.application.name}
+  #客户端和服务端在同一个事务组
+  tx-service-group: sweetcat_app_geography_tx_group
+  # 以下配置项，默认值为true
+  enable-auto-data-source-proxy: false
+  service:
+    vgroup-mapping:
+      sweetcat_app_geography_tx_group: default
+    grouplist:
+      # seata 服务端地址
+      default: localhost:8091
+  #服务注册到nacos
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace: "dev"
+      username: "nacos"
+      password: "nacos"
+      cluster: default

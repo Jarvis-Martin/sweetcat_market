@@ -38,6 +38,9 @@ public class StoreInfoRepositoryImpl implements StoreInfoRepository {
     @Override
     public StoreInfo find(Long storeId) {
         StoreInfoPO storeInfoPO = storeInfoMapper.find(storeId);
+        if (storeInfoPO == null) {
+            return null;
+        }
         return storeInfoFactory.create(storeInfoPO);
     }
 

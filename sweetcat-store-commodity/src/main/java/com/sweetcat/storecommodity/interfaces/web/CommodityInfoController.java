@@ -65,7 +65,7 @@ public class CommodityInfoController {
     @GetMapping("/credit/commodities")
     public ResponseDTO findPageCreditCanOffsetAPart(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> commodityPage = commodityInfoFacade.findPageCreditCanOffsetAPart(page, limit);
-        if (commodityPage == null || commodityPage.size() <= 0) {
+        if (commodityPage == null || commodityPage.isEmpty()) {
             return response("查找积分可兑换商品", "{}");
         }
         ArrayList<CommoditySummaryInfoRestDTO> commodities = commodityPage.stream().collect(
@@ -91,7 +91,7 @@ public class CommodityInfoController {
     @GetMapping("/store/commodities")
     public ResponseDTO findPageByStoreId(@PathVariable("store_id") Long storeId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> commodityPage = commodityInfoFacade.findPageByStoreId(storeId, page, limit);
-        if (commodityPage == null) {
+        if (commodityPage == null || commodityPage.isEmpty()) {
             return response("指定门店商品分页数据", "{}");
         }
         List<CommodityDetailDTO> commodities = converterCommodityInfoListToCommodityInfoDTOList(commodityPage);
@@ -104,7 +104,7 @@ public class CommodityInfoController {
     @GetMapping("/commodities/newlisting")
     public ResponseDTO findPageNewCommodities(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Commodity> pageNewCommodities = commodityInfoFacade.findPageNewCommodities(page, limit);
-        if (pageNewCommodities == null) {
+        if (pageNewCommodities == null || pageNewCommodities.isEmpty()) {
             return response("新上架商品", "{}");
         }
         List<CommodityDetailDTO> commodities = converterCommodityInfoListToCommodityInfoDTOList(pageNewCommodities);

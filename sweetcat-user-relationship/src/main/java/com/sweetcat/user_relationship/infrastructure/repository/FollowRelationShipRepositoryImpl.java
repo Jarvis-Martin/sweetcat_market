@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,6 +53,9 @@ public class FollowRelationShipRepositoryImpl implements FollowRelationShipRepos
     @Override
     public List<FollowRelationShip> getFansPage(Long userId, Integer page, Integer limit) {
         List<FollowRelationshipPO> followRelationshipPOPage = followRelationShipMapper.getFansPage(userId, page, limit);
+        if (followRelationshipPOPage == null || followRelationshipPOPage.isEmpty()) {
+            return Collections.emptyList();
+        }
         return followRelationshipPOPage.stream().collect(
                 ArrayList<FollowRelationShip>::new,
                 (con, followRelationshipPO) -> {
@@ -76,6 +80,9 @@ public class FollowRelationShipRepositoryImpl implements FollowRelationShipRepos
     @Override
     public List<FollowRelationShip> getSubscriberPage(Long userId, Integer page, Integer limit) {
         List<FollowRelationshipPO> followRelationshipPOPage = followRelationShipMapper.getSubscriberPage(userId, page, limit);
+        if (followRelationshipPOPage == null || followRelationshipPOPage.isEmpty()) {
+            return Collections.emptyList();
+        }
         return followRelationshipPOPage.stream().collect(
                 ArrayList<FollowRelationShip>::new,
                 (con, followRelationshipPO) -> {

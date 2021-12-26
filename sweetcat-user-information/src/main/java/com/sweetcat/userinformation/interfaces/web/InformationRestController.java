@@ -45,7 +45,7 @@ public class InformationRestController {
     @GetMapping("/informations/{receiver_id}")
     public ResponseDTO findPageByReceiverId(@PathVariable("receiver_id") Long receiverId, Integer page, Integer limit) {
         List<Information> informationPage = informationFacade.findPageByReceiverId(receiverId, page, limit);
-        if (informationPage == null || informationPage.size() <= 0) {
+        if (informationPage == null || informationPage.isEmpty()) {
             return response("查询通知分页数据成功", "{}");
         }
         ArrayList<InformationRestDTO> informationRestDTOPage = informationPage.stream().collect(

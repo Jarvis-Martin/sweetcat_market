@@ -37,6 +37,9 @@ public class ManInfoRepositoryImpl implements ManInfoRepository {
     @Override
     public ManInfo find(Long manId) {
         ManInfoPO manInfoPO = manInfoMapper.getOne(manId);
+        if (manInfoPO == null) {
+            return null;
+        }
         return manInfoFactory.create(manInfoPO);
     }
 }

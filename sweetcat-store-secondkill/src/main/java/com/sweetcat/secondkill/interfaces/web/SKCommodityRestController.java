@@ -69,8 +69,8 @@ public class SKCommodityRestController {
     @GetMapping("/commodities")
     public ResponseDTO findPageByTime(Long currentTimeStamp, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<SKCommodity> skCommoditiePage = skCommodityFacade.findPageByTime(currentTimeStamp, page, limit);
-        if (skCommoditiePage == null || skCommoditiePage.size() <= 0) {
-            return response("移除商品成功", "{}");
+        if (skCommoditiePage == null || skCommoditiePage.isEmpty()) {
+            return response("查找商品分页数据成功", "{}");
         }
         ArrayList<SKCommoditySummaryInfoRestDTO> skCommoditySummaryInfoRestDTOPage = skCommoditiePage.stream().collect(
                 ArrayList<SKCommoditySummaryInfoRestDTO>::new,

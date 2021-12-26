@@ -12,6 +12,7 @@ import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_servi
 import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class CommodityInfoApplicationService {
         this.commodityInfoRepository = commodityInfoRepository;
     }
 
+    @Transactional
     public Commodity findByCommodityId(Long commodityId) {
         // 检查 commodityId
         verifyIdFormatService.verifyId(commodityId);
@@ -61,12 +63,14 @@ public class CommodityInfoApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<Commodity> findPageCreditCanOffsetAPart(Integer page, Integer limit) {
         limit = limit < 0 ? 15 : limit;
         page = page < 0 ? 0 : page * limit;
         return commodityInfoRepository.findPageCreditCanOffsetAPart(page, limit);
     }
 
+    @Transactional
     public List<Commodity> findPageByStoreId(Long storeId, Integer page, Integer limit) {
         // 检查 storeId
         verifyIdFormatService.verifyId(storeId);
@@ -75,6 +79,7 @@ public class CommodityInfoApplicationService {
         return commodityInfoRepository.findPageByStoreId(storeId, page, limit);
     }
 
+    @Transactional
     public List<Commodity> findPageNewCommodities(Integer page, Integer limit) {
         // 见参数检查
         limit = limit < 0 ? 15 : limit;
@@ -82,6 +87,7 @@ public class CommodityInfoApplicationService {
         return commodityInfoRepository.findPageNewCommodities(page, limit);
     }
 
+    @Transactional
     public void addOne(AddStoreCommodityCommand addStoreCommodityCommand) {
         // 获得需要检查的 参数
         long storeId = addStoreCommodityCommand.getStoreId();
@@ -132,6 +138,7 @@ public class CommodityInfoApplicationService {
         commodityInfoRepository.addOne(commodity);
     }
 
+    @Transactional
     public void increAddCommodityToCartNumber(Long commodityId, Integer increment) {
         verifyIdFormatService.verifyId(commodityId);
         Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);
@@ -140,6 +147,7 @@ public class CommodityInfoApplicationService {
         commodityInfoRepository.save(commodity);
     }
 
+    @Transactional
     public void increCommodityCollectNumber(Long commodityId, Integer increment) {
         verifyIdFormatService.verifyId(commodityId);
         Commodity commodity = commodityInfoRepository.findByCommodityId(commodityId);

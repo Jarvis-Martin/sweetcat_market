@@ -72,7 +72,7 @@ public class OrderRestController {
     @GetMapping("/orders")
     public ResponseDTO findPage(@RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Order> orders = orderFacade.findPage(page, limit);
-        if (orders == null || orders.size() <= 0) {
+        if (orders == null || orders.isEmpty()) {
             return response("查询订单成功", "{}");
         }
 

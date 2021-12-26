@@ -11,8 +11,11 @@ import com.sweetcat.secondkill.domain.commodity.repository.SKCommodityRepository
 import com.sweetcat.secondkill.domain.commodity.vo.Store;
 import com.sweetcat.secondkill.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.secondkill.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +56,8 @@ public class SKCommodityApplicationService {
      * 增加一件商品记录
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddSKCommodityCommand command) {
         Long storeId = command.getStoreId();
         // 检查id
@@ -116,6 +121,7 @@ public class SKCommodityApplicationService {
      * 移除秒杀商品
      * @param commodityId
      */
+    @Transactional
     public void removeOne(Long commodityId) {
         // 检查 commodityId
         verifyIdFormatService.verifyIds(commodityId);
@@ -132,6 +138,7 @@ public class SKCommodityApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<SKCommodity> findPageByTime(Long currentTimeStamp, Integer page, Integer limit) {
         // 调整 page limit
         limit = limit == null || limit < 0 ? 15 : limit;
@@ -155,6 +162,7 @@ public class SKCommodityApplicationService {
      * @param commodityId
      * @return
      */
+    @Transactional
     public SKCommodity findOneByCommodityId(Long commodityId) {
         // 检查 commodityId
         verifyIdFormatService.verifyIds(commodityId);

@@ -71,7 +71,7 @@ public class UserCommodityRecommendRestController {
     @GetMapping("/{referrer_id}")
     public ResponseDTO findPageByReferrerId(@PathVariable("referrer_id") Long referrerId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<RecommendForm> recommendFormPage = recommendFacade.findPageByReferrerId(referrerId, page, limit);
-        if (recommendFormPage == null || recommendFormPage.size() <= 0) {
+        if (recommendFormPage == null || recommendFormPage.isEmpty()) {
             return response("查询用户商品推荐记录(分页)成功", "{}");
         }
 

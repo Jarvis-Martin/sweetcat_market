@@ -15,8 +15,11 @@ import com.sweetcat.recommend.domain.recommendform.repository.RecommendFormRepos
 import com.sweetcat.recommend.infrastructure.factory.UserCommodityRecommendFactory;
 import com.sweetcat.recommend.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.recommend.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,7 +33,6 @@ import java.util.List;
 @Service
 public class UserCommodityRecommendApplicationService {
     private RecommendFormRepository recommendFormRepository;
-    private UserCommodityRecommendFactory recommendFactory;
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
     private CommodityInfoRpc commodityInfoRpc;
@@ -44,11 +46,6 @@ public class UserCommodityRecommendApplicationService {
     @Autowired
     public void setCommodityInfoRpc(CommodityInfoRpc commodityInfoRpc) {
         this.commodityInfoRpc = commodityInfoRpc;
-    }
-
-    @Autowired
-    public void setRecommendFactory(UserCommodityRecommendFactory recommendFactory) {
-        this.recommendFactory = recommendFactory;
     }
 
     @Autowired
@@ -71,6 +68,8 @@ public class UserCommodityRecommendApplicationService {
      *
      * @param command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddCommodityRecommendCommand command) {
         long referrerId = command.getUserId();
         long commodityId = command.getCommodityId();
@@ -79,12 +78,7 @@ public class UserCommodityRecommendApplicationService {
         // rpc检查用户是否存在
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(referrerId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // 构建 推荐人
         Referrer referrer = new Referrer(referrerId);
         // rpc获取商品基本信息
@@ -123,11 +117,21 @@ public class UserCommodityRecommendApplicationService {
         recommendFormRepository.addOne(recommendForm);
     }
 
+    private void checkUser(UserInfoRpcDTO userInfo) {
+        if (userInfo == null) {
+            throw new UserNotExistedException(
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
+            );
+        }
+    }
+
     /**
      * 移除指定商品推荐
      *
      * @param recordId
      */
+    @Transactional
     public void remove(Long recordId) {
         // 检查 id
         verifyIdFormatService.verifyId(recordId);
@@ -145,18 +149,14 @@ public class UserCommodityRecommendApplicationService {
      * @param limit
      * @return
      */
+    @Transactional
     public List<RecommendForm> findPageByReferrerId(Long referrerId, Integer page, Integer limit) {
         // 检查id
         verifyIdFormatService.verifyId(referrerId);
         // rpc检查用户是否存在
         UserInfoRpcDTO userInfo = userInfoRpc.getUserInfo(referrerId);
         // 用户不存在
-        if (userInfo == null) {
-            throw new UserNotExistedException(
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorCode(),
-                    ResponseStatusEnum.USERNOTEXISTED.getErrorMessage()
-            );
-        }
+        checkUser(userInfo);
         // page limti格式检查
         limit = limit == null || limit < 0 ? 10 : limit;
         page = page == null || page < 0 ? 0 : page * limit;
@@ -170,6 +170,7 @@ public class UserCommodityRecommendApplicationService {
      * @param recordId recordId
      * @return
      */
+    @Transactional
     public RecommendForm findByRecordId(Long recordId) {
         // 检查id
         verifyIdFormatService.verifyId(recordId);

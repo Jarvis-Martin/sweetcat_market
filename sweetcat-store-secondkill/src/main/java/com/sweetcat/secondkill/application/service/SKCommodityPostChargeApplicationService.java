@@ -15,8 +15,11 @@ import com.sweetcat.secondkill.domain.commonditypostcharge.entity.SKCommodityPos
 import com.sweetcat.secondkill.domain.commonditypostcharge.repository.SKCommodityPostChargeRepository;
 import com.sweetcat.secondkill.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.secondkill.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: Coder_Jarvis
@@ -68,6 +71,8 @@ public class SKCommodityPostChargeApplicationService {
      *
      * @param command command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddSKCommodityPostChargeCommand command) {
         long commodityId = command.getCommodityId();
         long storeId = command.getStoreId();
@@ -122,6 +127,8 @@ public class SKCommodityPostChargeApplicationService {
      * @param addressCode addressCode
      * @return
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public SKCommodityPostCharge find(Long commodityId, String addressCode) {
         // 检查id 格式
         verifyIdFormatService.verifyIds(commodityId);
@@ -151,6 +158,7 @@ public class SKCommodityPostChargeApplicationService {
      *
      * @param chargeId chargeId
      */
+    @Transactional
     public void remove(Long chargeId) {
         // 检查 id
         verifyIdFormatService.verifyIds(chargeId);

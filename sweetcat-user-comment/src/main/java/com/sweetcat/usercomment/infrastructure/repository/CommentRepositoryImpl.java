@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,11 +30,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private CommodityCommentMapper commodityCommentMapper;
     private CommentCommentMapper commentCommentMapper;
     private CommentFactory commentFactory;
-
-    @Autowired
-    public void setCommentCommodityMapper(CommodityCommentMapper commodityCommentMapper) {
-        this.commodityCommentMapper = commodityCommentMapper;
-    }
 
     @Autowired
     public void setCommodityCommentMapper(CommodityCommentMapper commodityCommentMapper) {
@@ -140,10 +136,10 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public <T extends Comment> List<T> findPageByPublisherId(Long publisherId, Integer page, Integer limit) {
         List<CommentPO> commentPOPage = commentMapper.findPageByPublisherId(publisherId, page, limit);
-        if (commentPOPage == null || commentPOPage.size() <= 0) {
-            return null;
+        if (commentPOPage == null || commentPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
-        ArrayList<T> commentPage = commentPOPage.stream().collect(
+        return commentPOPage.stream().collect(
                 ArrayList<T>::new,
                 (con, commentPO) -> {
                     // 查找商品评论分页
@@ -159,7 +155,6 @@ public class CommentRepositoryImpl implements CommentRepository {
                 },
                 ArrayList<T>::addAll
         );
-        return commentPage;
     }
 
 }

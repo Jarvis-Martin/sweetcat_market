@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,15 +67,14 @@ public class UserFootprintRepositoryImpl implements UserFootprintRepository {
     @Override
     public List<UserFootprint> findPageByDate(Long userId, @Param("date") Long date, @Param("page") Integer page, @Param("limit") Integer limit) {
         List<UserFootprintPO> footprintPOPage = footprintMapper.findPageByDate(userId, date, page, limit);
-        if (footprintPOPage == null) {
-            return null;
+        if (footprintPOPage == null || footprintPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
-        ArrayList<UserFootprint> footprintPage = footprintPOPage.stream().collect(
+        return footprintPOPage.stream().collect(
                 ArrayList<UserFootprint>::new,
                 (con, userFootprintPO) -> con.add(footprintFactory.create(userFootprintPO)),
-                ArrayList::addAll
+                ArrayList<UserFootprint>::addAll
         );
-        return footprintPage;
     }
 
     @Override

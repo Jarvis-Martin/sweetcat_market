@@ -69,7 +69,7 @@ public class UserFavoriteRestController {
     public ResponseDTO findPageByUserId(@PathVariable("user_id") Long userid, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         // 查
         List<UserFavorate> userFavoritePage = footprintFacade.findPageByUserId(userid, page, limit);
-        if (userFavoritePage == null || userFavoritePage.size() <= 0) {
+        if (userFavoritePage == null || userFavoritePage.isEmpty()) {
             return response("查询用户收藏商品分页数据成功", "{}");
         }
         // 创建 response data

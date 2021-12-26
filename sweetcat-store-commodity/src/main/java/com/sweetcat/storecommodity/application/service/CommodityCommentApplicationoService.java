@@ -11,9 +11,9 @@ import com.sweetcat.storecommodity.domain.commoditycomment.repository.CommodityC
 import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.domain.commodityinfo.repository.CommodityInfoRepository;
 import com.sweetcat.storecommodity.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
-import com.sweetcat.storecommodity.infrastructure.service.snowflake_service.SnowFlakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,14 +27,8 @@ import java.util.List;
 public class CommodityCommentApplicationoService {
     private CommodityCommentRepository commentRepository;
     private CommodityInfoRepository commodityInfoRepository;
-    private SnowFlakeService snowFlakeService;
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
-
-    @Autowired
-    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
-        this.snowFlakeService = snowFlakeService;
-    }
 
     @Autowired
     public void setUserInfoRpc(UserInfoRpc userInfoRpc) {
@@ -62,6 +56,7 @@ public class CommodityCommentApplicationoService {
      * @param commentId commentId
      * @return
      */
+    @Transactional
     public CommodityComment findByCommentId(Long commentId) {
         // 检查 commentId 格式
         verifyIdFormatService.verifyId(commentId);
@@ -82,6 +77,7 @@ public class CommodityCommentApplicationoService {
      * @param commodityId commodityId
      * @return
      */
+    @Transactional
     public List<CommodityComment> findPageByCommodityId(Long commodityId, Integer page, Integer limit) {
         // 检查 commodityId 格式
         verifyIdFormatService.verifyId(commodityId);
@@ -100,6 +96,7 @@ public class CommodityCommentApplicationoService {
      *
      * @param command command
      */
+    @Transactional
     public void addOne(AddCommodityCommentCommand command) {
         Long commentId = command.getCommentId();
         long userId = command.getUserId();
@@ -140,15 +137,20 @@ public class CommodityCommentApplicationoService {
      *
      * @param commentId commodityComment
      */
+    @Transactional
     public void removeOne(Long commentId) {
         // 检查 id
         verifyIdFormatService.verifyId(commentId);
         // 检查评论是否存在
         CommodityComment comment = commentRepository.findByCommentId(commentId);
-        if (comment != null) {
-        // 删除 comment
-            commentRepository.removeOne(comment);
+        if (comment == null) {
+            throw new CommentNotExistedException(
+                    ResponseStatusEnum.COMMENTNOTEXISTED.getErrorCode(),
+                    ResponseStatusEnum.COMMENTNOTEXISTED.getErrorMessage()
+            );
         }
+        // 删除 comment
+        commentRepository.removeOne(comment);
         // 找到对应商品
         Commodity commodity = commodityInfoRepository.findByCommodityId(comment.getCommodityId());
         // 修改评论数

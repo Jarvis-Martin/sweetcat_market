@@ -14,8 +14,11 @@ import com.sweetcat.secondkill.domain.commoditycomment.repository.SKCommodityCom
 import com.sweetcat.secondkill.domain.commoditycomment.vo.Publisher;
 import com.sweetcat.secondkill.infrastructure.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.secondkill.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,14 +32,8 @@ import java.util.List;
 public class SKCommodityCommentApplicationoService {
     private SKCommodityCommentRepository commentRepository;
     private SKCommodityRepository commodityRepository;
-    private SnowFlakeService snowFlakeService;
     private VerifyIdFormatService verifyIdFormatService;
     private UserInfoRpc userInfoRpc;
-
-    @Autowired
-    public void setSnowFlakeService(SnowFlakeService snowFlakeService) {
-        this.snowFlakeService = snowFlakeService;
-    }
 
     @Autowired
     public void setUserInfoRpc(UserInfoRpc userInfoRpc) {
@@ -64,6 +61,7 @@ public class SKCommodityCommentApplicationoService {
      * @param commentId commentId
      * @return
      */
+    @Transactional
     public SKCommodityComment findByCommentId(Long commentId) {
         // 检查 commentId 格式
         verifyIdFormatService.verifyIds(commentId);
@@ -88,6 +86,7 @@ public class SKCommodityCommentApplicationoService {
      * @param commodityId commodityId
      * @return
      */
+    @Transactional
     public List<SKCommodityComment> findPageByCommodityId(Long commodityId, Integer page, Integer limit) {
         // 检查 commodityId 格式
         verifyIdFormatService.verifyIds(commodityId);
@@ -102,6 +101,8 @@ public class SKCommodityCommentApplicationoService {
      *
      * @param command command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddSKCommodityCommentCommand command) {
         Long commentId = command.getCommentId();
         long userId = command.getUserId();
@@ -155,6 +156,7 @@ public class SKCommodityCommentApplicationoService {
      *
      * @param commentId commodityComment
      */
+    @Transactional
     public void removeOne(Long commentId) {
         // 检查 id
         verifyIdFormatService.verifyIds(commentId);

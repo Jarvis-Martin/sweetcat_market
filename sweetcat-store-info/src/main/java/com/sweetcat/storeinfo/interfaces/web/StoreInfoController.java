@@ -5,7 +5,6 @@ import com.sweetcat.commons.responsedto.ResponseDTO;
 import com.sweetcat.storeinfo.domain.storeinfo.entity.StoreInfo;
 import com.sweetcat.storeinfo.interfaces.facade.StoreInfoFacade;
 import com.sweetcat.storeinfo.interfaces.facade.assembler.StoreInfoAssembler;
-import com.sweetcat.storeinfo.interfaces.facade.restdto.StoreInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,11 +41,13 @@ public class StoreInfoController {
     @GetMapping("/{store_id}")
     public ResponseDTO getOneById(@PathVariable("store_id") Long storeId) {
         StoreInfo storeInfo = storeInfoFacade.getOneById(storeId);
-
+        if (storeInfo == null) {
+            return response("查询成功", "{}");
+        }
         HashMap<String, Object> storeInfoDTO = new HashMap<>(2);
         storeInfoDTO.put("store_info", storeInfoAssembler.converterToStoreInfoDTO(storeInfo));
 
-        return response("一切OK", storeInfoDTO);
+        return response("查询成功", storeInfoDTO);
     }
 
     @PostMapping("")

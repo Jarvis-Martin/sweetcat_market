@@ -29,8 +29,7 @@ public class AppFeedbackController {
     public ResponseDTO addAFeedback(UploadFeedbackCommand command) {
         feedbackFacade.addAFeedback(command);
 
-        String tip = "反馈成功，客服人员将及时为您处理，请稍等";
-        return response(tip, "{}");
+        return response("反馈成功，客服人员将及时为您处理，请稍等", "{}");
     }
 
     /**

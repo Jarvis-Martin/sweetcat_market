@@ -45,7 +45,7 @@ public class UserCouponRestController {
     @GetMapping("/coupons")
     public ResponseDTO findPageByUserId(Long userId, Integer page, Integer limit) {
         List<UserCoupon> userCouponPage = userCouponFacade.findPageByUserId(userId, page, limit);
-        if (userCouponPage == null || userCouponPage.size() <= 0) {
+        if (userCouponPage == null || userCouponPage.isEmpty()) {
             return response("查询用户优惠券分页数据成功", "{}");
         }
         ArrayList<CouponRestDTO> couponRestDTOPage = userCouponPage.stream().collect(

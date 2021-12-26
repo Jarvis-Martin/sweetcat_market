@@ -12,10 +12,14 @@ import com.sweetcat.commons.ResponseStatusEnum;
 import com.sweetcat.commons.domainevent.appfeedback.FeedbackSubmittedEvent;
 import com.sweetcat.commons.exception.SaveFileFailException;
 import com.sweetcat.commons.util.JSONUtils;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -35,6 +39,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class AppFeedbackApplicationService {
+    Logger logger = LoggerFactory.getLogger(AppFeedbackApplicationService.class);
     @Value("${upload-file-path}")
     private String uploadFilePath;
     @Value("${static-server-address}")
@@ -73,6 +78,7 @@ public class AppFeedbackApplicationService {
         this.feedbackRepository = feedbackRepository;
     }
 
+    @Transactional
     public AppFeedback findOneByFeedbackId(Long feedbackId) {
         // 检查id
         verifyIdFormatService.verifyIds(feedbackId);
@@ -80,6 +86,7 @@ public class AppFeedbackApplicationService {
         return feedbackRepository.findOneByFeedbackId(feedbackId);
     }
 
+    @GlobalTransactional
     public void addAFeedback(UploadFeedbackCommand command) {
         long userId = command.getUserId();
         String[] feedbackPics = command.getFeedbackPics();
@@ -101,7 +108,7 @@ public class AppFeedbackApplicationService {
         // 构建 FeedbackSubmittedEvent
         FeedbackSubmittedEvent feedbackSubmittedEvent = new FeedbackSubmittedEvent(feedbackId, userId);
         // 触发领域事件 FeedbackSubmittedEvent
-        System.out.println("sweetcat-app-feedback: 触发领域事件 feedbackSubmittedEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-app-feedback: 触发领域事件 feedbackSubmittedEvent 时间为：{}", Instant.now().toEpochMilli());
         eventPublisher.syncSend("feedback_topic", feedbackSubmittedEvent);
     }
 
@@ -152,4 +159,5 @@ public class AppFeedbackApplicationService {
         feedback.setProcessTime(command.getProcessTime());
         feedbackRepository.save(feedback);
     }
+
 }

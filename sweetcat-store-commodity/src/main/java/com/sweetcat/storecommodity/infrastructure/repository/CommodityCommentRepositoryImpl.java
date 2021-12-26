@@ -2,7 +2,6 @@ package com.sweetcat.storecommodity.infrastructure.repository;
 
 import com.sweetcat.storecommodity.domain.commoditycomment.entity.CommodityComment;
 import com.sweetcat.storecommodity.domain.commoditycomment.repository.CommodityCommentRepository;
-import com.sweetcat.storecommodity.domain.commodityinfo.entity.Commodity;
 import com.sweetcat.storecommodity.infrastructure.dao.CommodityCommentMapper;
 import com.sweetcat.storecommodity.infrastructure.factory.CommodityCommentFactory;
 import com.sweetcat.storecommodity.infrastructure.po.CommodityCommentPO;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,15 +46,14 @@ public class CommodityCommentRepositoryImpl implements CommodityCommentRepositor
     @Override
     public List<CommodityComment> findPageByCommodityId(Long commodityId, Integer page, Integer limit) {
         List<CommodityCommentPO> commentPOList = commentMapper.findPageByCommodityId(commodityId, page, limit);
-        ArrayList<CommodityComment> commentList = null;
-        if (commentPOList != null) {
-            commentList = commentPOList.stream().collect(
-                    ArrayList<CommodityComment>::new,
-                    (con, commentPO) -> con.add(commentFactory.create(commentPO)),
-                    ArrayList::addAll
-            );
+        if (commentPOList == null || commentPOList.isEmpty()) {
+            return Collections.emptyList();
         }
-        return commentList;
+        return commentPOList.stream().collect(
+                ArrayList<CommodityComment>::new,
+                (con, commentPO) -> con.add(commentFactory.create(commentPO)),
+                ArrayList<CommodityComment>::addAll
+        );
     }
 
     @Override

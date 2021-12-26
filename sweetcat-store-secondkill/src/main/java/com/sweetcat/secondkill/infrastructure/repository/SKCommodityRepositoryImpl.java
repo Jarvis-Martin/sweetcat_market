@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -80,8 +81,8 @@ public class SKCommodityRepositoryImpl implements SKCommodityRepository {
         Instant startTime = LocalDateTime.of(year, monthValue, dayOfMonth, zone.startTime(), 0).atZone(ZoneId.systemDefault()).toInstant();
         Instant deadline = LocalDateTime.of(year, monthValue, dayOfMonth, zone.deadline(), 59).atZone(ZoneId.systemDefault()).toInstant();
         List<SKCommodityPO> skCommodityPOPage = commodityMapper.findPageByTime(startTime.toEpochMilli(), deadline.toEpochMilli(), page, limit);
-        if (skCommodityPOPage == null || skCommodityPOPage.size() <= 0) {
-            return null;
+        if (skCommodityPOPage == null || skCommodityPOPage.isEmpty()) {
+            return Collections.emptyList();
         }
         return skCommodityPOPage.stream().collect(
                 ArrayList<SKCommodity>::new,

@@ -96,7 +96,7 @@ public class CommentRestController {
     @GetMapping("/comments")
     public ResponseDTO findPageByPublisherId(Long publisherId, @RequestParam("_page") Integer page, @RequestParam("_limit") Integer limit) {
         List<Comment> commentPage = commentFacade.findPageByPublisherId(publisherId, page, limit);
-        if (commentPage == null || commentPage.size() <= 0) {
+        if (commentPage == null || commentPage.isEmpty()) {
             return response("查询评论分页成功", "[]");
         }
         ArrayList<CommentRestDTO> commentRestDTOPage = commentPage.stream().collect(

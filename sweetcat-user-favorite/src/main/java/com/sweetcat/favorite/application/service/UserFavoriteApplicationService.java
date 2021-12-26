@@ -15,8 +15,13 @@ import com.sweetcat.favorite.domain.favorite.entity.UserFavorate;
 import com.sweetcat.favorite.domain.favorite.repository.UserFavoriteRepository;
 import com.sweetcat.favorite.domain.favorite.service.id_format_verfiy_service.VerifyIdFormatService;
 import com.sweetcat.favorite.infrastructure.service.snowflake_service.SnowFlakeService;
+import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -29,6 +34,7 @@ import java.util.List;
  */
 @Service
 public class UserFavoriteApplicationService {
+    Logger logger = LoggerFactory.getLogger(UserFavoriteApplicationService.class);
     private UserFavoriteRepository favoriteRepository;
     private VerifyIdFormatService verifyIdFormatService;
     private SnowFlakeService snowFlakeService;
@@ -71,6 +77,8 @@ public class UserFavoriteApplicationService {
      *
      * @param command command
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void addOne(AddUserFavoriteCommand command) {
         long userId = command.getUserId();
         long commodityId = command.getCommodityId();
@@ -99,7 +107,7 @@ public class UserFavoriteApplicationService {
         //      -- 填充 领域事件
         inflateAddedCommodityToFavoriteEvent(userId, commodityId, addedCommodityToFavoriteEvent);
         //      -- log
-        System.out.println("sweetcat-user-favorite 触发领域事件 AddedCommodityToFavoriteEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-user-favorite 触发领域事件 AddedCommodityToFavoriteEvent 时间为：{}", Instant.now().toEpochMilli());
         //      -- 发布
         domainEventPublisher.syncSend("sweetcat_user_favorite:add_commodity_to_favorite",addedCommodityToFavoriteEvent);
     }
@@ -135,6 +143,8 @@ public class UserFavoriteApplicationService {
      *
      * @param favoriteId favoriteId
      */
+    @Transactional
+    @ShardingTransactionType(TransactionType.BASE)
     public void removeOne(Long favoriteId) {
         // 获取 favorite id
         UserFavorate userFavorate = favoriteRepository.findByFavoriteId(favoriteId);
@@ -147,7 +157,7 @@ public class UserFavoriteApplicationService {
         //      -- 填充 领域事件
         inflateRemovedCommodityFromFavoriteEvent(userFavorate, removedCommodityFromFavoriteEvent);
         //      -- log
-        System.out.println("sweetcat-user-favorite 触发领域事件 RemovedCommodityFromFavoriteEvent 时间为：" + Instant.now().toEpochMilli());
+        logger.info("sweetcat-user-favorite 触发领域事件 RemovedCommodityFromFavoriteEvent 时间为：" + Instant.now().toEpochMilli());
         //      -- 发布
         domainEventPublisher.syncSend("sweetcat_user_favorite:remove_commodity_from_favorite", removedCommodityFromFavoriteEvent);
     }
@@ -166,6 +176,7 @@ public class UserFavoriteApplicationService {
      * @param limit  limit
      * @return
      */
+    @Transactional
     public List<UserFavorate> findPageByUserId(Long userid, Integer page, Integer limit) {
         // 检查id
         verifyIdFormatService.verifyIds(userid);

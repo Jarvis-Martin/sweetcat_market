@@ -6,6 +6,8 @@ import com.sweetcat.user_info.domain.user.entity.User;
 import com.sweetcat.user_info.interfaces.facade.UserInfoFacade;
 import com.sweetcat.user_info.interfaces.facade.assembler.UserAssembler;
 import com.sweetcat.user_info.interfaces.facade.restdto.UserInfoDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    Logger logger = LoggerFactory.getLogger(UserController.class);
     private UserInfoFacade userInfoFacade;
     private UserAssembler userAssembler;
 
@@ -121,8 +124,7 @@ public class UserController {
     @PostMapping("/{user_id}/phone")
     public ResponseDTO changePhone(@PathVariable("user_id") Long userId, String phone) {
         userInfoFacade.changePhone(userId, phone);
-        String tip = "换绑手机号成功";
-        return response(tip, "{}");
+        return response("换绑手机号成功", "{}");
     }
 
     /**
@@ -134,8 +136,7 @@ public class UserController {
     @PostMapping("/{user_id}/password")
     public ResponseDTO changePassword(@PathVariable("user_id") Long userId, String password) {
         userInfoFacade.changePassword(userId, password);
-        String tip = "修改密码成功";
-        return response(tip, "{}");
+        return response("修改密码成功", "{}");
     }
 
     /**
@@ -212,8 +213,7 @@ public class UserController {
     @GetMapping("/login/captcha")
     public ResponseDTO getCaptchaForLogin(String phone) {
         userInfoFacade.getCaptchaForLogin(phone);
-        String tip = "验证码以发送到您的手机，请注意查收喔";
-        return response(tip, "{}");
+        return response("验证码以发送到您的手机，请注意查收喔", "{}");
     }
 
     /**
@@ -225,8 +225,7 @@ public class UserController {
     @GetMapping("/register/captcha")
     public ResponseDTO getCaptchaForRegister(String phone) {
         userInfoFacade.getCaptchaForRegister(phone);
-        String tip = "验证码以发送到您的手机，请注意查收喔";
-        return response(tip, "{}");
+        return response("验证码以发送到您的手机，请注意查收喔", "{}");
     }
 
     /**
@@ -238,8 +237,7 @@ public class UserController {
     @GetMapping("/captcha")
     public ResponseDTO getCaptcha(String phone) {
         userInfoFacade.getCaptcha(phone);
-        String tip = "验证码以发送到您的手机，请注意查收喔";
-        return response(tip, "{}");
+        return response("验证码以发送到您的手机，请注意查收喔", "{}");
     }
 
     /**
@@ -251,10 +249,9 @@ public class UserController {
      */
     @PostMapping("/captcha/verification")
     public ResponseDTO verifyCaptcha(String phone, String captcha) {
-        System.out.println("verificaiton : ----- phone: " + phone + " captcha: " + captcha);
+        logger.debug("verificaiton : ----- phone: " + phone + " captcha: " + captcha);
         userInfoFacade.verifyCaptcha(phone, captcha);
-        String tip = "验证码验证通过";
-        return response(tip, "{}");
+        return response("验证码验证通过", "{}");
     }
 
 
