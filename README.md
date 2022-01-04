@@ -110,7 +110,7 @@
 
 #### 经典 DDD 分层架构
 
-| <img src="D:\sweetcat_workspace\images\layerd_arch.png" alt="layerd_arch" style="zoom:50%;" /> |
+| <img src="images\layerd_arch.png" alt="layerd_arch" style="zoom:50%;" /> |
 | :----------------------------------------------------------: |
 |                    **经典 DDD 分层架构**                     |
 
@@ -127,7 +127,7 @@
 
 #### 依赖倒置原则后的 DDD 分层架构
 
-| <img src="D:\sweetcat_workspace\images\layed_architecture.jpg" alt="layed_architecture" style="zoom:50%;" /> |
+| <img src="images\layed_architecture.jpg" alt="layed_architecture" style="zoom:50%;" /> |
 | :----------------------------------------------------------: |
 |               **依赖导致后的 DDD  分层架构图**               |
 
