@@ -1,0 +1,27 @@
+
+X
+java:S3457‚"AFormat specifiers should be used instead of string concatenation.(¤ëÖ
+]
+java:S3457ò"AFormat specifiers should be used instead of string concatenation.(òÛ×èúÿÿÿÿ
+]
+java:S3457¯"AFormat specifiers should be used instead of string concatenation.(ğÊ» øÿÿÿÿ
+]
+java:S3457°"AFormat specifiers should be used instead of string concatenation.(Ú¶Ö¬ÿÿÿÿÿ
+D
+java:S1144ü"-Remove this unused private "saveFile" method.(¡ûì’
+c
+java:S1192Õ"GDefine a constant instead of duplicating this literal "phone:" 3 times.(ØÇ¶Æÿÿÿÿÿ
+f
+java:S1192Ê"ODefine a constant instead of duplicating this literal "phone_captcha:" 4 times.(³›İ‘
+N
+java:S2629‚"7Use the built-in formatting to construct this argument.(¤ëÖ
+x
+java:S2629ò"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(òÛ×èúÿÿÿÿ
+S
+java:S2629¯"7Use the built-in formatting to construct this argument.(ğÊ» øÿÿÿÿ
+S
+java:S2629°"7Use the built-in formatting to construct this argument.(Ú¶Ö¬ÿÿÿÿÿ
+A
+java:S5411¦"*Use the primitive boolean expression here.(®©™“
+b
+java:S2184 "FCast one of the operands of this multiplication operation to a "long".(ÃĞëÊüÿÿÿÿ

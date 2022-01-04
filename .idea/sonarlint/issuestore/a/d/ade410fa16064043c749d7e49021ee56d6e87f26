@@ -1,0 +1,11 @@
+
+[
+java:S1117q"ERename "userCouponInfoRpc" which hides the field declared at line 46.(Ó¾ï
+t
+java:S1128
+"RRemove this unused import 'com.sweetcat.commons.exception.OrderNotExistException'.(Ğùº…ùÿÿÿÿ8Ãª¬ß/
+m
+java:S1128"QRemove this unused import 'com.sweetcat.storeorder.application.rpc.UserOrderRpc'.(µÄ† 8©Œ¬ß/
+
+java:S1128"nRemove this unused import 'com.sweetcat.storeorder.infrastructure.service.snowflake_service.SnowFlakeService'.(Ÿè—áıÿÿÿÿ8©Œ¬ß/
+W	java:S107•"<Method has 8 parameters, which is greater than 7 authorized.(”½Ôüÿÿÿÿ

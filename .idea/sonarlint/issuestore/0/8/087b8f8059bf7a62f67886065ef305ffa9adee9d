@@ -1,0 +1,11 @@
+
+y
+java:S4144E"dUpdate this method so that its implementation is not identical to "setUserCouponInfoRpc" on line 64.(èıİO
+h
+java:S3776m"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ú«Ó
+\
+java:S1854÷"@Remove this useless assignment to local variable "commoditySet".(­ÀŞüúÿÿÿÿ
+M
+java:S1481÷"1Remove this unused "commoditySet" local variable.(­ÀŞüúÿÿÿÿ
+W	java:S107á"<Method has 8 parameters, which is greater than 7 authorized.(°î½úıÿÿÿÿ
+W	java:S107„"<Method has 9 parameters, which is greater than 7 authorized.(ÑæÇ£øÿÿÿÿ
