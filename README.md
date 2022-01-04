@@ -15,7 +15,7 @@
 
 ### 项目整体架构图
 
-| <img src="\images\micro_service_architecture.svg" alt="micro_service_architecture" style="zoom:90%;" /> |
+| <img src="images\micro_service_architecture.svg" alt="micro_service_architecture" style="zoom:90%;" /> |
 | :----------------------------------------------------------: |
 |                   **项目整体微服务架构图**                   |
 
