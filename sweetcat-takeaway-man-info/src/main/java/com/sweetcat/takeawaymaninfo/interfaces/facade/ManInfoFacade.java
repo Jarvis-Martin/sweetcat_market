@@ -1,6 +1,6 @@
 package com.sweetcat.takeawaymaninfo.interfaces.facade;
 
-import com.sweetcat.takeawaymaninfo.application.event.subscribe.ManInfApplicationService;
+import com.sweetcat.takeawaymaninfo.application.service.ManInfApplicationService;
 import com.sweetcat.takeawaymaninfo.domain.maninfo.entity.ManInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
